@@ -1,0 +1,109 @@
+#ifndef TEXTFORMULANODE_H
+#define TEXTFORMULANODE_H
+
+#include <QGraphicsTextItem>
+#include "FormulaNode.h"
+
+class TextFormulaNode : public FormulaNode
+{
+public:
+	TextFormulaNode();
+	TextFormulaNode(FormulaNode* parent);
+	virtual ~TextFormulaNode();
+	
+private:
+	friend class boost::serialization::access;
+
+	template<class Archive>
+	void save(Archive& ar, const unsigned int version) const
+	{
+		string str = ((TextFormulaNode*)this)->GetText().toUtf8().data();
+		ar << str;
+		ar << boost::serialization::base_object<FormulaNode>(*this);
+	}
+
+	template<class Archive>
+	void load(Archive& ar, const unsigned int version)
+	{
+		string str;
+		ar >> str;
+		SetText(str.c_str());
+		ar >> boost::serialization::base_object<FormulaNode>(*this);
+	}
+
+	BOOST_SERIALIZATION_SPLIT_MEMBER()
+
+public:
+	virtual void UpdateBoundingRect();
+	virtual void Remake();
+
+	virtual FormulaNode* Clone();
+	
+	void SetText(QString _text);
+	QString GetText();
+	//void SetFont(QFont font);
+	
+	virtual SharedCaretState GetFirstPosition();
+	virtual SharedCaretState GetLastPosition();
+	virtual SharedCaretState GetNextPosition(SharedCaretState& relativeState = SharedCaretState());
+	virtual SharedCaretState GetPreviousPosition(SharedCaretState& relativeState = SharedCaretState());
+
+	virtual QRectF GetDocumentPosBounds(int pos);
+
+	virtual void RenderCaret(const int pos, const int anchor);
+
+	//command functions
+	
+	virtual bool DoInsertNode(NodeEvent& nodeEvent);
+	virtual bool UndoInsertNode(NodeEvent& nodeEvent);
+	virtual bool DoInsertText(NodeEvent& nodeEvent);
+	virtual bool UndoInsertText(NodeEvent& nodeEvent);
+	
+	virtual bool DoRemoveItem(NodeEvent& nodeEvent);
+	virtual bool UndoRemoveItem(NodeEvent& nodeEvent);
+
+	//template<class T>
+	//bool DoCreateNode(NodeEvent& nodeEvent);
+	
+	virtual bool DoCreatePlusFormulaNode(NodeEvent& nodeEvent);
+	virtual bool UndoCreatePlusFormulaNode(NodeEvent& nodeEvent);
+	virtual bool DoCreateDivisionFormulaNode(NodeEvent& nodeEvent);
+	virtual bool UndoCreateDivisionFormulaNode(NodeEvent& nodeEvent);
+
+protected:
+};
+
+class FormulaTextItem : public QGraphicsTextItem
+{
+public:
+	FormulaTextItem(Settings* _settings, QGraphicsItem* parent = 0);
+	~FormulaTextItem();
+	
+public:
+	virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
+	
+private:
+	Settings* settings;
+};
+
+namespace boost
+{
+	namespace serialization
+	{
+		template<class Archive>
+		inline void save_construct_data(Archive& ar, const TextFormulaNode* node, const BOOST_PFTO unsigned int file_version)
+		{
+			ar << node->parent;
+		}
+
+		template<class Archive>
+		inline void load_construct_data(Archive& ar, TextFormulaNode* node, const BOOST_PFTO unsigned int file_version)
+		{
+			FormulaNode* parent;
+			ar >> parent;
+			::new (node)TextFormulaNode(parent);
+		}
+	}
+}
+
+#endif
