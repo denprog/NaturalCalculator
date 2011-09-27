@@ -71,6 +71,7 @@ private:
 		boost::serialization::void_cast_register<GroupFormulaNode, FormulaNode>(static_cast<GroupFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
 		boost::serialization::void_cast_register<EmptyFormulaNode, FormulaNode>(static_cast<EmptyFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
 		boost::serialization::void_cast_register<TextFormulaNode, FormulaNode>(static_cast<TextFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
+		boost::serialization::void_cast_register<DivisionFormulaNode, FormulaNode>(static_cast<DivisionFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
 		
 		ar.template register_type<FormulaNode>();
 		ar.template register_type<DocumentFormulaNode>();
@@ -79,6 +80,7 @@ private:
 		ar.template register_type<GroupFormulaNode>();
 		ar.template register_type<EmptyFormulaNode>();
 		ar.template register_type<TextFormulaNode>();
+		ar.template register_type<DivisionFormulaNode>();
 	}
 
 public:

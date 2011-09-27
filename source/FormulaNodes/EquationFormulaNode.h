@@ -1,9 +1,9 @@
 #ifndef EQUATIONFORMULANODE_H
 #define EQUATIONFORMULANODE_H
 
-#include "ShapeFormulaNode.h"
+#include "CompoundFormulaNode.h"
 
-class EquationFormulaNode : public ShapeFormulaNode
+class EquationFormulaNode : public CompoundFormulaNode
 {
 public:
 	EquationFormulaNode(FormulaNode* _parent, FormulaWnd* wnd);
@@ -14,6 +14,9 @@ public:
 	virtual void UpdateBoundingRect();
 
 	virtual FormulaNode* Clone();
+
+private:
+	ShapeFormulaNode* shape;
 };
 
 #endif

@@ -48,8 +48,6 @@ void SquareRootFormulaNode::Remake()
 		shape->UpdateBoundingRect();
 		boundingRect = shape->boundingRect;
 	}
-	
-	//UpdateBoundingRect();
 }
 
 void SquareRootFormulaNode::UpdateBoundingRect()

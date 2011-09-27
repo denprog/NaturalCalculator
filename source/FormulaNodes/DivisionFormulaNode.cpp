@@ -2,6 +2,10 @@
 #include "../FormulaNodes/ShapeFormulaNode.h"
 #include "../Main/FormulaWnd.h"
 
+DivisionFormulaNode::DivisionFormulaNode()
+{
+}
+
 DivisionFormulaNode::DivisionFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : CompoundFormulaNode(_parent, wnd)
 {
 	shape = AddShapeNode();

@@ -18,6 +18,7 @@ FormulaNode::FormulaNode()
 	baseline = 0;
 	command = NULL;
 	settings = NULL;
+	childNodes = NULL;
 	//childNodes = new FormulaNodesCollection();
 }
 

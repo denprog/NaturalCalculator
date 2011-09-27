@@ -1,6 +1,10 @@
 #include "CompoundFormulaNode.h"
 #include "FormulaNodesCollection.h"
 
+CompoundFormulaNode::CompoundFormulaNode()
+{
+}
+
 CompoundFormulaNode::CompoundFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : GroupFormulaNode(_parent, wnd)
 {
 #ifdef _DEBUG
