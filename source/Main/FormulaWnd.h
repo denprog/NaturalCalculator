@@ -4,16 +4,12 @@
 #include <QGraphicsView>
 #include <vector>
 #include <fstream>
-//#include "../FormulaNodes/RootFormulaNode.h"
 #include "../FormulaNodes/DocumentFormulaNode.h"
-//#include "../FormulaNodes/FormulaNode.h"
+#include "../FormulaNodes/EquationFormulaNode.h"
 #include "../FormulaNodes/FormulaNodesCollection.h"
-//#include "../FormulaNodes/DocumentFormulaNode.h"
 #include "../Editor/Caret.h"
 #include "../Editor/CommandManager.h"
 #include "Settings.h"
-
-//class DocumentFormulaNode;
 
 /**
  * @class	FormulaWnd
@@ -26,21 +22,6 @@ class FormulaWnd : public QGraphicsView
 public:
 	FormulaWnd(QWidget *parent = 0);
 	~FormulaWnd();
-
-//private:
-//	friend class boost::serialization::access;
-//
-//	template<class Archive>
-//	void save(Archive& ar, const unsigned int version) const
-//	{
-//	}
-//
-//	template<class Archive>
-//	void load(Archive& ar, const unsigned int version)
-//	{
-//	}
-//
-//	BOOST_SERIALIZATION_SPLIT_MEMBER()
 
 public:
 	friend class Caret;
@@ -72,6 +53,7 @@ private:
 		boost::serialization::void_cast_register<EmptyFormulaNode, FormulaNode>(static_cast<EmptyFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
 		boost::serialization::void_cast_register<TextFormulaNode, FormulaNode>(static_cast<TextFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
 		boost::serialization::void_cast_register<DivisionFormulaNode, FormulaNode>(static_cast<DivisionFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
+		boost::serialization::void_cast_register<EquationFormulaNode, FormulaNode>(static_cast<EquationFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
 		
 		ar.template register_type<FormulaNode>();
 		ar.template register_type<DocumentFormulaNode>();
@@ -81,6 +63,7 @@ private:
 		ar.template register_type<EmptyFormulaNode>();
 		ar.template register_type<TextFormulaNode>();
 		ar.template register_type<DivisionFormulaNode>();
+		ar.template register_type<EquationFormulaNode>();
 	}
 
 public:

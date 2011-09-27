@@ -44,7 +44,6 @@ private:
 	ShapeFormulaNode* shape;
 };
 
-
 namespace boost
 {
 	namespace serialization

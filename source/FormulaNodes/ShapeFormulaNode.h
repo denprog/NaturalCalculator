@@ -53,7 +53,9 @@ namespace boost
 		template<class Archive>
 		inline void load_construct_data(Archive& ar, ShapeFormulaNode* node, const BOOST_PFTO unsigned int file_version)
 		{
-			ar >> node->parent;
+			FormulaNode* parent;
+			ar >> parent;
+			::new (node)ShapeFormulaNode(parent, parent->wnd);
 		}
 	}
 }

@@ -3,6 +3,10 @@
 #include "ShapeFormulaNode.h"
 #include <QFontMetrics>
 
+EquationFormulaNode::EquationFormulaNode()
+{
+}
+
 EquationFormulaNode::EquationFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : CompoundFormulaNode(_parent, wnd)
 {
 	shape = AddShapeNode();
@@ -42,7 +46,6 @@ void EquationFormulaNode::Remake()
 		shape->AddFillRect(0, h * 0.55, w * 0.8, h * 0.1, QColor("black"));
 		shape->Move(cx + w * 0.1, cy - h / 2);
 
-		//shape->UpdateBoundingRect();
 		shape->boundingRect.setCoords(0, 0, w, h);
 		UpdateBoundingRect();
 	}
@@ -57,18 +60,6 @@ void EquationFormulaNode::UpdateBoundingRect()
 	QRect r = m.boundingRect("=");
 	shape->boundingRect.setWidth(r.width());
 	shape->boundingRect.setHeight(r.height());
-	
-	//if (childNodes->Count() > 0)
-	//{
-	//	FormulaNode* left = (*this)[0];
-	//	
-	//	QFont font = settings->GetTextFormulaNodeFont(NORMAL_LEVEL);
-	//	QFontMetrics m(font);
-	//	QRect r = m.boundingRect("=");
-	//	
-	//	boundingRect.setCoords(0, 0, left->boundingRect.width() + r.width(), r.height());
-	//	boundingRect.moveTo(item->pos().x(), item->pos().y());
-	//}
 }
 
 FormulaNode* EquationFormulaNode::Clone()
