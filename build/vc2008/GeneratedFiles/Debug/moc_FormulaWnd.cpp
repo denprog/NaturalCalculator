@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'FormulaWnd.h'
 **
-** Created: Tue 27. Sep 11:53:47 2011
+** Created: Wed 28. Sep 14:07:48 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.3)
 **
 ** WARNING! All changes made in this file will be lost!

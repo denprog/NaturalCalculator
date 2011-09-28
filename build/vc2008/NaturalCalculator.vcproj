@@ -551,6 +551,56 @@
 				</File>
 			</Filter>
 		</Filter>
+		<Filter
+			Name="Parser Thread"
+			>
+			<Filter
+				Name="Source Files"
+				>
+				<File
+					RelativePath="..\..\source\ParserThread\ParserExpression.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\ParserThread\ParserThread.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Header Files"
+				>
+				<File
+					RelativePath="..\..\source\ParserThread\ParserExpression.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\ParserThread\ParserThread.h"
+					>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description=""
+							CommandLine=""
+							AdditionalDependencies=""
+							Outputs=""
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description=""
+							CommandLine=""
+							AdditionalDependencies=""
+							Outputs=""
+						/>
+					</FileConfiguration>
+				</File>
+			</Filter>
+		</Filter>
 	</Files>
 	<Globals>
 		<Global

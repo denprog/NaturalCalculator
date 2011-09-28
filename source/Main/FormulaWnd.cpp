@@ -12,6 +12,8 @@
 #include "../FormulaNodes/MinusFormulaNode.h"
 #include "../FormulaNodes/DivisionFormulaNode.h"
 
+int FormulaWnd::updateEventId;
+
 FormulaWnd::FormulaWnd(QWidget *parent)	: QGraphicsView(parent), commandManager(this)
 {
 	scene = new QGraphicsScene();
@@ -30,6 +32,10 @@ FormulaWnd::FormulaWnd(QWidget *parent)	: QGraphicsView(parent), commandManager(
 
 	caret->SetToNodeBegin(documentNode);
 	caret->Render();
+
+	updateEventId = QEvent::registerEventType(1);
+	
+	parserThread = new ParserThread(this);
 }
 
 FormulaWnd::~FormulaWnd()
@@ -37,6 +43,18 @@ FormulaWnd::~FormulaWnd()
 	delete caret;
 	delete documentNode;
 	delete scene;
+	delete parserThread;
+}
+
+bool FormulaWnd::event(QEvent* e)
+{
+	if (e->type() == (QEvent::Type)updateEventId)
+	{
+		UpdateView();
+		return true;
+	}
+	
+	return QGraphicsView::event(e);
 }
 
 void FormulaWnd::resizeEvent(QResizeEvent* event)

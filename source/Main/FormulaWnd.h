@@ -10,6 +10,7 @@
 #include "../Editor/Caret.h"
 #include "../Editor/CommandManager.h"
 #include "Settings.h"
+#include "../ParserThread/ParserThread.h"
 
 /**
  * @class	FormulaWnd
@@ -30,6 +31,7 @@ public:
 	friend class RootFormulaNode;
 	
 protected:
+	virtual bool event(QEvent* e);
 	virtual void resizeEvent(QResizeEvent* event);
 	virtual void keyPressEvent(QKeyEvent* event);
 
@@ -69,11 +71,13 @@ private:
 public:
 	DocumentFormulaNode* documentNode;
 	Caret* caret;
+	static int updateEventId;
 	
 private:
 	QGraphicsScene* scene;
 	CommandManager commandManager;
 	Settings* settings;
+	ParserThread* parserThread;
 };
 
 #endif // FORMULAWND_H
