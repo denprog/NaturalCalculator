@@ -15,6 +15,8 @@ public:
 	virtual void UpdateBoundingRect();
 
 	virtual FormulaNode* Clone();
+
+	virtual void Parse(ParserExpression& expr);
 	
 	virtual void RenderCaret(const int pos, const int anchor);
 

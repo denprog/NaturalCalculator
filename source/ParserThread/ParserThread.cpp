@@ -43,6 +43,7 @@ bool ParserThread::GetSolvedExpression(HierarchyPos& pos, ParserExpression& expr
 	if (it != solvedExpressions.end())
 	{
 		expr = *it;
+		solvedExpressions.erase(it);
 		return true;
 	}
 	

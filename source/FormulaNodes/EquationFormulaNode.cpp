@@ -54,7 +54,8 @@ void EquationFormulaNode::Remake()
 		}
 		
 		int cx = left->boundingRect.width();
-		int cy = left->baseline;
+		int cy = max(left->baseline, right->baseline);
+		baseline = cy;
 		
 		QFont font = settings->GetTextFormulaNodeFont(NORMAL_LEVEL);
 		QFontMetrics m(font);
@@ -62,15 +63,15 @@ void EquationFormulaNode::Remake()
 
 		int w = r.width();
 		int h = r.height();
-		baseline = left->baseline;
 
-		left->Move(0, 0);
+		left->Move(0, baseline - left->baseline);
 		shape->AddFillRect(0, h * 0.3, w * 0.8, h * 0.1, QColor("black"));
 		shape->AddFillRect(0, h * 0.55, w * 0.8, h * 0.1, QColor("black"));
 		shape->Move(cx + w * 0.1, cy - h / 2);
-		right->Move(cx + w, 0);
+		right->Move(cx + w, baseline - right->baseline);
 
 		shape->boundingRect.setCoords(0, 0, w, h);
+
 		UpdateBoundingRect();
 	}
 }

@@ -71,6 +71,15 @@ void DivisionFormulaNode::UpdateBoundingRect()
 	shape->boundingRect.setHeight(1);
 }
 
+void DivisionFormulaNode::Parse(ParserExpression& expr)
+{
+	expr.Add("(", this);
+	(*this)[0]->Parse(expr);
+	expr.Add(")/(", this);
+	(*this)[2]->Parse(expr);
+	expr.Add(")", this);
+}
+
 FormulaNode* DivisionFormulaNode::Clone()
 {
 	return new DivisionFormulaNode(parent, wnd);

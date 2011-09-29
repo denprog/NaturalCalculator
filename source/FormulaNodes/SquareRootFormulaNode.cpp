@@ -50,6 +50,13 @@ void SquareRootFormulaNode::Remake()
 	}
 }
 
+void SquareRootFormulaNode::Parse(ParserExpression& expr)
+{
+	expr.Add("sqrt(", this);
+	(*this)[1]->Parse(expr);
+	expr.Add(")", this);
+}
+
 void SquareRootFormulaNode::UpdateBoundingRect()
 {
 	boundingRect = shape->boundingRect;

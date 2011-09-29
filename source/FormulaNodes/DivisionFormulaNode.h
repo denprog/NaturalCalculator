@@ -33,6 +33,8 @@ public:
 	virtual void Remake();
 	virtual void UpdateBoundingRect();
 
+	virtual void Parse(ParserExpression& expr);
+
 	virtual FormulaNode* Clone();
 
 	virtual SharedCaretState GetNextPosition(SharedCaretState& relativeState = SharedCaretState());

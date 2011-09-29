@@ -1,5 +1,6 @@
 #include "ResultFormulaNode.h"
 #include "TextFormulaNode.h"
+#include "MinusFormulaNode.h"
 #include "FormulaNodesCollection.h"
 #include "../Main/FormulaWnd.h"
 
@@ -40,6 +41,8 @@ void ResultFormulaNode::Remake()
 				string mantissa, exponent;
 				res.ToString(3, expr.precision, mantissaSign, mantissa, exponentSign, exponent);
 
+				if (mantissaSign)
+					AddChild(new MinusFormulaNode(this, wnd));
 				TextFormulaNode* t = new TextFormulaNode(this);
 				AddChild(t);
 				t->SetText(mantissa.c_str());
@@ -63,4 +66,6 @@ void ResultFormulaNode::Remake()
 		}
 		((TextFormulaNode*)(*this)[0])->SetText("~");
 	}
+	
+	GroupFormulaNode::Remake();
 }
