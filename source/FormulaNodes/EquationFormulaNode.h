@@ -16,7 +16,6 @@ private:
 	template<class Archive>
 	void save(Archive& ar, const unsigned int version) const
 	{
-		//ar << boost::serialization::base_object<CompoundFormulaNode>(*this);
 		FormulaNode* left = (*childNodes)[0];
 		ar << left;
 	}
@@ -24,7 +23,6 @@ private:
 	template<class Archive>
 	void load(Archive& ar, const unsigned int version)
 	{
-		//ar >> boost::serialization::base_object<CompoundFormulaNode>(*this);
 		FormulaNode* left;
 		ar >> left;
 		InsertChild(left, 0);

@@ -35,6 +35,7 @@ void DivisionFormulaNode::InsertChild(FormulaNode* node, int pos)
 		CompoundFormulaNode::InsertChild(node, 0);
 		break;
 	case 1:
+	case 2:
 		if (childNodes->Count() == 2)
 			CompoundFormulaNode::InsertChild(node, 2);
 		break;
