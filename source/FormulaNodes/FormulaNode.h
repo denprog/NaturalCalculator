@@ -10,10 +10,11 @@
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/serialization/split_member.hpp>
-//#include "FormulaNodesCollection.h"
 #include "../Editor/Caret.h"
+#include "../Editor/CaretState.h"
 #include "../Editor/Command.h"
 #include "../Main/Settings.h"
+#include "../ParserThread/ParserExpression.h"
 
 using namespace std;
 using boost::any_cast;
@@ -84,8 +85,10 @@ public:
 	virtual void Move(int x, int y);
 	virtual void SetSize();
 
-	virtual void GetHierarchyPos(vector<int>& positions);
+	virtual void GetHierarchyPos(HierarchyPos& positions);
 	virtual void Render();
+	
+	virtual void Parse(ParserExpression& expr);
 	
 	int GetChildPos(FormulaNode* node);
 	bool IsChild(const FormulaNode* node);

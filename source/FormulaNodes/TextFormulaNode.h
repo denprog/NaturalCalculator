@@ -52,6 +52,8 @@ public:
 
 	virtual void RenderCaret(const int pos, const int anchor);
 
+	virtual void Parse(ParserExpression& expr);
+
 	//command functions
 	
 	virtual bool DoInsertNode(NodeEvent& nodeEvent);

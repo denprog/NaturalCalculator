@@ -142,7 +142,7 @@ void FormulaNode::SetSize()
 {
 }
 
-void FormulaNode::GetHierarchyPos(vector<int>& positions)
+void FormulaNode::GetHierarchyPos(HierarchyPos& positions)
 {
 	FormulaNode* n = this;
 	while (n->parent)
@@ -155,6 +155,15 @@ void FormulaNode::GetHierarchyPos(vector<int>& positions)
 void FormulaNode::Render()
 {
 	childNodes->Render();
+}
+
+void FormulaNode::Parse(ParserExpression& expr)
+{
+	for (int i = 0; i < childNodes->Count(); ++i)
+	{
+		FormulaNode* n = (*this)[i];
+		n->Parse(expr);
+	}
 }
 
 int FormulaNode::GetChildPos(FormulaNode* node)

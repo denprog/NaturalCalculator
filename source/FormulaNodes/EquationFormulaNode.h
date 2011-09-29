@@ -40,6 +40,7 @@ public:
 
 private:
 	ShapeFormulaNode* shape;
+	string lastExpression;
 };
 
 namespace boost

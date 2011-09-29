@@ -10,6 +10,8 @@ class FormulaNode;
 class FormulaWnd;
 class CurrentNode;
 
+typedef vector<int> HierarchyPos;
+
 class CaretState
 {
 public:

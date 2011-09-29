@@ -72,12 +72,12 @@ public:
 	DocumentFormulaNode* documentNode;
 	Caret* caret;
 	static int updateEventId;
+	ParserThread* parserThread;
 	
 private:
 	QGraphicsScene* scene;
 	CommandManager commandManager;
 	Settings* settings;
-	ParserThread* parserThread;
 };
 
 #endif // FORMULAWND_H
