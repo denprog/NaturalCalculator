@@ -2,6 +2,7 @@
 #define EQUATIONFORMULANODE_H
 
 #include "CompoundFormulaNode.h"
+#include "ResultFormulaNode.h"
 
 class EquationFormulaNode : public CompoundFormulaNode
 {
@@ -38,6 +39,7 @@ public:
 
 private:
 	ShapeFormulaNode* shape;
+	ResultFormulaNode* resNode;
 	string lastExpression;
 };
 

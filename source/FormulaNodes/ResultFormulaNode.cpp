@@ -4,9 +4,8 @@
 #include "FormulaNodesCollection.h"
 #include "../Main/FormulaWnd.h"
 
-ResultFormulaNode::ResultFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, FormulaNode* expressionNode) : GroupFormulaNode(_parent, wnd)
+ResultFormulaNode::ResultFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : GroupFormulaNode(_parent, wnd)
 {
-	expressionNode->GetHierarchyPos(expressionPos);
 }
 
 ResultFormulaNode::~ResultFormulaNode()
@@ -17,22 +16,13 @@ void ResultFormulaNode::Remake()
 {
 	ParserExpression expr;
 	
-	if (wnd->parserThread->GetSolvedExpression(expressionPos, expr))
+	if (wnd->parserThread->GetSolvedExpression(parserExpression.pos, expr))
 	{
 		//make a result node
 		if (expr.exception.id == None)
 		{
 			childNodes->Clear();
 			
-			try
-			{
-				Integer res = boost::get<BigNumbersParser::Integer>(expr.result);
-				res.ToString();
-			}
-			catch (boost::bad_get)
-			{
-			}
-
 			try
 			{
 				Real res = boost::get<BigNumbersParser::Real>(expr.result);
@@ -46,6 +36,15 @@ void ResultFormulaNode::Remake()
 				TextFormulaNode* t = new TextFormulaNode(this);
 				AddChild(t);
 				t->SetText(mantissa.c_str());
+			}
+			catch (boost::bad_get)
+			{
+			}
+			
+			try
+			{
+				Integer res = boost::get<BigNumbersParser::Integer>(expr.result);
+				res.ToString();
 			}
 			catch (boost::bad_get)
 			{
@@ -68,4 +67,15 @@ void ResultFormulaNode::Remake()
 	}
 	
 	GroupFormulaNode::Remake();
+}
+
+void ResultFormulaNode::SetExpression(ParserExpression& expr)
+{
+	if (expr.expression != parserExpression.expression)
+	{
+		parserExpression = expr;
+		//solve the expression
+		wnd->parserThread->AddExpression(parserExpression);
+		Remake();
+	}
 }

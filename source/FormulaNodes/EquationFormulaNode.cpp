@@ -1,7 +1,6 @@
 #include "EquationFormulaNode.h"
 #include "FormulaNodesCollection.h"
 #include "ShapeFormulaNode.h"
-#include "ResultFormulaNode.h"
 #include <QFontMetrics>
 #include "../Main/FormulaWnd.h"
 
@@ -12,6 +11,8 @@ EquationFormulaNode::EquationFormulaNode()
 EquationFormulaNode::EquationFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : CompoundFormulaNode(_parent, wnd)
 {
 	shape = AddShapeNode();
+	resNode = new ResultFormulaNode(this, wnd);
+	AddChild(resNode);
 
 #ifdef _DEBUG
 	name = "EquationFormulaNode";
@@ -31,27 +32,28 @@ void EquationFormulaNode::Remake()
 	if (childNodes->Count() > 0)
 	{
 		FormulaNode* left = (*this)[0];
-
-		//get expression to solve
+		
+		//get an expression to solve
 		ParserExpression expr(this, 10);
 		left->Parse(expr);
+		resNode->SetExpression(expr);
 
-		if (childNodes->Count() == 2)
-		{
-			//create a result node
-			ResultFormulaNode* resNode = new ResultFormulaNode(this, wnd, this);
-			AddChild(resNode);
-			resNode->Remake();
-		}
+		//if (childNodes->Count() == 2)
+		//{
+		//	//create a result node
+		//	ResultFormulaNode* resNode = new ResultFormulaNode(this, wnd, this);
+		//	AddChild(resNode);
+		//	resNode->Remake();
+		//}
 		
 		FormulaNode* right = (*this)[2];
 		
-		if (expr.expression != lastExpression)
-		{
-			//solve the expression
-			wnd->parserThread->AddExpression(expr);
-			lastExpression = expr.expression;
-		}
+		//if (expr.expression != lastExpression)
+		//{
+		//	//solve the expression
+		//	wnd->parserThread->AddExpression(expr);
+		//	lastExpression = expr.expression;
+		//}
 		
 		int cx = left->boundingRect.width();
 		int cy = max(left->baseline, right->baseline);

@@ -7,17 +7,18 @@
 class ResultFormulaNode : public GroupFormulaNode
 {
 public:
-	ResultFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, FormulaNode* expressionNode);
+	ResultFormulaNode(FormulaNode* _parent, FormulaWnd* wnd);
 	virtual ~ResultFormulaNode();
 
 public:
 	virtual void Remake();
 	
+public:
+	void SetExpression(ParserExpression& expr);
+	
 private:
-	//int precision;
 	int exp;
-	//ParserExpression parserExpression;
-	HierarchyPos expressionPos;
+	ParserExpression parserExpression;
 };
 
 #endif

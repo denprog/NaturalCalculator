@@ -50,7 +50,7 @@ bool ParserThread::GetSolvedExpression(HierarchyPos& pos, ParserExpression& expr
 	return false;
 }
 
-ParserThread::SolvingThread::SolvingThread(ParserThread* _parserThread) //: integerParser(10), realParser(10), rationalParser(10)
+ParserThread::SolvingThread::SolvingThread(ParserThread* _parserThread)
 {
 	parserThread = _parserThread;
 }
@@ -61,22 +61,33 @@ ParserThread::SolvingThread::~SolvingThread()
 
 void ParserThread::SolvingThread::operator()()
 {
+	using BigNumbersParser::Parser;
+	
 	boost::mutex mut;
 
-	parsers.push_back((BigNumbersParser::Parser<Real>*)new BigNumbersParser::Parser<Real>(10));
-	parsers.push_back((BigNumbersParser::Parser<Integer>*)new BigNumbersParser::Parser<Integer>(10));
-	parsers.push_back((BigNumbersParser::Parser<Rational>*)new BigNumbersParser::Parser<Rational>(10));
+	parsers.push_back(new Parser<Real>(10));
+	parsers.push_back(new Parser<Integer>(10));
+	parsers.push_back(new Parser<Rational>(10));
 	
 	while (!parserThread->exit)
 	{
 		boost::unique_lock<boost::mutex> lock(mut);
-		parserThread->expressionsReady.wait(lock);
 
 		//get the expressions
 		parserThread->expressionsMutex.lock();
 		expressions = parserThread->expressionsToSolve;
 		parserThread->expressionsToSolve.clear();
 		parserThread->expressionsMutex.unlock();
+
+		while (expressions.size() == 0 && !parserThread->exit)
+		{
+			parserThread->expressionsReady.wait(lock);
+
+			parserThread->expressionsMutex.lock();
+			expressions = parserThread->expressionsToSolve;
+			parserThread->expressionsToSolve.clear();
+			parserThread->expressionsMutex.unlock();
+		}
 		
 		//solve the expressions
 		for (int i = 0, j; i < (int)expressions.size(); ++i)
@@ -91,18 +102,7 @@ void ParserThread::SolvingThread::operator()()
 				{
 					try
 					{
-						BigNumbersParser::Parser<Integer>* p = boost::get<BigNumbersParser::Parser<Integer>*>(parsers[j]);
-						Integer res = p->Parse(expr.expression, expr.precision);
-						expr.result = res;
-						break;
-					}
-					catch (boost::bad_get)
-					{
-					}
-					
-					try
-					{
-						BigNumbersParser::Parser<Real>* p = boost::get<BigNumbersParser::Parser<Real>*>(parsers[j]);
+						Parser<Real>* p = boost::get<Parser<Real>*>(parsers[j]);
 						Real res = p->Parse(expr.expression, expr.precision);
 						expr.result = res;
 						break;
@@ -113,7 +113,18 @@ void ParserThread::SolvingThread::operator()()
 
 					try
 					{
-						BigNumbersParser::Parser<Rational>* p = boost::get<BigNumbersParser::Parser<Rational>*>(parsers[j]);
+						Parser<Integer>* p = boost::get<Parser<Integer>*>(parsers[j]);
+						Integer res = p->Parse(expr.expression, expr.precision);
+						expr.result = res;
+						break;
+					}
+					catch (boost::bad_get)
+					{
+					}
+					
+					try
+					{
+						Parser<Rational>* p = boost::get<Parser<Rational>*>(parsers[j]);
 						Rational res = p->Parse(expr.expression, expr.precision);
 						expr.result = res;
 						break;
@@ -134,11 +145,14 @@ void ParserThread::SolvingThread::operator()()
 
 			//push the solved result
 			parserThread->expressionsMutex.lock();
-			parserThread->solvedExpressions.push_back(expr);
+			vector<ParserExpression>::iterator it = find(parserThread->solvedExpressions.begin(), parserThread->solvedExpressions.end(), expr.pos);
+			if (it != parserThread->solvedExpressions.end())
+				*it = expr;
+			else
+				parserThread->solvedExpressions.push_back(expr);
 			parserThread->expressionsMutex.unlock();
 			
 			//say what the expression was solved
-			//QCoreApplication::postEvent(parserThread->wnd, &parserThread->updateEvent);
 			QCoreApplication::postEvent(parserThread->wnd, new QEvent((QEvent::Type)FormulaWnd::updateEventId));
 		}
 	}
@@ -147,7 +161,7 @@ void ParserThread::SolvingThread::operator()()
 	{
 		try
 		{
-			BigNumbersParser::Parser<Integer>* p = boost::get<BigNumbersParser::Parser<Integer>*>(parsers[i]);
+			Parser<Integer>* p = boost::get<Parser<Integer>*>(parsers[i]);
 			delete p;
 			continue;
 		}
@@ -157,7 +171,7 @@ void ParserThread::SolvingThread::operator()()
 
 		try
 		{
-			BigNumbersParser::Parser<Real>* p = boost::get<BigNumbersParser::Parser<Real>*>(parsers[i]);
+			Parser<Real>* p = boost::get<Parser<Real>*>(parsers[i]);
 			delete p;
 			continue;
 		}
@@ -167,7 +181,7 @@ void ParserThread::SolvingThread::operator()()
 
 		try
 		{
-			BigNumbersParser::Parser<Rational>* p = boost::get<BigNumbersParser::Parser<Rational>*>(parsers[i]);
+			Parser<Rational>* p = boost::get<Parser<Rational>*>(parsers[i]);
 			delete p;
 			continue;
 		}
