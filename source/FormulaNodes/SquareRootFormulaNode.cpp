@@ -50,7 +50,7 @@ void SquareRootFormulaNode::Remake()
 	}
 }
 
-void SquareRootFormulaNode::Parse(ParserExpression& expr)
+void SquareRootFormulaNode::Parse(ParserString& expr)
 {
 	expr.Add("sqrt(", this);
 	(*this)[1]->Parse(expr);

@@ -11,8 +11,7 @@ EquationFormulaNode::EquationFormulaNode()
 EquationFormulaNode::EquationFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : CompoundFormulaNode(_parent, wnd)
 {
 	shape = AddShapeNode();
-	resNode = new ResultFormulaNode(this, wnd);
-	AddChild(resNode);
+	resNode = NULL;
 
 #ifdef _DEBUG
 	name = "EquationFormulaNode";
@@ -31,32 +30,36 @@ void EquationFormulaNode::Remake()
 	
 	if (childNodes->Count() > 0)
 	{
-		FormulaNode* left = (*this)[0];
-		
 		//get an expression to solve
-		ParserExpression expr(this, 10);
+		//ParserExpression expr(this, wnd->settings->value("real/precision", 8).toInt());
+		//left->Parse(expr);
+		//resNode->SetExpression(expr);
+
+		if (!resNode)
+		{
+			resNode = new ResultFormulaNode(this, wnd);
+			AddChild(resNode);
+			
+			AutoParserExpression expr1(this, wnd->settings->value("auto/precision", 8).toInt(), wnd->settings->value("auto/exp", 3).toInt());
+			resNode->AddResultNode(ParserExpressionVariant(expr1));
+			
+			RealParserExpression expr2(this, wnd->settings->value("auto/precision", 8).toInt(), wnd->settings->value("auto/exp", 3).toInt());
+			resNode->AddResultNode(ParserExpressionVariant(expr2));
+
+			IntegerParserExpression expr3(this, DECIMAL_NOTATION);
+			resNode->AddResultNode(ParserExpressionVariant(expr3));
+
+			RationalParserExpression expr4(this, IMPROPER_FRACTION);
+			resNode->AddResultNode(ParserExpressionVariant(expr4));
+		}
+		
+		FormulaNode* left = (*this)[0];
+		ParserString expr;
 		left->Parse(expr);
 		resNode->SetExpression(expr);
 
-		//if (childNodes->Count() == 2)
-		//{
-		//	//create a result node
-		//	ResultFormulaNode* resNode = new ResultFormulaNode(this, wnd, this);
-		//	AddChild(resNode);
-		//	resNode->Remake();
-		//}
-		
-		FormulaNode* right = (*this)[2];
-		
-		//if (expr.expression != lastExpression)
-		//{
-		//	//solve the expression
-		//	wnd->parserThread->AddExpression(expr);
-		//	lastExpression = expr.expression;
-		//}
-		
 		int cx = left->boundingRect.width();
-		int cy = max(left->baseline, right->baseline);
+		int cy = max(left->baseline, resNode->baseline);
 		baseline = cy;
 		
 		QFont font = settings->GetTextFormulaNodeFont(NORMAL_LEVEL);
@@ -70,7 +73,7 @@ void EquationFormulaNode::Remake()
 		shape->AddFillRect(0, h * 0.3, w * 0.8, h * 0.1, QColor("black"));
 		shape->AddFillRect(0, h * 0.55, w * 0.8, h * 0.1, QColor("black"));
 		shape->Move(cx + w * 0.1, cy - h / 2);
-		right->Move(cx + w, baseline - right->baseline);
+		resNode->Move(cx + w, baseline - resNode->baseline);
 
 		shape->boundingRect.setCoords(0, 0, w, h);
 

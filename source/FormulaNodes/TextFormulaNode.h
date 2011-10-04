@@ -52,7 +52,7 @@ public:
 
 	virtual void RenderCaret(const int pos, const int anchor);
 
-	virtual void Parse(ParserExpression& expr);
+	virtual void Parse(ParserString& expr);
 
 	//command functions
 	

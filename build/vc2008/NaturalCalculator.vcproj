@@ -56,7 +56,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="qtmain.lib QtCore4.lib QtGui4.lib"
+				AdditionalDependencies="qtmain.lib QtCore4.lib QtGui4.lib $(PARSER)lib\Release\BigNumbersParser.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				AdditionalLibraryDirectories="$(QTDIR)\lib"
 				GenerateDebugInformation="false"
@@ -126,7 +126,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="qtmaind.lib QtCored4.lib QtGuid4.lib BigNumbersParser.lib"
+				AdditionalDependencies="qtmaind.lib QtCored4.lib QtGuid4.lib $(PARSER)lib\Debug\BigNumbersParser.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				AdditionalLibraryDirectories="$(QTDIR)\lib"
 				IgnoreAllDefaultLibraries="false"
@@ -153,6 +153,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy $(MPFR)Debug\mpfr.dll $(OutDir)\mpfr.dll&#x0D;&#x0A;copy $(MPIR)dll\Win32\Debug\mpir.dll $(OutDir)\mpir.dll"
 			/>
 		</Configuration>
 	</Configurations>

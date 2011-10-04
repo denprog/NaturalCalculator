@@ -39,7 +39,7 @@ void MinusFormulaNode::UpdateBoundingRect()
 	boundingRect.moveTo(item->pos().x(), item->pos().y());
 }
 
-void MinusFormulaNode::Parse(ParserExpression& expr)
+void MinusFormulaNode::Parse(ParserString& expr)
 {
 	expr.Add("-", this);
 }

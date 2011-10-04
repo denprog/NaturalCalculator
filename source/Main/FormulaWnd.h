@@ -29,6 +29,8 @@ public:
 	friend class FormulaNode;
 	friend class DocumentFormulaNode;
 	friend class RootFormulaNode;
+	friend class EquationFormulaNode;
+	friend class ResultFormulaNode;
 	
 protected:
 	virtual bool event(QEvent* e);

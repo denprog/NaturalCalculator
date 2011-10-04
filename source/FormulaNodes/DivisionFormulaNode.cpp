@@ -72,7 +72,7 @@ void DivisionFormulaNode::UpdateBoundingRect()
 	shape->boundingRect.setHeight(1);
 }
 
-void DivisionFormulaNode::Parse(ParserExpression& expr)
+void DivisionFormulaNode::Parse(ParserString& expr)
 {
 	expr.Add("(", this);
 	(*this)[0]->Parse(expr);

@@ -16,30 +16,30 @@ ParserThread::~ParserThread()
 	delete thread;
 }
 
-void ParserThread::AddExpression(ParserExpression& expr)
+void ParserThread::AddExpression(ParserExpressionVariant& expr)
 {
 	boost::mutex::scoped_lock lock(expressionsMutex);
 	expressionsToSolve.push_back(expr);
 	expressionsReady.notify_one();
 }
 
-void ParserThread::RemoveExpression(HierarchyPos& id)
+void ParserThread::RemoveExpression(ParserExpressionVariant& expr)
 {
 	boost::mutex::scoped_lock lock(expressionsMutex);
 	//remove the element from the both vectors
-	vector<ParserExpression>::iterator it = find(expressionsToSolve.begin(), expressionsToSolve.end(), id);
+	ParserExpressionVariantIter it = find(expressionsToSolve.begin(), expressionsToSolve.end(), expr);
 	if (it != expressionsToSolve.end())
 		expressionsToSolve.erase(it);
-	it = find(solvedExpressions.begin(), solvedExpressions.end(), id);
+	it = find(solvedExpressions.begin(), solvedExpressions.end(), expr);
 	if (it != solvedExpressions.end())
 		solvedExpressions.erase(it);
 }
 
-bool ParserThread::GetSolvedExpression(HierarchyPos& pos, ParserExpression& expr)
+bool ParserThread::GetSolvedExpression(ParserExpressionVariant& expr)
 {
 	boost::mutex::scoped_lock lock(expressionsMutex);
 
-	vector<ParserExpression>::iterator it = find(solvedExpressions.begin(), solvedExpressions.end(), pos);
+	ParserExpressionVariantIter it = find(solvedExpressions.begin(), solvedExpressions.end(), expr);
 	if (it != solvedExpressions.end())
 	{
 		expr = *it;
@@ -65,10 +65,14 @@ void ParserThread::SolvingThread::operator()()
 	
 	boost::mutex mut;
 
-	parsers.push_back(new Parser<Real>(10));
-	parsers.push_back(new Parser<Integer>(10));
-	parsers.push_back(new Parser<Rational>(10));
+	realParser = new Parser<Real>(10);
+	integerParser = new Parser<Integer>(10);
+	rationalParser = new Parser<Rational>(10);
 	
+	parsers.push_back(realParser);
+	parsers.push_back(integerParser);
+	parsers.push_back(rationalParser);
+
 	while (!parserThread->exit)
 	{
 		boost::unique_lock<boost::mutex> lock(mut);
@@ -92,60 +96,14 @@ void ParserThread::SolvingThread::operator()()
 		//solve the expressions
 		for (int i = 0, j; i < (int)expressions.size(); ++i)
 		{
-			ParserExpression expr = expressions[i];
-			ParserException firstException;
+			ParserExpressionVariant& expr = expressions[i];
 			
-			//try solve the expression with the given parsers in their order
-			for (j = 0; j < (int)parsers.size(); ++j)
-			{
-				try
-				{
-					try
-					{
-						Parser<Real>* p = boost::get<Parser<Real>*>(parsers[j]);
-						Real res = p->Parse(expr.expression, expr.precision);
-						expr.result = res;
-						break;
-					}
-					catch (boost::bad_get)
-					{
-					}
-
-					try
-					{
-						Parser<Integer>* p = boost::get<Parser<Integer>*>(parsers[j]);
-						Integer res = p->Parse(expr.expression, expr.precision);
-						expr.result = res;
-						break;
-					}
-					catch (boost::bad_get)
-					{
-					}
-					
-					try
-					{
-						Parser<Rational>* p = boost::get<Parser<Rational>*>(parsers[j]);
-						Rational res = p->Parse(expr.expression, expr.precision);
-						expr.result = res;
-						break;
-					}
-					catch (boost::bad_get)
-					{
-					}
-				}
-				catch (ParserException e)
-				{
-					if (j == 0)
-						firstException = e;
-				}
-			}
-
-			if (j == (int)parsers.size())
-				expr.exception = firstException;
+			//solve the expression
+			boost::apply_visitor(*this, expr.var);
 
 			//push the solved result
 			parserThread->expressionsMutex.lock();
-			vector<ParserExpression>::iterator it = find(parserThread->solvedExpressions.begin(), parserThread->solvedExpressions.end(), expr.pos);
+			ParserExpressionVariantIter it = find(parserThread->solvedExpressions.begin(), parserThread->solvedExpressions.end(), expr);
 			if (it != parserThread->solvedExpressions.end())
 				*it = expr;
 			else
@@ -157,36 +115,96 @@ void ParserThread::SolvingThread::operator()()
 		}
 	}
 
-	for (int i = 0; i < (int)parsers.size(); ++i)
+	//clearing
+	delete realParser;
+	delete integerParser;
+	delete rationalParser;
+}
+
+void ParserThread::SolvingThread::operator()(RealParserExpression const& expr) const
+{
+	try
+	{
+		((RealParserExpression&)expr).result = realParser->Parse((string&)expr.expression.expression, expr.precision);
+	}
+	catch (ParserException e)
+	{
+		((RealParserExpression&)expr).exception = e;
+	}
+}
+
+void ParserThread::SolvingThread::operator()(IntegerParserExpression const& expr) const
+{
+	try
+	{
+		((IntegerParserExpression&)expr).result = integerParser->Parse((string&)expr.expression.expression);
+	}
+	catch (ParserException e)
+	{
+		((IntegerParserExpression&)expr).exception = e;
+	}
+}
+
+void ParserThread::SolvingThread::operator()(RationalParserExpression const& expr) const
+{
+	try
+	{
+		((RationalParserExpression&)expr).result = rationalParser->Parse((string&)expr.expression.expression);
+	}
+	catch (ParserException e)
+	{
+		((RationalParserExpression&)expr).exception = e;
+	}
+}
+
+void ParserThread::SolvingThread::operator()(AutoParserExpression const& expr) const
+{
+	int j;
+	AutoParserExpression& expression = (AutoParserExpression&)expr;
+	ParserException firstException;
+
+	//try to solve the expression with the given parsers in their order
+	for (j = 0; j < (int)parsers.size(); ++j)
 	{
 		try
 		{
-			Parser<Integer>* p = boost::get<Parser<Integer>*>(parsers[i]);
-			delete p;
-			continue;
-		}
-		catch (boost::bad_get)
-		{
-		}
+			try
+			{
+				Parser<Real>* p = boost::get<Parser<Real>*>(parsers[j]);
+				expression.result = p->Parse(expression.expression.expression, expression.precision);
+				break;
+			}
+			catch (boost::bad_get)
+			{
+			}
 
-		try
-		{
-			Parser<Real>* p = boost::get<Parser<Real>*>(parsers[i]);
-			delete p;
-			continue;
-		}
-		catch (boost::bad_get)
-		{
-		}
+			try
+			{
+				Parser<Integer>* p = boost::get<Parser<Integer>*>(parsers[j]);
+				expression.result = p->Parse(expression.expression.expression);
+				break;
+			}
+			catch (boost::bad_get)
+			{
+			}
 
-		try
-		{
-			Parser<Rational>* p = boost::get<Parser<Rational>*>(parsers[i]);
-			delete p;
-			continue;
+			try
+			{
+				Parser<Rational>* p = boost::get<Parser<Rational>*>(parsers[j]);
+				expression.result = p->Parse(expression.expression.expression);
+				break;
+			}
+			catch (boost::bad_get)
+			{
+			}
 		}
-		catch (boost::bad_get)
+		catch (ParserException e)
 		{
+			if (j == 0)
+				firstException = e;
 		}
 	}
+
+	if (j == (int)parsers.size())
+		expression.exception = firstException;
 }

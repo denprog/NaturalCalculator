@@ -29,7 +29,7 @@ void MultiplyFormulaNode::Remake()
 	boundingRect.setCoords(0, 0, w, w);
 }
 
-void MultiplyFormulaNode::Parse(ParserExpression& expr)
+void MultiplyFormulaNode::Parse(ParserString& expr)
 {
 	expr.Add("*", this);
 }

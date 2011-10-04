@@ -60,6 +60,7 @@ FormulaNode::~FormulaNode()
 void FormulaNode::AddChild(FormulaNode* node)
 {
 	childNodes->Add(node);
+	node->item->setParentItem(item);
 	node->parent = this;
 }
 
@@ -157,7 +158,7 @@ void FormulaNode::Render()
 	childNodes->Render();
 }
 
-void FormulaNode::Parse(ParserExpression& expr)
+void FormulaNode::Parse(ParserString& expr)
 {
 	for (int i = 0; i < childNodes->Count(); ++i)
 	{

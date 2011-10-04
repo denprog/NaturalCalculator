@@ -40,7 +40,7 @@ void PlusFormulaNode::UpdateBoundingRect()
 	boundingRect.moveTo(item->pos().x(), item->pos().y());
 }
 
-void PlusFormulaNode::Parse(ParserExpression& expr)
+void PlusFormulaNode::Parse(ParserString& expr)
 {
 	expr.Add("+", this);
 }

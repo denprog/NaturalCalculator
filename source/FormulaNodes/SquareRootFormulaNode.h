@@ -16,7 +16,7 @@ public:
 
 	virtual FormulaNode* Clone();
 
-	virtual void Parse(ParserExpression& expr);
+	virtual void Parse(ParserString& expr);
 	
 	virtual void RenderCaret(const int pos, const int anchor);
 

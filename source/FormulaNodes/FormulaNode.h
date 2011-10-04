@@ -88,7 +88,7 @@ public:
 	virtual void GetHierarchyPos(HierarchyPos& positions);
 	virtual void Render();
 	
-	virtual void Parse(ParserExpression& expr);
+	virtual void Parse(ParserString& expr);
 	
 	int GetChildPos(FormulaNode* node);
 	bool IsChild(const FormulaNode* node);

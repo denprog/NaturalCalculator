@@ -131,7 +131,7 @@ void TextFormulaNode::RenderCaret(const int pos, const int anchor)
 	g->addToGroup(i);
 }
 
-void TextFormulaNode::Parse(ParserExpression& expr)
+void TextFormulaNode::Parse(ParserString& expr)
 {
 	expr.Add(GetText().toUtf8().data(), this);
 }

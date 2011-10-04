@@ -14,11 +14,32 @@ public:
 	virtual void Remake();
 	
 public:
-	void SetExpression(ParserExpression& expr);
+	void SetExpression(ParserString& expr);
 	
+	void AddResultNode(ParserExpressionVariant& expr);
+	void RemoveResultNode();
+
 private:
-	int exp;
-	ParserExpression parserExpression;
+	//template<class Number>
+	//bool MakeResultNode(ParserExpression& expr, FormulaNode* p);
+	
+	struct ResultNodeMaker : boost::static_visitor<void>
+	{
+		ResultNodeMaker(FormulaNode* _parent);
+		
+		void operator()(RealParserExpression const& expr) const;
+		void operator()(IntegerParserExpression const& expr) const;
+		void operator()(RationalParserExpression const& expr) const;
+		void operator()(AutoParserExpression const& expr) const;
+		
+		FormulaNode* parent;
+	};
+		
+private:
+	//int exp;
+	//ParserExpression parserExpression;
+	//vector<ParserExpression> parserExpressions;
+	vector<ParserExpressionVariant> parserExpressions;
 };
 
 #endif

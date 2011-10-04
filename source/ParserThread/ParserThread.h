@@ -21,12 +21,12 @@ public:
 	~ParserThread();
 
 public:
-	void AddExpression(ParserExpression& expr);
-	void RemoveExpression(HierarchyPos& id);
-	bool GetSolvedExpression(HierarchyPos& pos, ParserExpression& expr);
+	void AddExpression(ParserExpressionVariant& expr);
+	void RemoveExpression(ParserExpressionVariant& expr);
+	bool GetSolvedExpression(ParserExpressionVariant& expr);
 		
 private:
-	class SolvingThread
+	class SolvingThread : public boost::static_visitor<void>
 	{
 	public:
 		SolvingThread(ParserThread* _parserThread);
@@ -34,24 +34,36 @@ private:
 		
 	public:
 		void operator()();
+	
+		void operator()(RealParserExpression const& expr) const;
+		void operator()(IntegerParserExpression const& expr) const;
+		void operator()(RationalParserExpression const& expr) const;
+		void operator()(AutoParserExpression const& expr) const;
 		
 	private:		
 		ParserThread* parserThread;
-		vector<ParserExpression> expressions;
+		vector<ParserExpressionVariant> expressions;
 		
-		//vector of parsers with their difined order of solving
+		//vector of parsers with their difined order of solving an auto result node
 		vector<boost::variant<
 			BigNumbersParser::Parser<Integer>*, 
 			BigNumbersParser::Parser<Real>*, 
 			BigNumbersParser::Parser<Rational>* 
 			> > parsers;
+		
+		Parser<Real>* realParser;
+		Parser<Integer>* integerParser;
+		Parser<Rational>* rationalParser;
 	};
 	
 private:
 	boost::thread* thread;
 	FormulaWnd* wnd;
-	vector<ParserExpression> expressionsToSolve; //the thread gets expressions from here
-	vector<ParserExpression> solvedExpressions; //the thread puts solved expressions here
+	
+	vector<ParserExpressionVariant> expressionsToSolve; //the thread gets expressions from here
+	vector<ParserExpressionVariant> solvedExpressions; //the thread puts solved expressions here
+	typedef vector<ParserExpressionVariant>::iterator ParserExpressionVariantIter;
+	
 	boost::mutex expressionsMutex; //locks these vectors for writing and reading
 	boost::condition_variable expressionsReady;
 	bool exit; //exit flag for the thread
