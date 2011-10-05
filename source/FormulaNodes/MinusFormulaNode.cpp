@@ -14,7 +14,7 @@ MinusFormulaNode::~MinusFormulaNode()
 	
 void MinusFormulaNode::Remake()
 {
-	QFont font = settings->GetTextFormulaNodeFont(NORMAL_LEVEL);
+	QFont font = settings->GetTextFormulaNodeFont(level);
 	QFontMetrics m(font);
 	QRect r = m.boundingRect("T");
 	
@@ -31,7 +31,7 @@ void MinusFormulaNode::Remake()
 
 void MinusFormulaNode::UpdateBoundingRect()
 {
-	QFont font = settings->GetTextFormulaNodeFont(NORMAL_LEVEL);
+	QFont font = settings->GetTextFormulaNodeFont(level);
 	QFontMetrics m(font);
 	QRect r = m.boundingRect("T");
 	

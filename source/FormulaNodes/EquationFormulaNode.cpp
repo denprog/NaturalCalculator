@@ -62,7 +62,7 @@ void EquationFormulaNode::Remake()
 		int cy = max(left->baseline, resNode->baseline);
 		baseline = cy;
 		
-		QFont font = settings->GetTextFormulaNodeFont(NORMAL_LEVEL);
+		QFont font = settings->GetTextFormulaNodeFont(level);
 		QFontMetrics m(font);
 		QRect r = m.boundingRect("=");
 
@@ -85,7 +85,7 @@ void EquationFormulaNode::UpdateBoundingRect()
 {
 	CompoundFormulaNode::UpdateBoundingRect();
 
-	QFont font = settings->GetTextFormulaNodeFont(NORMAL_LEVEL);
+	QFont font = settings->GetTextFormulaNodeFont(level);
 	QFontMetrics m(font);
 	QRect r = m.boundingRect("=");
 	shape->boundingRect.setWidth(r.width());

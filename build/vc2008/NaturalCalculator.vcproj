@@ -375,6 +375,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\source\FormulaNodes\PowerFormulaNode.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\FormulaNodes\ResultFormulaNode.cpp"
 					>
 				</File>
@@ -440,6 +444,10 @@
 				</File>
 				<File
 					RelativePath="..\..\source\FormulaNodes\PlusFormulaNode.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\FormulaNodes\PowerFormulaNode.h"
 					>
 				</File>
 				<File

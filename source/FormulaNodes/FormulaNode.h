@@ -81,7 +81,11 @@ public:
 	virtual void Remake();
 	virtual void Update();
 	virtual void UpdateBoundingRect();
-	virtual void SetLevel();
+	
+	virtual FormulaNodeLevel GetLesserLevel();
+	virtual FormulaNodeLevel GetGreaterLevel();
+	virtual void SetLevel(FormulaNodeLevel _level);
+	
 	virtual void Move(int x, int y);
 	virtual void SetSize();
 
@@ -128,8 +132,13 @@ public:
 	
 	virtual bool DoCreatePlusFormulaNode(NodeEvent& nodeEvent);
 	virtual bool UndoCreatePlusFormulaNode(NodeEvent& nodeEvent);
+	
 	virtual bool DoCreateDivisionFormulaNode(NodeEvent& nodeEvent);
 	virtual bool UndoCreateDivisionFormulaNode(NodeEvent& nodeEvent);
+
+	virtual bool DoCreatePowerFormulaNode(NodeEvent& nodeEvent);
+	virtual bool UndoCreatePowerFormulaNode(NodeEvent& nodeEvent);
+	
 	virtual bool DoCreateEquationFormulaNode(NodeEvent& nodeEvent);
 	virtual bool UndoCreateEquationFormulaNode(NodeEvent& nodeEvent);
 
@@ -140,6 +149,7 @@ public:
 	QGraphicsItem* item;
 	int baseline;
 	FormulaWnd* wnd;
+	FormulaNodeLevel level;
 	
 protected:
 	Settings* settings;

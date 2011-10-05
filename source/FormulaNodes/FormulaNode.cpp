@@ -19,7 +19,7 @@ FormulaNode::FormulaNode()
 	command = NULL;
 	settings = NULL;
 	childNodes = NULL;
-	//childNodes = new FormulaNodesCollection();
+	level = NORMAL_LEVEL;
 }
 
 FormulaNode::FormulaNode(FormulaNode* _parent, FormulaWnd* _wnd)
@@ -31,6 +31,7 @@ FormulaNode::FormulaNode(FormulaNode* _parent, FormulaWnd* _wnd)
 	command = NULL;
 	settings = _wnd->settings;
 	childNodes = new FormulaNodesCollection();
+	level = NORMAL_LEVEL;
 	
 #ifdef _DEBUG
 	name = "FormulaNode";
@@ -129,8 +130,25 @@ void FormulaNode::UpdateBoundingRect()
 		boundingRect.moveTo(item->pos().x(), item->pos().y());
 }
 
-void FormulaNode::SetLevel()
+FormulaNodeLevel FormulaNode::GetLesserLevel()
 {
+	if (level == STILL_LESS_LEVEL)
+		return STILL_LESS_LEVEL;
+	return (FormulaNodeLevel)(level + 1);
+}
+
+FormulaNodeLevel FormulaNode::GetGreaterLevel()
+{
+	if (level == NORMAL_LEVEL)
+		return NORMAL_LEVEL;
+	return (FormulaNodeLevel)(level - 1);
+}
+
+void FormulaNode::SetLevel(FormulaNodeLevel _level)
+{
+	for (int i = 0; i < childNodes->Count(); ++i)
+		(*childNodes)[i]->SetLevel(_level);
+	level = _level;
 }
 
 void FormulaNode::Move(int x, int y)
@@ -269,6 +287,7 @@ void FormulaNode::RenderCaret(const int pos, const int anchor)
 	i = new QGraphicsLineItem(r.left(), r.bottom(), r.right(), r.bottom(), g);
 	i->setPen(QPen("red"));
 	g->addToGroup(i);
+	g->setZValue(1);
 }
 
 bool FormulaNode::DoInsertNode(NodeEvent& nodeEvent)
@@ -427,6 +446,16 @@ bool FormulaNode::UndoCreatePlusFormulaNode(NodeEvent& nodeEvent)
 	RemoveChild(c->GetPos() - 1);
 	
 	return true;
+}
+
+bool FormulaNode::DoCreatePowerFormulaNode(NodeEvent& nodeEvent)
+{
+	return false;
+}
+
+bool FormulaNode::UndoCreatePowerFormulaNode(NodeEvent& nodeEvent)
+{
+	return false;
 }
 
 bool FormulaNode::DoCreateDivisionFormulaNode(NodeEvent& nodeEvent)

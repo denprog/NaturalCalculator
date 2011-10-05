@@ -3,6 +3,7 @@
 #include "DivisionFormulaNode.h"
 #include "EmptyFormulaNode.h"
 #include "PlusFormulaNode.h"
+#include "PowerFormulaNode.h"
 #include "../Main/FormulaWnd.h"
 
 TextFormulaNode::TextFormulaNode()
@@ -11,9 +12,9 @@ TextFormulaNode::TextFormulaNode()
 
 TextFormulaNode::TextFormulaNode(FormulaNode* parent) : FormulaNode(parent, parent->wnd)
 {
-	item = new FormulaTextItem(settings, parent->item);
+	item = new FormulaTextItem(settings, level, boundingRect, parent->item);
 	
-	QFont font = settings->GetTextFormulaNodeFont(NORMAL_LEVEL);
+	QFont font = settings->GetTextFormulaNodeFont(level);
 	((QGraphicsTextItem*)item)->setFont(font);
 
 #ifdef _DEBUG
@@ -27,7 +28,7 @@ TextFormulaNode::~TextFormulaNode()
 
 void TextFormulaNode::UpdateBoundingRect()
 {
-	QFont font = settings->GetTextFormulaNodeFont(NORMAL_LEVEL);
+	QFont font = settings->GetTextFormulaNodeFont(level);
 	QFontMetrics m(font);
 	QRectF b = m.boundingRect(((QGraphicsTextItem*)item)->toPlainText());
 	
@@ -37,7 +38,9 @@ void TextFormulaNode::UpdateBoundingRect()
 
 void TextFormulaNode::Remake()
 {
+	((FormulaTextItem*)item)->level = level;
 	UpdateBoundingRect();
+	((FormulaTextItem*)item)->boundingRect = boundingRect;
 	baseline = ((QGraphicsTextItem*)item)->font().pointSize();
 }
 
@@ -106,7 +109,7 @@ QRectF TextFormulaNode::GetDocumentPosBounds(int pos)
 
 	if (pos > 0)
 	{
-		QFont font("Times New Roman", 20);
+		QFont font = settings->GetTextFormulaNodeFont(level);
 		QFontMetrics m(font);
 		QString text = ((QGraphicsTextItem*)item)->toPlainText();
 		QRectF b = m.boundingRect(text.right(text.length() - pos));
@@ -298,9 +301,42 @@ bool TextFormulaNode::UndoCreateDivisionFormulaNode(NodeEvent& nodeEvent)
 	return true;
 }
 
+bool TextFormulaNode::DoCreatePowerFormulaNode(NodeEvent& nodeEvent)
+{
+	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	FormulaNode* p = parent;
+	int pos = parent->GetChildPos(this);
+	//create a power node, insert current node into it and insert the result into the parent
+	FormulaNode* d = new PowerFormulaNode(parent, wnd);
+	FormulaNode* g = new GroupFormulaNode(d, wnd);
+	g->MoveChild(this, 0);
+	d->InsertChild(g, 0);
+	g = new GroupFormulaNode(d, wnd);
+	FormulaNode* n = new EmptyFormulaNode(g);
+	g->AddChild(n);
+	d->AddChild(g);
+	p->InsertChild(d, pos);
+
+	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreatePowerFormulaNode);
+	c->SetToNode(g, 0);
+	
+	return true;
+}
+
+bool TextFormulaNode::UndoCreatePowerFormulaNode(NodeEvent& nodeEvent)
+{
+	FormulaNode* p = parent->parent->parent;
+	int pos = p->GetChildPos(parent->parent);
+	p->MoveChild(this, pos);
+	p->RemoveChild(pos + 1);
+	
+	return true;
+}
+
 //FormulaTextItem
 
-FormulaTextItem::FormulaTextItem(Settings* _settings, QGraphicsItem* parent) : QGraphicsTextItem(parent), settings(_settings)
+FormulaTextItem::FormulaTextItem(Settings* _settings, FormulaNodeLevel _level, QRectF& _boundingRect, QGraphicsItem* parent) : 
+	QGraphicsTextItem(parent), settings(_settings), level(_level), boundingRect(_boundingRect)
 {
 }
 
@@ -310,7 +346,7 @@ FormulaTextItem::~FormulaTextItem()
 
 void FormulaTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-	QFont font = settings->GetTextFormulaNodeFont(NORMAL_LEVEL);
+	QFont font = settings->GetTextFormulaNodeFont(level);
 	painter->setFont(font);
-	painter->drawText(boundingRect(), Qt::AlignVCenter | Qt::AlignLeft, toPlainText());
+	painter->drawText(boundingRect, Qt::AlignVCenter | Qt::AlignLeft, toPlainText());
 }

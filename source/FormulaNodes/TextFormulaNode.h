@@ -71,6 +71,8 @@ public:
 	virtual bool UndoCreatePlusFormulaNode(NodeEvent& nodeEvent);
 	virtual bool DoCreateDivisionFormulaNode(NodeEvent& nodeEvent);
 	virtual bool UndoCreateDivisionFormulaNode(NodeEvent& nodeEvent);
+	virtual bool DoCreatePowerFormulaNode(NodeEvent& nodeEvent);
+	virtual bool UndoCreatePowerFormulaNode(NodeEvent& nodeEvent);
 
 protected:
 };
@@ -78,14 +80,19 @@ protected:
 class FormulaTextItem : public QGraphicsTextItem
 {
 public:
-	FormulaTextItem(Settings* _settings, QGraphicsItem* parent = 0);
+	FormulaTextItem(Settings* _settings, FormulaNodeLevel _level, QRectF& _boundingRect, QGraphicsItem* parent = 0);
 	~FormulaTextItem();
+	
+public:
+	friend class TextFormulaNode;
 	
 public:
 	virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
 	
 private:
 	Settings* settings;
+	FormulaNodeLevel level;
+	QRectF boundingRect;
 };
 
 namespace boost
