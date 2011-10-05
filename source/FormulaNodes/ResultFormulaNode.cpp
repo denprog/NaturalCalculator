@@ -1,6 +1,7 @@
 #include "ResultFormulaNode.h"
 #include "TextFormulaNode.h"
 #include "MinusFormulaNode.h"
+#include "MultiplyFormulaNode.h"
 #include "DivisionFormulaNode.h"
 #include "FormulaNodesCollection.h"
 #include "../Main/FormulaWnd.h"
@@ -199,6 +200,25 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RealParserExpression const& 
 	TextFormulaNode* t = new TextFormulaNode(parent);
 	parent->AddChild(t);
 	t->SetText(mantissa.c_str());
+	
+	if (!exponent.empty())
+	{
+		parent->AddChild(new MultiplyFormulaNode(parent, parent->wnd));
+		
+		PowerFormulaNode* p = new PowerFormulaNode(parent, parent->wnd);
+		parent->AddChild(p);
+		TextFormulaNode* t = new TextFormulaNode(parent);
+		p->InsertChild(t, 0);
+		t->SetText("10");
+		
+		GroupFormulaNode* g = new GroupFormulaNode(p, p->wnd);
+		p->InsertChild(g, 2);
+		if (exponentSign)
+			g->InsertChild(new MinusFormulaNode(p, parent->wnd), 0);
+		t = new TextFormulaNode(g);
+		g->AddChild(t);
+		t->SetText(exponent.c_str());
+	}
 }
 
 void ResultFormulaNode::ResultNodeMaker::operator()(IntegerParserExpression const& expr) const
