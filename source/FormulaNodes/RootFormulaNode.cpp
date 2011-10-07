@@ -141,11 +141,17 @@ SharedCaretState RootFormulaNode::GetPreviousPosition(SharedCaretState& relative
 bool RootFormulaNode::DoCreateEquationFormulaNode(NodeEvent& nodeEvent)
 {
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	//create a equation node and move the first level nodes in its left side
 	FormulaNode* e = new EquationFormulaNode(this, wnd);
+	FormulaNode* g = new GroupFormulaNode(e, wnd);
+	for (int i = 0, j = 0; i < childNodes->Count(); ++j)
+		g->MoveChild((*childNodes)[0], j);
+	e->InsertChild(g, 0);
 	AddChild(e);
+	//e->MoveChild((*childNodes)[0], 0);
 
 	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreateDivisionFormulaNode);
-	c->SetToNode(this, GetChildPos(e));
+	c->SetToNode(e, 1);
 	
 	return true;
 }

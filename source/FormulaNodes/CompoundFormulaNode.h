@@ -6,6 +6,7 @@
 class CompoundFormulaNode : public GroupFormulaNode
 {
 public:
+	CompoundFormulaNode();
 	CompoundFormulaNode(FormulaNode* _parent, FormulaWnd* wnd);
 	virtual ~CompoundFormulaNode();
 	

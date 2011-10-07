@@ -12,6 +12,8 @@
 #include "../FormulaNodes/MinusFormulaNode.h"
 #include "../FormulaNodes/DivisionFormulaNode.h"
 
+int FormulaWnd::updateEventId;
+
 FormulaWnd::FormulaWnd(QWidget *parent)	: QGraphicsView(parent), commandManager(this)
 {
 	scene = new QGraphicsScene();
@@ -30,6 +32,10 @@ FormulaWnd::FormulaWnd(QWidget *parent)	: QGraphicsView(parent), commandManager(
 
 	caret->SetToNodeBegin(documentNode);
 	caret->Render();
+
+	updateEventId = QEvent::registerEventType(1);
+	
+	parserThread = new ParserThread(this);
 }
 
 FormulaWnd::~FormulaWnd()
@@ -37,36 +43,24 @@ FormulaWnd::~FormulaWnd()
 	delete caret;
 	delete documentNode;
 	delete scene;
+	delete parserThread;
+}
+
+bool FormulaWnd::event(QEvent* e)
+{
+	if (e->type() == (QEvent::Type)updateEventId)
+	{
+		UpdateView();
+		return true;
+	}
+	
+	return QGraphicsView::event(e);
 }
 
 void FormulaWnd::resizeEvent(QResizeEvent* event)
 {
 	QGraphicsView::resizeEvent(event);
-	//scene->setSceneRect(rect());
-	//scene->setSceneRect(0, 0, 200, 600);
-	//scene->setSceneRect(documentNode->boundingRect);
-	
-	//QRectF r1 = rect(), r2 = documentNode->boundingRect;
-	//QRectF r(0, 0, max(r1.width() - 2, r2.width()), max(r1.height() - 2, r2.height()));
-
-	//QScrollBar* h = horizontalScrollBar();
-	//if (h->isVisible())
-	//{
-	//	r.setHeight(r.height() - h->height());
-	//}
-
-	//QScrollBar* v = verticalScrollBar();
-	//if (v->isVisible())
-	//{
-	//	r.setWidth(r.width() - v->width());
-	//}
-
-	//scene->setSceneRect(r);
-
 	scene->setSceneRect(documentNode->boundingRect);
-	
-	//fitInView(sceneRect());
-	//adjustSize();
 }
 
 void FormulaWnd::keyPressEvent(QKeyEvent* event)
@@ -86,15 +80,15 @@ void FormulaWnd::keyPressEvent(QKeyEvent* event)
 		break;
 	case Qt::Key_Delete:
 		if (commandManager.Remove(true))
-				UpdateView();
+			UpdateView();
 		break;
 	case Qt::Key_Backspace:
 		if (commandManager.Remove(false))
-				UpdateView();
+			UpdateView();
 		break;
 	case Qt::Key_Plus:
 		if (commandManager.InsertNode(NULL, CommandAction(caret->currentState, &FormulaNode::DoCreatePlusFormulaNode)))
-				UpdateView();
+			UpdateView();
 		break;
 	case Qt::Key_Slash:
 		if (commandManager.InsertNode(NULL, CommandAction(caret->currentState, &FormulaNode::DoCreateDivisionFormulaNode)))
@@ -106,6 +100,12 @@ void FormulaWnd::keyPressEvent(QKeyEvent* event)
 		break;
 	default:
 		QString str = event->text();
+		if (str == "^")
+		{
+			if (commandManager.InsertNode(NULL, CommandAction(caret->currentState, &FormulaNode::DoCreatePowerFormulaNode)))
+				UpdateView();
+			break;
+		}
 		if (!str.isEmpty())
 		{
 			if (commandManager.InsertText(str, CommandAction(caret->currentState, &FormulaNode::DoInsertText)))

@@ -14,7 +14,7 @@ MultiplyFormulaNode::~MultiplyFormulaNode()
 
 void MultiplyFormulaNode::Remake()
 {
-	QFont font = settings->GetTextFormulaNodeFont(NORMAL_LEVEL);
+	QFont font = settings->GetTextFormulaNodeFont(level);
 	QFontMetrics m(font);
 	QRect r = m.boundingRect("T");
 	
@@ -29,9 +29,14 @@ void MultiplyFormulaNode::Remake()
 	boundingRect.setCoords(0, 0, w, w);
 }
 
+void MultiplyFormulaNode::Parse(ParserString& expr)
+{
+	expr.Add("*", this);
+}
+
 void MultiplyFormulaNode::UpdateBoundingRect()
 {
-	QFont font = settings->GetTextFormulaNodeFont(NORMAL_LEVEL);
+	QFont font = settings->GetTextFormulaNodeFont(level);
 	QFontMetrics m(font);
 	QRect r = m.boundingRect("T");
 	

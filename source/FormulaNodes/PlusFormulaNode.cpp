@@ -14,7 +14,7 @@ PlusFormulaNode::~PlusFormulaNode()
 
 void PlusFormulaNode::Remake()
 {
-	QFont font = settings->GetTextFormulaNodeFont(NORMAL_LEVEL);
+	QFont font = settings->GetTextFormulaNodeFont(level);
 	QFontMetrics m(font);
 	QRect r = m.boundingRect("T");
 	
@@ -32,12 +32,17 @@ void PlusFormulaNode::Remake()
 
 void PlusFormulaNode::UpdateBoundingRect()
 {
-	QFont font = settings->GetTextFormulaNodeFont(NORMAL_LEVEL);
+	QFont font = settings->GetTextFormulaNodeFont(level);
 	QFontMetrics m(font);
 	QRect r = m.boundingRect("T");
 	
 	boundingRect.setCoords(0, 0, r.width(), r.width());
 	boundingRect.moveTo(item->pos().x(), item->pos().y());
+}
+
+void PlusFormulaNode::Parse(ParserString& expr)
+{
+	expr.Add("+", this);
 }
 
 FormulaNode* PlusFormulaNode::Clone()

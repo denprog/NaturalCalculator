@@ -5,8 +5,6 @@
 Settings::Settings(const QString& organization, const QString& application, QObject* parent) : 
 	QSettings(QSettings::UserScope, organization, application, parent)
 {
-	//textFormulaNodeFonts[1] = QFont("Times New Roman", 20);
-	
 	qRegisterMetaType<FontMap>();
 	qRegisterMetaTypeStreamOperators<FontMap>();
 	
@@ -16,6 +14,8 @@ Settings::Settings(const QString& organization, const QString& application, QObj
 	QVariant v;
 	v.setValue(textFormulaNodeFonts);
 	textFormulaNodeFonts = Load("Formulas", "textFormulaNodeFonts", v).value<FontMap>();
+	
+	setValue("InterSymbolSpace", 2);
 }
 
 Settings::~Settings()

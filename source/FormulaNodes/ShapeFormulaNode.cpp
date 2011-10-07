@@ -34,6 +34,7 @@ void ShapeFormulaNode::AddFillRect(qreal x, qreal y, qreal width, qreal height, 
 {
 	QGraphicsRectItem* i = new QGraphicsRectItem(x, y, width, height, item);
 	i->setBrush(QBrush(color));
+	i->setPen(QPen(color));
 	((QGraphicsItemGroup*)item)->addToGroup(i);
 }
 

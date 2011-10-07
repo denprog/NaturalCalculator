@@ -56,7 +56,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="qtmain.lib QtCore4.lib QtGui4.lib"
+				AdditionalDependencies="qtmain.lib QtCore4.lib QtGui4.lib $(PARSER)lib\Release\BigNumbersParser.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				AdditionalLibraryDirectories="$(QTDIR)\lib"
 				GenerateDebugInformation="false"
@@ -126,7 +126,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="qtmaind.lib QtCored4.lib QtGuid4.lib BigNumbersParser.lib"
+				AdditionalDependencies="qtmaind.lib QtCored4.lib QtGuid4.lib $(PARSER)lib\Debug\BigNumbersParser.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				AdditionalLibraryDirectories="$(QTDIR)\lib"
 				IgnoreAllDefaultLibraries="false"
@@ -153,6 +153,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy $(MPFR)Debug\mpfr.dll $(OutDir)\mpfr.dll&#x0D;&#x0A;copy $(MPIR)dll\Win32\Debug\mpir.dll $(OutDir)\mpir.dll"
 			/>
 		</Configuration>
 	</Configurations>
@@ -374,6 +375,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\source\FormulaNodes\PowerFormulaNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\FormulaNodes\ResultFormulaNode.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\FormulaNodes\RootFormulaNode.cpp"
 					>
 				</File>
@@ -435,6 +444,14 @@
 				</File>
 				<File
 					RelativePath="..\..\source\FormulaNodes\PlusFormulaNode.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\FormulaNodes\PowerFormulaNode.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\FormulaNodes\ResultFormulaNode.h"
 					>
 				</File>
 				<File
@@ -548,6 +565,56 @@
 				<File
 					RelativePath="..\..\source\Main\Settings.h"
 					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Parser Thread"
+			>
+			<Filter
+				Name="Source Files"
+				>
+				<File
+					RelativePath="..\..\source\ParserThread\ParserExpression.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\ParserThread\ParserThread.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Header Files"
+				>
+				<File
+					RelativePath="..\..\source\ParserThread\ParserExpression.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\ParserThread\ParserThread.h"
+					>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description=""
+							CommandLine=""
+							AdditionalDependencies=""
+							Outputs=""
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description=""
+							CommandLine=""
+							AdditionalDependencies=""
+							Outputs=""
+						/>
+					</FileConfiguration>
 				</File>
 			</Filter>
 		</Filter>

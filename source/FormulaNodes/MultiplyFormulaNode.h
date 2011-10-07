@@ -13,6 +13,8 @@ public:
 	virtual void Remake();
 	virtual void UpdateBoundingRect();
 
+	virtual void Parse(ParserString& expr);
+
 	virtual FormulaNode* Clone();
 };
 

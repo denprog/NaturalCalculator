@@ -2,6 +2,10 @@
 #include "../FormulaNodes/ShapeFormulaNode.h"
 #include "../Main/FormulaWnd.h"
 
+DivisionFormulaNode::DivisionFormulaNode()
+{
+}
+
 DivisionFormulaNode::DivisionFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : CompoundFormulaNode(_parent, wnd)
 {
 	shape = AddShapeNode();
@@ -31,6 +35,7 @@ void DivisionFormulaNode::InsertChild(FormulaNode* node, int pos)
 		CompoundFormulaNode::InsertChild(node, 0);
 		break;
 	case 1:
+	case 2:
 		if (childNodes->Count() == 2)
 			CompoundFormulaNode::InsertChild(node, 2);
 		break;
@@ -65,6 +70,15 @@ void DivisionFormulaNode::UpdateBoundingRect()
 {
 	FormulaNode::UpdateBoundingRect();
 	shape->boundingRect.setHeight(1);
+}
+
+void DivisionFormulaNode::Parse(ParserString& expr)
+{
+	expr.Add("(", this);
+	(*this)[0]->Parse(expr);
+	expr.Add(")/(", this);
+	(*this)[2]->Parse(expr);
+	expr.Add(")", this);
 }
 
 FormulaNode* DivisionFormulaNode::Clone()
