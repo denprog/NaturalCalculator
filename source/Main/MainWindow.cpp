@@ -1,4 +1,5 @@
 #include <QtGui>
+#include <QFileDialog>
 #include <vld.h>
 #include "MainWindow.h"
 
@@ -83,12 +84,23 @@ void MainWindow::OnNew()
 
 void MainWindow::OnOpen()
 {
-	formulaWnd->Open("sample.ncl");
+	QFileDialog d(this);
+	d.setFileMode(QFileDialog::ExistingFile);
+	d.setNameFilter(tr("Natural Calulator files (*.ncl)"));
+	
+	if (d.exec())
+		formulaWnd->Open(d.selectedFiles()[0]);
 }
 
 void MainWindow::OnSave()
 {
-	formulaWnd->Save("sample.ncl");
+	QFileDialog d(this);
+	d.setAcceptMode(QFileDialog::AcceptSave);
+	d.setNameFilter(tr("Natural Calulator files (*.ncl)"));
+	d.setDefaultSuffix("ncl");
+	
+	if (d.exec())
+		formulaWnd->Save(d.selectedFiles()[0]);
 }
 
 void MainWindow::OnUndo()
