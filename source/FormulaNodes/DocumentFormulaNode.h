@@ -41,6 +41,8 @@ public:
 	virtual FormulaNode* Clone();
 	
 	void AddLine();
+	
+	void Clear();
 
 	virtual SharedCaretState GetFirstPosition();
 	virtual SharedCaretState GetLastPosition();

@@ -39,6 +39,7 @@ protected:
 	virtual void keyPressEvent(QKeyEvent* event);
 
 public:
+	void New();
 	bool Open(QString fileName);
 	bool Save(QString fileName);
 	void Undo();

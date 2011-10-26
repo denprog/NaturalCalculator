@@ -44,6 +44,12 @@ void DocumentFormulaNode::AddLine()
 	AddChild(rootNode);
 }
 
+void DocumentFormulaNode::Clear()
+{
+	childNodes->Clear();
+	AddLine();
+}
+
 SharedCaretState DocumentFormulaNode::GetFirstPosition()
 {
 	return childNodes->GetFirst()->GetFirstPosition();

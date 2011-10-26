@@ -118,23 +118,17 @@ void FormulaWnd::keyPressEvent(QKeyEvent* event)
 bool FormulaWnd::Open(QString fileName)
 {
 	DocumentFormulaNode* d = NULL;
-	//DocumentFormulaNode* d = new DocumentFormulaNode(this);
 
 	try
 	{
 		std::ifstream ifs((const char*)fileName.toUtf8().data(), ios::binary);
-		//WndStream ifs((const char*)fileName.toUtf8().data());
 		boost::archive::binary_iarchive ia(ifs);
 		RegisterTypes<boost::archive::binary_iarchive>(ia);
 		//firstly load into the temporary variable
-		//ia >> c;
 		ia >> d;
 	}
 	catch (...)
 	{
-		//if (c)
-		//	delete c;
-		
 		QMessageBox msgBox(QMessageBox::Critical, "Natural Editor", "File open error!", QMessageBox::Ok);
 		msgBox.exec();
 		return false;
@@ -143,9 +137,6 @@ bool FormulaWnd::Open(QString fileName)
 	//in case of succesfull loading replace the document's child nodes
 	delete documentNode;
 	documentNode = d;
-	//documentNode->childNodes->Clear();
-	//documentNode->childNodes->CopyFrom(c);
-	//documentNode->childNodes->CopyFrom(*d->childNodes);
 
 	documentNode->Remake();
 	caret->SetToNodeBegin(documentNode);
@@ -176,6 +167,14 @@ bool FormulaWnd::Save(QString fileName)
 	}
 	
 	return true;
+}
+
+void FormulaWnd::New()
+{
+	documentNode->Clear();
+	caret->SetToNodeBegin(documentNode);
+	commandManager.Reset();
+	UpdateView();
 }
 
 void FormulaWnd::Undo()

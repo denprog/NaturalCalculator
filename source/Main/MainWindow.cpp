@@ -78,6 +78,7 @@ void MainWindow::SetupUi()
 
 void MainWindow::OnNew()
 {
+	formulaWnd->New();
 }
 
 void MainWindow::OnOpen()
