@@ -255,7 +255,7 @@ bool TextFormulaNode::DoCreatePlusFormulaNode(NodeEvent& nodeEvent)
 	parent->InsertChild(p, parent->GetChildPos(this) + 1);
 
 	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreatePlusFormulaNode);
-	c->SetToNode(parent, parent->GetChildPos(this) + 1);
+	c->SetToNode(parent, parent->GetChildPos(p) + 1);
 
 	return true;
 }

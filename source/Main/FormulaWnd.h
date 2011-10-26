@@ -57,8 +57,12 @@ private:
 		boost::serialization::void_cast_register<GroupFormulaNode, FormulaNode>(static_cast<GroupFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
 		boost::serialization::void_cast_register<EmptyFormulaNode, FormulaNode>(static_cast<EmptyFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
 		boost::serialization::void_cast_register<TextFormulaNode, FormulaNode>(static_cast<TextFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
+		boost::serialization::void_cast_register<PlusFormulaNode, FormulaNode>(static_cast<PlusFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
+		boost::serialization::void_cast_register<MinusFormulaNode, FormulaNode>(static_cast<MinusFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
+		boost::serialization::void_cast_register<MultiplyFormulaNode, FormulaNode>(static_cast<MultiplyFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
 		boost::serialization::void_cast_register<DivisionFormulaNode, FormulaNode>(static_cast<DivisionFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
 		boost::serialization::void_cast_register<PowerFormulaNode, FormulaNode>(static_cast<PowerFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
+		boost::serialization::void_cast_register<SquareRootFormulaNode, FormulaNode>(static_cast<SquareRootFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
 		boost::serialization::void_cast_register<EquationFormulaNode, FormulaNode>(static_cast<EquationFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
 		
 		ar.template register_type<FormulaNode>();
@@ -68,8 +72,12 @@ private:
 		ar.template register_type<GroupFormulaNode>();
 		ar.template register_type<EmptyFormulaNode>();
 		ar.template register_type<TextFormulaNode>();
+		ar.template register_type<PlusFormulaNode>();
+		ar.template register_type<MinusFormulaNode>();
+		ar.template register_type<MultiplyFormulaNode>();
 		ar.template register_type<DivisionFormulaNode>();
 		ar.template register_type<PowerFormulaNode>();
+		ar.template register_type<SquareRootFormulaNode>();
 		ar.template register_type<EquationFormulaNode>();
 	}
 
