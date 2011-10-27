@@ -2,6 +2,7 @@
 #include <QFileDialog>
 #include <vld.h>
 #include "MainWindow.h"
+#include "SettingsDialog.h"
 
 MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags), settings("naturaleditor.org", "MainWindow")
 {
@@ -10,9 +11,6 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, 
 
 MainWindow::~MainWindow()
 {
-	//delete newAction;
-	//mainToolbar->removeAction(newAction);
-	//delete mainToolbar;
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)
@@ -31,29 +29,33 @@ void MainWindow::SetupUi()
 	mainToolbar->setIconSize(QSize(16, 16));
 	addToolBar(Qt::TopToolBarArea, mainToolbar);
 
-	newAction = new QAction(QIcon(":/Resources/images/new.png"), tr("&New"), this);
-	connect(newAction, SIGNAL(triggered()), this, SLOT(OnNew()));
-	mainToolbar->addAction(newAction);
+	QAction* action = new QAction(QIcon(":/Resources/images/new.png"), tr("&New"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(OnNew()));
+	mainToolbar->addAction(action);
 
-	openAction = new QAction(QIcon(":/Resources/images/open.png"), tr("&Open"), this);
-	openAction->setShortcut(QKeySequence::Open);
-	connect(openAction, SIGNAL(triggered()), this, SLOT(OnOpen()));
-	mainToolbar->addAction(openAction);
+	action = new QAction(QIcon(":/Resources/images/open.png"), tr("&Open"), this);
+	action->setShortcut(QKeySequence::Open);
+	connect(action, SIGNAL(triggered()), this, SLOT(OnOpen()));
+	mainToolbar->addAction(action);
 
-	saveAction = new QAction(QIcon(":/Resources/images/save.png"), tr("&Save"), this);
-	saveAction->setShortcut(QKeySequence::Save);
-	connect(saveAction, SIGNAL(triggered()), this, SLOT(OnSave()));
-	mainToolbar->addAction(saveAction);
+	action = new QAction(QIcon(":/Resources/images/save.png"), tr("&Save"), this);
+	action->setShortcut(QKeySequence::Save);
+	connect(action, SIGNAL(triggered()), this, SLOT(OnSave()));
+	mainToolbar->addAction(action);
 
-	undoAction = new QAction(QIcon(":/Resources/images/undo.png"), tr("&Undo"), this);
-	undoAction->setShortcut(QKeySequence::Undo);
-	connect(undoAction, SIGNAL(triggered()), this, SLOT(OnUndo()));
-	mainToolbar->addAction(undoAction);
+	action = new QAction(QIcon(":/Resources/images/undo.png"), tr("&Undo"), this);
+	action->setShortcut(QKeySequence::Undo);
+	connect(action, SIGNAL(triggered()), this, SLOT(OnUndo()));
+	mainToolbar->addAction(action);
 
-	redoAction = new QAction(QIcon(":/Resources/images/redo.png"), tr("&Redo"), this);
-	redoAction->setShortcut(QKeySequence::Redo);
-	connect(redoAction, SIGNAL(triggered()), this, SLOT(OnRedo()));
-	mainToolbar->addAction(redoAction);
+	action = new QAction(QIcon(":/Resources/images/redo.png"), tr("&Redo"), this);
+	action->setShortcut(QKeySequence::Redo);
+	connect(action, SIGNAL(triggered()), this, SLOT(OnRedo()));
+	mainToolbar->addAction(action);
+	
+	action = new QAction(QIcon(":/Resources/images/settings.png"), tr("Se&ttings"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(OnSettings()));
+	mainToolbar->addAction(action);
 
 	setWindowTitle(QApplication::translate("Natural Calculator", "Natural Calculator", 0, QApplication::UnicodeUTF8));
 	QMetaObject::connectSlotsByName(this);
@@ -111,4 +113,10 @@ void MainWindow::OnUndo()
 void MainWindow::OnRedo()
 {
 	formulaWnd->Redo();
+}
+
+void MainWindow::OnSettings()
+{
+	SettingsDialog d;
+	d.exec();
 }

@@ -35,6 +35,7 @@ private slots:
 	void OnSave();
 	void OnUndo();
 	void OnRedo();
+	void OnSettings();
 
 public:
 	FormulaWnd* formulaWnd;
@@ -44,11 +45,6 @@ private:
 	Settings settings;
 
 	QToolBar* mainToolbar;
-	QAction* newAction;
-	QAction* openAction;
-	QAction* saveAction;
-	QAction* undoAction;
-	QAction* redoAction;
 };
 
 #endif // NATURALCALCULATOR_H
