@@ -153,7 +153,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(MPFR)Debug\mpfr.dll $(OutDir)\mpfr.dll&#x0D;&#x0A;copy $(MPIR)dll\Win32\Debug\mpir.dll $(OutDir)\mpir.dll"
+				CommandLine="copy $(MPFR)Debug\mpfr.dll $(OutDir)\mpfr.dll&#x0D;&#x0A;copy $(MPIR)dll\Win32\Debug\mpir.dll $(OutDir)\mpir.dll&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -617,6 +617,17 @@
 					</FileConfiguration>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="Translation Files"
+			Filter="ts"
+			UniqueIdentifier="{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}"
+			ParseFiles="false"
+			>
+			<File
+				RelativePath="..\..\source\Translation\naturalcalculator_ru.ts"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
