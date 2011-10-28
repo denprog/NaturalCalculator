@@ -56,9 +56,63 @@ void MainWindow::SetupUi()
 	action = new QAction(QIcon(":/Resources/images/settings.png"), tr("Se&ttings"), this);
 	connect(action, SIGNAL(triggered()), this, SLOT(OnSettings()));
 	mainToolbar->addAction(action);
-
+	
 	setWindowTitle(QApplication::translate("Natural Calculator", "Natural Calculator", 0, QApplication::UnicodeUTF8));
 	QMetaObject::connectSlotsByName(this);
+
+	mathToolbar = new QToolBar();
+	mathToolbar->setEnabled(true);
+	addToolBar(Qt::TopToolBarArea, mathToolbar);
+	QTabWidget* tab = new QTabWidget;
+	mathToolbar->addWidget(tab);
+
+	//fill the algebra toolbar
+	
+	QToolBar* algebraToolBar = new QToolBar();
+	algebraToolBar->setEnabled(true);
+	algebraToolBar->setIconSize(QSize(20, 20));
+
+	action = new QAction(QIcon(":/Resources/images/math/plus.png"), tr("Plus"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(OnPlus()));
+	algebraToolBar->addAction(action);
+
+	action = new QAction(QIcon(":/Resources/images/math/minus.png"), tr("Minus"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(OnMinus()));
+	algebraToolBar->addAction(action);
+
+	action = new QAction(QIcon(":/Resources/images/math/multiply.png"), tr("Multiply"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(OnMultiply()));
+	algebraToolBar->addAction(action);
+
+	action = new QAction(QIcon(":/Resources/images/math/division.png"), tr("Division"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(OnDivision()));
+	algebraToolBar->addAction(action);
+
+	action = new QAction(QIcon(":/Resources/images/math/power.png"), tr("Power"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(OnPower()));
+	algebraToolBar->addAction(action);
+
+	action = new QAction(QIcon(":/Resources/images/math/sqrt.png"), tr("Square root"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(OnSqrt()));
+	algebraToolBar->addAction(action);
+
+	action = new QAction(QIcon(":/Resources/images/math/equality.png"), tr("Equality"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(OnEquality()));
+	algebraToolBar->addAction(action);
+
+	tab->addTab(algebraToolBar, "algebra");
+	
+	//fill the functions toolbar
+	
+	QToolBar* functionsToolBar = new QToolBar();
+	functionsToolBar->setEnabled(true);
+	functionsToolBar->setIconSize(QSize(20, 20));
+
+	action = new QAction(QIcon(":/Resources/images/math/sin.png"), tr("&Sin"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(OnSin()));
+	functionsToolBar->addAction(action);
+
+	tab->addTab(functionsToolBar, "functions");
 
 	QVariant p = settings.Load("NaturalCalculator", "position");
 	move(p.toPoint());
@@ -120,4 +174,43 @@ void MainWindow::OnSettings()
 	SettingsDialog d(&settings);
 	if (d.exec())
 		formulaWnd->UpdateView();
+}
+
+void MainWindow::OnPlus()
+{
+	formulaWnd->InsertNode(&FormulaNode::DoCreatePlusFormulaNode);
+}
+
+void MainWindow::OnSin()
+{
+}
+
+void MainWindow::OnMinus()
+{
+	formulaWnd->InsertNode(&FormulaNode::DoCreateMinusFormulaNode);
+}
+
+void MainWindow::OnMultiply()
+{
+	formulaWnd->InsertNode(&FormulaNode::DoCreateMultiplyFormulaNode);
+}
+
+void MainWindow::OnDivision()
+{
+	formulaWnd->InsertNode(&FormulaNode::DoCreateDivisionFormulaNode);
+}
+
+void MainWindow::OnPower()
+{
+	formulaWnd->InsertNode(&FormulaNode::DoCreatePowerFormulaNode);
+}
+
+void MainWindow::OnSqrt()
+{
+	formulaWnd->InsertNode(&FormulaNode::DoCreateSquareRootFormulaNode);
+}
+
+void MainWindow::OnEquality()
+{
+	formulaWnd->InsertNode(&FormulaNode::DoCreateEquationFormulaNode);
 }

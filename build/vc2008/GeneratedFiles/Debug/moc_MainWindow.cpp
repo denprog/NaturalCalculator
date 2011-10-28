@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'MainWindow.h'
 **
-** Created: Thu 27. Oct 10:31:38 2011
+** Created: Fri 28. Oct 13:19:32 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.3)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-       6,   14, // methods
+      14,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -37,13 +37,23 @@ static const uint qt_meta_data_MainWindow[] = {
       38,   11,   11,   11, 0x08,
       47,   11,   11,   11, 0x08,
       56,   11,   11,   11, 0x08,
+      69,   11,   11,   11, 0x08,
+      78,   11,   11,   11, 0x08,
+      88,   11,   11,   11, 0x08,
+     101,   11,   11,   11, 0x08,
+     114,   11,   11,   11, 0x08,
+     124,   11,   11,   11, 0x08,
+     133,   11,   11,   11, 0x08,
+     146,   11,   11,   11, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_MainWindow[] = {
     "MainWindow\0\0OnNew()\0OnOpen()\0OnSave()\0"
-    "OnUndo()\0OnRedo()\0OnSettings()\0"
+    "OnUndo()\0OnRedo()\0OnSettings()\0OnPlus()\0"
+    "OnMinus()\0OnMultiply()\0OnDivision()\0"
+    "OnPower()\0OnSqrt()\0OnEquality()\0OnSin()\0"
 };
 
 const QMetaObject MainWindow::staticMetaObject = {
@@ -81,9 +91,17 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 3: OnUndo(); break;
         case 4: OnRedo(); break;
         case 5: OnSettings(); break;
+        case 6: OnPlus(); break;
+        case 7: OnMinus(); break;
+        case 8: OnMultiply(); break;
+        case 9: OnDivision(); break;
+        case 10: OnPower(); break;
+        case 11: OnSqrt(); break;
+        case 12: OnEquality(); break;
+        case 13: OnSin(); break;
         default: ;
         }
-        _id -= 6;
+        _id -= 14;
     }
     return _id;
 }

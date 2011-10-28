@@ -36,6 +36,16 @@ private slots:
 	void OnUndo();
 	void OnRedo();
 	void OnSettings();
+	
+	void OnPlus();
+	void OnMinus();
+	void OnMultiply();
+	void OnDivision();
+	void OnPower();
+	void OnSqrt();
+	void OnEquality();
+	
+	void OnSin();
 
 public:
 	FormulaWnd* formulaWnd;
@@ -45,6 +55,7 @@ private:
 	Settings settings;
 
 	QToolBar* mainToolbar;
+	QToolBar* mathToolbar;
 };
 
 #endif // NATURALCALCULATOR_H

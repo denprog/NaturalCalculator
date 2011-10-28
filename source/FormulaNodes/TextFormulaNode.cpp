@@ -3,6 +3,8 @@
 #include "DivisionFormulaNode.h"
 #include "EmptyFormulaNode.h"
 #include "PlusFormulaNode.h"
+#include "MinusFormulaNode.h"
+#include "MultiplyFormulaNode.h"
 #include "PowerFormulaNode.h"
 #include "../Main/FormulaWnd.h"
 
@@ -241,12 +243,6 @@ bool TextFormulaNode::UndoRemoveItem(NodeEvent& nodeEvent)
 	return true;
 }
 
-//template<>
-//bool TextFormulaNode::DoCreateNode<DivisionFormulaNode>(NodeEvent& nodeEvent)
-//{
-//	return true;
-//}
-
 bool TextFormulaNode::DoCreatePlusFormulaNode(NodeEvent& nodeEvent)
 {
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
@@ -261,6 +257,48 @@ bool TextFormulaNode::DoCreatePlusFormulaNode(NodeEvent& nodeEvent)
 }
 
 bool TextFormulaNode::UndoCreatePlusFormulaNode(NodeEvent& nodeEvent)
+{
+	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	parent->RemoveChild(parent->GetChildPos(this) + 1);
+	
+	return true;
+}
+
+bool TextFormulaNode::DoCreateMinusFormulaNode(NodeEvent& nodeEvent)
+{
+	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	//create a plus node and insert it into the parent after this node
+	FormulaNode* p = new MinusFormulaNode(this, wnd);
+	parent->InsertChild(p, parent->GetChildPos(this) + 1);
+
+	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreateMinusFormulaNode);
+	c->SetToNode(parent, parent->GetChildPos(p) + 1);
+
+	return true;
+}
+
+bool TextFormulaNode::UndoCreateMinusFormulaNode(NodeEvent& nodeEvent)
+{
+	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	parent->RemoveChild(parent->GetChildPos(this) + 1);
+	
+	return true;
+}
+
+bool TextFormulaNode::DoCreateMultiplyFormulaNode(NodeEvent& nodeEvent)
+{
+	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	//create a plus node and insert it into the parent after this node
+	FormulaNode* p = new MultiplyFormulaNode(this, wnd);
+	parent->InsertChild(p, parent->GetChildPos(this) + 1);
+
+	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreateMultiplyFormulaNode);
+	c->SetToNode(parent, parent->GetChildPos(p) + 1);
+
+	return true;
+}
+
+bool TextFormulaNode::UndoCreateMultiplyFormulaNode(NodeEvent& nodeEvent)
 {
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	parent->RemoveChild(parent->GetChildPos(this) + 1);
@@ -331,6 +369,16 @@ bool TextFormulaNode::UndoCreatePowerFormulaNode(NodeEvent& nodeEvent)
 	p->RemoveChild(pos + 1);
 	
 	return true;
+}
+
+bool TextFormulaNode::DoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
+{
+	return false;
+}
+
+bool TextFormulaNode::UndoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
+{
+	return false;
 }
 
 //FormulaTextItem

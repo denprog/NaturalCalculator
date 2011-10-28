@@ -191,6 +191,12 @@ void FormulaWnd::Redo()
 	caret->Render();
 }
 
+void FormulaWnd::InsertNode(boost::function<bool (FormulaNode*, NodeEvent&)> action)
+{
+	if (commandManager.InsertNode(NULL, CommandAction(caret->currentState, action)))
+		UpdateView();
+}
+
 void FormulaWnd::UpdateView()
 {
 	documentNode->Remake();

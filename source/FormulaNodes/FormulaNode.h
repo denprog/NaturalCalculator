@@ -127,17 +127,23 @@ public:
 	virtual bool DoRemoveItem(NodeEvent& nodeEvent);
 	virtual bool UndoRemoveItem(NodeEvent& nodeEvent);
 	
-	//template<class T>
-	//bool DoCreateNode(NodeEvent& nodeEvent);
-	
 	virtual bool DoCreatePlusFormulaNode(NodeEvent& nodeEvent);
 	virtual bool UndoCreatePlusFormulaNode(NodeEvent& nodeEvent);
+
+	virtual bool DoCreateMinusFormulaNode(NodeEvent& nodeEvent);
+	virtual bool UndoCreateMinusFormulaNode(NodeEvent& nodeEvent);
+
+	virtual bool DoCreateMultiplyFormulaNode(NodeEvent& nodeEvent);
+	virtual bool UndoCreateMultiplyFormulaNode(NodeEvent& nodeEvent);
 	
 	virtual bool DoCreateDivisionFormulaNode(NodeEvent& nodeEvent);
 	virtual bool UndoCreateDivisionFormulaNode(NodeEvent& nodeEvent);
 
 	virtual bool DoCreatePowerFormulaNode(NodeEvent& nodeEvent);
 	virtual bool UndoCreatePowerFormulaNode(NodeEvent& nodeEvent);
+
+	virtual bool DoCreateSquareRootFormulaNode(NodeEvent& nodeEvent);
+	virtual bool UndoCreateSquareRootFormulaNode(NodeEvent& nodeEvent);
 	
 	virtual bool DoCreateEquationFormulaNode(NodeEvent& nodeEvent);
 	virtual bool UndoCreateEquationFormulaNode(NodeEvent& nodeEvent);
