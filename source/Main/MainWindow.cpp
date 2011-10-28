@@ -108,7 +108,7 @@ void MainWindow::SetupUi()
 	functionsToolBar->setEnabled(true);
 	functionsToolBar->setIconSize(QSize(20, 20));
 
-	action = new QAction(QIcon(":/Resources/images/math/sin.png"), tr("&Sin"), this);
+	action = new QAction(QIcon(":/Resources/images/math/sin.png"), tr("&sinus"), this);
 	connect(action, SIGNAL(triggered()), this, SLOT(OnSin()));
 	functionsToolBar->addAction(action);
 
@@ -131,6 +131,8 @@ void MainWindow::SetupUi()
 
 	c->setLayout(layout);
 	setCentralWidget(c);
+
+	formulaWnd->activateWindow();
 }
 
 void MainWindow::OnNew()

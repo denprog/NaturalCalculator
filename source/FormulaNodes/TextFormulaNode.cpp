@@ -35,6 +35,7 @@ void TextFormulaNode::UpdateBoundingRect()
 	QRectF b = m.boundingRect(((QGraphicsTextItem*)item)->toPlainText());
 	
 	boundingRect.setCoords(0, 0, b.width(), b.height());
+	((FormulaTextItem*)item)->boundingRect = boundingRect;
 	boundingRect.moveTo(item->pos().x(), item->pos().y());
 }
 
@@ -42,7 +43,6 @@ void TextFormulaNode::Remake()
 {
 	((FormulaTextItem*)item)->level = level;
 	UpdateBoundingRect();
-	((FormulaTextItem*)item)->boundingRect = boundingRect;
 	baseline = ((QGraphicsTextItem*)item)->font().pointSize();
 }
 

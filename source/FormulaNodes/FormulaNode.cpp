@@ -310,7 +310,7 @@ bool FormulaNode::DoInsertText(NodeEvent& nodeEvent)
 	FormulaNode* n = c->GetNode();
 	int pos = c->GetPos();
 	
-	if (dynamic_cast<EmptyFormulaNode*>((*n)[pos]))
+	if (pos < n->childNodes->Count() && dynamic_cast<EmptyFormulaNode*>((*n)[pos]))
 	{
 		//remove the empty node and store its being
 		RemoveChild(pos);
