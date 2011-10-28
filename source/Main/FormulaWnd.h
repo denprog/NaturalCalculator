@@ -45,7 +45,6 @@ public:
 	void Undo();
 	void Redo();
 	
-private:
 	void UpdateView();
 	
 private:

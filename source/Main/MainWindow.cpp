@@ -117,6 +117,7 @@ void MainWindow::OnRedo()
 
 void MainWindow::OnSettings()
 {
-	SettingsDialog d;
-	d.exec();
+	SettingsDialog d(&settings);
+	if (d.exec())
+		formulaWnd->UpdateView();
 }

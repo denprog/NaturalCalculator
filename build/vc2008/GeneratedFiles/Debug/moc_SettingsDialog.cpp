@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'SettingsDialog.h'
 **
-** Created: Thu 27. Oct 11:30:02 2011
+** Created: Thu 27. Oct 21:06:04 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.3)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_SettingsDialog[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-       1,   14, // methods
+       2,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -32,6 +32,7 @@ static const uint qt_meta_data_SettingsDialog[] = {
 
  // slots: signature, parameters, type, tag, flags
       33,   16,   15,   15, 0x0a,
+      81,   15,   15,   15, 0x0a,
 
        0        // eod
 };
@@ -39,6 +40,7 @@ static const uint qt_meta_data_SettingsDialog[] = {
 static const char qt_meta_stringdata_SettingsDialog[] = {
     "SettingsDialog\0\0current,previous\0"
     "OnChangePage(QTreeWidgetItem*,QTreeWidgetItem*)\0"
+    "OnOk()\0"
 };
 
 const QMetaObject SettingsDialog::staticMetaObject = {
@@ -71,9 +73,10 @@ int SettingsDialog::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: OnChangePage((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< QTreeWidgetItem*(*)>(_a[2]))); break;
+        case 1: OnOk(); break;
         default: ;
         }
-        _id -= 1;
+        _id -= 2;
     }
     return _id;
 }

@@ -8,9 +8,9 @@ Settings::Settings(const QString& organization, const QString& application, QObj
 	qRegisterMetaType<FontMap>();
 	qRegisterMetaTypeStreamOperators<FontMap>();
 	
-	textFormulaNodeFonts[NORMAL_LEVEL] = QFont("Times New Roman", 20);
-	textFormulaNodeFonts[LESS_LEVEL] = QFont("Times New Roman", 16);
-	textFormulaNodeFonts[STILL_LESS_LEVEL] = QFont("Times New Roman", 12);
+	textFormulaNodeFonts[NORMAL_LEVEL] = QFont("Times New Roman", 14);
+	textFormulaNodeFonts[LESS_LEVEL] = QFont("Times New Roman", 12);
+	textFormulaNodeFonts[STILL_LESS_LEVEL] = QFont("Times New Roman", 10);
 	QVariant v;
 	v.setValue(textFormulaNodeFonts);
 	textFormulaNodeFonts = Load("Formulas", "textFormulaNodeFonts", v).value<FontMap>();
