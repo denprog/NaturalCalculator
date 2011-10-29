@@ -1,6 +1,10 @@
 #include "EmptyFormulaNode.h"
 #include <QFontMetrics>
 
+/**
+ * Constructor.
+ * @param [in,out] _parent The parent node.
+ */
 EmptyFormulaNode::EmptyFormulaNode(FormulaNode* _parent) : ShapeFormulaNode(_parent, _parent->wnd)
 {
 #ifdef _DEBUG
@@ -8,10 +12,16 @@ EmptyFormulaNode::EmptyFormulaNode(FormulaNode* _parent) : ShapeFormulaNode(_par
 #endif
 }
 
+/**
+ * Destructor.
+ */
 EmptyFormulaNode::~EmptyFormulaNode()
 {
 }
 	
+/**
+ * Remakes this node.
+ */
 void EmptyFormulaNode::Remake()
 {
 	QFont font = settings->GetTextFormulaNodeFont(level);
@@ -29,6 +39,9 @@ void EmptyFormulaNode::Remake()
 	boundingRect.setCoords(0, 0, h / 2, h);
 }
 
+/**
+ * Updates the bounding rectangle.
+ */
 void EmptyFormulaNode::UpdateBoundingRect()
 {
 	QFont font = settings->GetTextFormulaNodeFont(level);
@@ -39,11 +52,20 @@ void EmptyFormulaNode::UpdateBoundingRect()
 	boundingRect.moveTo(item->pos().x(), item->pos().y());
 }
 
+/**
+ * Makes a deep copy of this object.
+ * @return A copy of this object.
+ */
 FormulaNode* EmptyFormulaNode::Clone()
 {
 	return new EmptyFormulaNode(parent);
 }
 
+/**
+ * Gets the next caret position of the node.
+ * @param [in,out] relativeState State of the relative.
+ * @return The empty position.
+ */
 SharedCaretState EmptyFormulaNode::GetNextPosition(SharedCaretState& relativeState)
 {
 	return SharedCaretState();

@@ -7,6 +7,9 @@
 
 using namespace std;
 
+/**
+ * Natural calculator application.
+ */
 class NaturalCalculatorApp : public QApplication
 {
 public:
@@ -19,7 +22,7 @@ public:
 	int GetFormulaWndPos(FormulaWnd* wnd);
 	
 private:
-	vector<FormulaWnd*> formulaWnds;
+	vector<FormulaWnd*> formulaWnds; ///< The formula windows
 };
 
 #endif

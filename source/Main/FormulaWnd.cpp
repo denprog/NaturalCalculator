@@ -14,6 +14,10 @@
 
 int FormulaWnd::updateEventId;
 
+/**
+ * Constructor.
+ * @param [in,out] parent The parent widget.
+ */
 FormulaWnd::FormulaWnd(QWidget *parent)	: QGraphicsView(parent), commandManager(this)
 {
 	scene = new QGraphicsScene();
@@ -38,6 +42,9 @@ FormulaWnd::FormulaWnd(QWidget *parent)	: QGraphicsView(parent), commandManager(
 	parserThread = new ParserThread(this);
 }
 
+/**
+ * Destructor.
+ */
 FormulaWnd::~FormulaWnd()
 {
 	delete caret;
@@ -46,6 +53,11 @@ FormulaWnd::~FormulaWnd()
 	delete parserThread;
 }
 
+/**
+ * Serves custom events.
+ * @param [in,out] e The event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool FormulaWnd::event(QEvent* e)
 {
 	if (e->type() == (QEvent::Type)updateEventId)
@@ -57,12 +69,20 @@ bool FormulaWnd::event(QEvent* e)
 	return QGraphicsView::event(e);
 }
 
+/**
+ * Resize event.
+ * @param [in,out] event The event.
+ */
 void FormulaWnd::resizeEvent(QResizeEvent* event)
 {
 	QGraphicsView::resizeEvent(event);
 	scene->setSceneRect(documentNode->boundingRect);
 }
 
+/**
+ * Key press event.
+ * @param [in,out] event The event.
+ */
 void FormulaWnd::keyPressEvent(QKeyEvent* event)
 {
 	switch (event->key())
@@ -126,6 +146,11 @@ void FormulaWnd::keyPressEvent(QKeyEvent* event)
 	}
 }
 
+/**
+ * Opens the given file.
+ * @param fileName Filename of the file.
+ * @return true if it succeeds, false if it fails.
+ */
 bool FormulaWnd::Open(QString fileName)
 {
 	DocumentFormulaNode* d = NULL;
@@ -160,6 +185,11 @@ bool FormulaWnd::Open(QString fileName)
 	return true;
 }
 
+/**
+ * Saves the given file.
+ * @param fileName The QString to save.
+ * @return true if it succeeds, false if it fails.
+ */
 bool FormulaWnd::Save(QString fileName)
 {
 	try
@@ -180,6 +210,9 @@ bool FormulaWnd::Save(QString fileName)
 	return true;
 }
 
+/**
+ * Clears this window to its init state.
+ */
 void FormulaWnd::New()
 {
 	documentNode->Clear();
@@ -188,6 +221,9 @@ void FormulaWnd::New()
 	UpdateView();
 }
 
+/**
+ * Undo command.
+ */
 void FormulaWnd::Undo()
 {
 	commandManager.Undo();
@@ -195,6 +231,9 @@ void FormulaWnd::Undo()
 	caret->Render();
 }
 
+/**
+ * Redo command.
+ */
 void FormulaWnd::Redo()
 {
 	commandManager.Redo();
@@ -202,12 +241,19 @@ void FormulaWnd::Redo()
 	caret->Render();
 }
 
+/**
+ * Inserts a node described by action.
+ * @param [in,out] action [in,out] The action is a function object to be executed.
+ */
 void FormulaWnd::InsertNode(boost::function<bool (FormulaNode*, NodeEvent&)> action)
 {
 	if (commandManager.InsertNode(NULL, CommandAction(caret->currentState, action)))
 		UpdateView();
 }
 
+/**
+ * Updates the window view.
+ */
 void FormulaWnd::UpdateView()
 {
 	documentNode->Remake();

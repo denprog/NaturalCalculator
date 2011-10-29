@@ -30,8 +30,7 @@ enum FormulaNodeLevel
 };
 
 /**
- * Base class for formula nodes
- * @class
+ * Formula node.
  */
 class FormulaNode
 {
@@ -87,7 +86,6 @@ public:
 	virtual void SetLevel(FormulaNodeLevel _level);
 	
 	virtual void Move(int x, int y);
-	virtual void SetSize();
 
 	virtual void GetHierarchyPos(HierarchyPos& positions);
 	virtual void Render();
@@ -149,13 +147,13 @@ public:
 	virtual bool UndoCreateEquationFormulaNode(NodeEvent& nodeEvent);
 
 public:
-	FormulaNode* parent;
-	FormulaNodesCollection* childNodes;
-	QRectF boundingRect;
+	FormulaNode* parent; ///< The parent node
+	FormulaNodesCollection* childNodes; ///< The child nodes
+	QRectF boundingRect; ///< The bounding rectangle
 	QGraphicsItem* item;
-	qreal baseline;
-	FormulaWnd* wnd;
-	FormulaNodeLevel level;
+	qreal baseline; ///< The baseline
+	FormulaWnd* wnd; ///< The formula window
+	FormulaNodeLevel level; ///< The node level
 
 protected:
 	Command* command;	
@@ -166,13 +164,5 @@ protected:
 	QString name;
 #endif
 };
-
-//#if defined(WIN32) && defined(_DEBUG)
-//#define _CRTDBG_MAP_ALLOC
-//#include <stdlib.h>
-//#include <crtdbg.h>
-//#define DEBUG_NEW new( _NORMAL_BLOCK, __FILE__, __LINE__ )
-//#define new DEBUG_NEW
-//#endif
 
 #endif

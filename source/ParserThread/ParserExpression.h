@@ -15,6 +15,9 @@ using namespace BigNumbersParser;
 
 class FormulaNode;
 
+/**
+ * Type of parser expression.
+ */
 enum ExpressionType
 {
 	AUTO = 1, 
@@ -23,6 +26,9 @@ enum ExpressionType
 	RATIONAL
 };
 
+/**
+ * Notation of parser expression.
+ */
 enum ExpressionNotation
 {
 	BINARY_NOTATION = 1, 
@@ -31,12 +37,18 @@ enum ExpressionNotation
 	HEXADECIMAL_NOTATION
 };
 
+/**
+ * Type of fraction
+ */
 enum FractionType
 {
 	PROPER_FRACTION = 1, 
 	IMPROPER_FRACTION
 };
 
+/**
+ * Parser string.
+ */
 struct ParserString
 {
 	ParserString();
@@ -62,6 +74,9 @@ struct ParserString
 	vector<AnnotationPos> annotation; //for having possibility of finding error's position
 };
 
+/**
+ * Parser expression.
+ */
 struct ParserExpression
 {
 	ParserExpression();
@@ -76,6 +91,9 @@ struct ParserExpression
 	bool solved;
 };
 
+/**
+ * Real parser expression.
+ */
 struct RealParserExpression : ParserExpression
 {
 	RealParserExpression();
@@ -89,6 +107,9 @@ struct RealParserExpression : ParserExpression
 	Real result;
 };
 
+/**
+ * Integer parser expression.
+ */
 struct IntegerParserExpression : ParserExpression
 {
 	IntegerParserExpression();
@@ -101,6 +122,9 @@ struct IntegerParserExpression : ParserExpression
 	Integer result;
 };
 
+/**
+ * Rational parser expression.
+ */
 struct RationalParserExpression : ParserExpression
 {
 	RationalParserExpression();
@@ -113,6 +137,9 @@ struct RationalParserExpression : ParserExpression
 	Rational result;
 };
 
+/**
+ * Automatic parser expression.
+ */
 struct AutoParserExpression : ParserExpression
 {
 	AutoParserExpression();
@@ -128,8 +155,9 @@ struct AutoParserExpression : ParserExpression
 	boost::variant<Integer, Real, Rational> result;
 };
 
-//typedef boost::variant<RealParserExpression, IntegerParserExpression, AutoParserExpression> ParserExpressionVar;
-
+/**
+ * Variant of parser expressions.
+ */
 struct ParserExpressionVariant
 {
 	ParserExpressionVariant(AutoParserExpression& expr)

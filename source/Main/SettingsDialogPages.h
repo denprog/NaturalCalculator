@@ -4,6 +4,9 @@
 #include <QWidget>
 #include "Settings.h"
 
+/**
+ * Formula fonts page.
+ */
 class FormulaFontsPage : public QWidget
 {
 public:
@@ -28,6 +31,9 @@ private:
 	FontGroup fontGroups[3]; //widget groups for setting font properties
 };
 
+/**
+ * Formula colors page.
+ */
 class FormulaColorsPage : public QWidget
 {
 public:

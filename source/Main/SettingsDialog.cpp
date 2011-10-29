@@ -2,6 +2,10 @@
 #include "SettingsDialog.h"
 #include "SettingsDialogPages.h"
 
+/**
+ * Constructor.
+ * @param [in] _settings The application settings.
+ */
 SettingsDialog::SettingsDialog(Settings* _settings) : settings(_settings)
 {
 	contentsWidget = new QTreeWidget;
@@ -55,6 +59,11 @@ SettingsDialog::SettingsDialog(Settings* _settings) : settings(_settings)
 	setWindowTitle(tr("Settings"));
 }
 
+/**
+ * The change page event.
+ * @param [in] current The current widget item.
+ * @param [in] previous The previous widget item.
+ */
 void SettingsDialog::OnChangePage(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
 	if (!current)
@@ -75,6 +84,9 @@ void SettingsDialog::OnChangePage(QTreeWidgetItem *current, QTreeWidgetItem *pre
 	}
 }
 
+/**
+ * The ok button event.
+ */
 void SettingsDialog::OnOk()
 {
 	formulaFontsPage->Store();

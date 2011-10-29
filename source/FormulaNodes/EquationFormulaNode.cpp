@@ -4,10 +4,18 @@
 #include <QFontMetrics>
 #include "../Main/FormulaWnd.h"
 
+/**
+ * Default constructor.
+ */
 EquationFormulaNode::EquationFormulaNode()
 {
 }
 
+/**
+ * Constructor.
+ * @param [in,out] _parent The parent node.
+ * @param [in,out] wnd The formula window.
+ */
 EquationFormulaNode::EquationFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : CompoundFormulaNode(_parent, wnd)
 {
 	shape = AddShapeNode();
@@ -18,10 +26,16 @@ EquationFormulaNode::EquationFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) 
 #endif
 }
 
+/**
+ * Destructor.
+ */
 EquationFormulaNode::~EquationFormulaNode()
 {
 }
 
+/**
+ * Remakes this node.
+ */
 void EquationFormulaNode::Remake()
 {
 	childNodes->Remake();
@@ -30,13 +44,9 @@ void EquationFormulaNode::Remake()
 	
 	if (childNodes->Count() > 0)
 	{
-		//get an expression to solve
-		//ParserExpression expr(this, wnd->settings->value("real/precision", 8).toInt());
-		//left->Parse(expr);
-		//resNode->SetExpression(expr);
-
 		if (!resNode)
 		{
+			//make a result node
 			resNode = new ResultFormulaNode(this, wnd);
 			AddChild(resNode);
 			
@@ -55,9 +65,11 @@ void EquationFormulaNode::Remake()
 		
 		FormulaNode* left = (*this)[0];
 		ParserString expr;
+		//parse the left nodes
 		left->Parse(expr);
 		resNode->SetExpression(expr);
 
+		//place the child nodes
 		int cx = left->boundingRect.width();
 		int cy = max(left->baseline, resNode->baseline);
 		baseline = cy;
@@ -70,6 +82,7 @@ void EquationFormulaNode::Remake()
 		int h = r.height();
 
 		left->Move(0, baseline - left->baseline);
+		//draw the shape
 		shape->AddFillRect(0, h * 0.3, w * 0.8, h * 0.1, QColor("black"));
 		shape->AddFillRect(0, h * 0.55, w * 0.8, h * 0.1, QColor("black"));
 		shape->Move(cx + w * 0.1, cy - h / 2);
@@ -81,6 +94,9 @@ void EquationFormulaNode::Remake()
 	}
 }
 
+/**
+ * Updates the bounding rectangle.
+ */
 void EquationFormulaNode::UpdateBoundingRect()
 {
 	CompoundFormulaNode::UpdateBoundingRect();
@@ -92,6 +108,10 @@ void EquationFormulaNode::UpdateBoundingRect()
 	shape->boundingRect.setHeight(r.height());
 }
 
+/**
+ * Makes a deep copy of this object.
+ * @return A copy of this object.
+ */
 FormulaNode* EquationFormulaNode::Clone()
 {
 	return new EquationFormulaNode(parent, wnd);

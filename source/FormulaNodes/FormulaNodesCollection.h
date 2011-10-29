@@ -9,8 +9,9 @@
 
 using namespace std;
 
-//class FormulaNode;
-
+/**
+ * Collection of formula nodes.
+ */
 class FormulaNodesCollection
 {
 public:
@@ -30,8 +31,6 @@ private:
 			FormulaNode* n = (*this)[i];
 			ar << n;
 		}
-		//for (NodesIter iter = nodes.begin(); iter != nodes.end(); ++iter)
-		//	ar << *iter;
 	}
 
 	template<class Archive>

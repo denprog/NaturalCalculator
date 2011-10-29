@@ -1,6 +1,11 @@
 #include "PlusFormulaNode.h"
 #include <QFontMetrics>
 
+/**
+ * Constructor.
+ * @param [in,out] _parent The parent node.
+ * @param [in,out] wnd The formula window.
+ */
 PlusFormulaNode::PlusFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : ShapeFormulaNode(_parent, wnd)
 {
 #ifdef _DEBUG
@@ -8,10 +13,16 @@ PlusFormulaNode::PlusFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : ShapeF
 #endif
 }
 
+/**
+ * Destructor.
+ */
 PlusFormulaNode::~PlusFormulaNode()
 {
 }
 
+/**
+ * Remakes this node.
+ */
 void PlusFormulaNode::Remake()
 {
 	QFont font = settings->GetTextFormulaNodeFont(level);
@@ -30,6 +41,9 @@ void PlusFormulaNode::Remake()
 	boundingRect.setCoords(0, 0, w, h);
 }
 
+/**
+ * Updates the bounding rectangle.
+ */
 void PlusFormulaNode::UpdateBoundingRect()
 {
 	QFont font = settings->GetTextFormulaNodeFont(level);
@@ -40,11 +54,19 @@ void PlusFormulaNode::UpdateBoundingRect()
 	boundingRect.moveTo(item->pos().x(), item->pos().y());
 }
 
+/**
+ * Adds the sign to the expression.
+ * @param [in,out] expr The parser expression.
+ */
 void PlusFormulaNode::Parse(ParserString& expr)
 {
 	expr.Add("+", this);
 }
 
+/**
+ * Makes a deep copy of this object.
+ * @return A copy of this object.
+ */
 FormulaNode* PlusFormulaNode::Clone()
 {
 	return new PlusFormulaNode(parent, wnd);

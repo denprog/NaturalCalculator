@@ -89,7 +89,6 @@ class FormulaTextItem : public QGraphicsTextItem
 {
 public:
 	FormulaTextItem(Settings* _settings, FormulaNodeLevel _level, QRectF& _boundingRect, QGraphicsItem* parent = 0);
-	~FormulaTextItem();
 	
 public:
 	friend class TextFormulaNode;

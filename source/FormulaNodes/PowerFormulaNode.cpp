@@ -2,6 +2,11 @@
 #include "FormulaNodesCollection.h"
 #include "ShapeFormulaNode.h"
 
+/**
+ * Constructor.
+ * @param [in,out] _parent The parent node.
+ * @param [in,out] wnd The formula window.
+ */
 PowerFormulaNode::PowerFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : CompoundFormulaNode(_parent, wnd)
 {
 	shape = AddShapeNode();
@@ -11,10 +16,16 @@ PowerFormulaNode::PowerFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : Comp
 #endif
 }
 
+/**
+ * Destructor.
+ */
 PowerFormulaNode::~PowerFormulaNode()
 {
 }
 
+/**
+ * Remakes this node.
+ */
 void PowerFormulaNode::Remake()
 {
 	if (childNodes->Count() > 1)
@@ -27,6 +38,7 @@ void PowerFormulaNode::Remake()
 		childNodes->Remake();
 		shape->ClearShapes();
 
+		//the shape
 		shape->AddFillRect(0, 0, left->boundingRect.height() / 10, left->boundingRect.height(), QColor("white"));
 		shape->UpdateBoundingRect();
 		
@@ -41,11 +53,19 @@ void PowerFormulaNode::Remake()
 	}
 }
 
+/**
+ * Makes a deep copy of this object.
+ * @return A copy of this object.
+ */
 FormulaNode* PowerFormulaNode::Clone()
 {
 	return new PowerFormulaNode(parent, wnd);
 }
 
+/**
+ * Parses the child nodes and adds the function name to the expression.
+ * @param [in,out] expr The expression.
+ */
 void PowerFormulaNode::Parse(ParserString& expr)
 {
 	expr.Add("pow(", this);

@@ -3,19 +3,35 @@
 
 //ParserString
 
+/**
+ * Default constructor.
+ */
 ParserString::ParserString()
 {
 }
 
+/**
+ * Destructor.
+ */
 ParserString::~ParserString()
 {
 }
 
+/**
+ * Adds an expression corresponding to a node.
+ * @param [in] expr The expression.
+ * @param [in] node The node.
+ */
 void ParserString::Add(char* expr, FormulaNode* node)
 {
 	Add(string(expr), node);
 }
 
+/**
+ * Adds an expression corresponding to a node.
+ * @param [in] expr The expression.
+ * @param [in] node The node.
+ */
 void ParserString::Add(string& expr, FormulaNode* node)
 {
 	HierarchyPos p;
@@ -27,6 +43,10 @@ void ParserString::Add(string& expr, FormulaNode* node)
 	expression += expr;
 }
 
+/**
+ * = casting operator.
+ * @param source Source for the parser string.
+ */
 void ParserString::operator=(const ParserString& source)
 {
 	expression = source.expression;
@@ -35,11 +55,11 @@ void ParserString::operator=(const ParserString& source)
 
 //ParserExpression
 
+/**
+ * Default constructor.
+ */
 ParserExpression::ParserExpression()
 {
-	//precision = 0;
-	//exp = 0;
-	//type = AUTO;
 	solved = false;
 }
 
@@ -47,40 +67,22 @@ ParserExpression::ParserExpression(FormulaNode* node)
 {
 }
 
-//ParserExpression::ParserExpression(FormulaNode* node, ExpressionType _type, int _precision, int _exp) : type(_type)//, precision(_precision), exp(_exp)
-//{
-//	node->GetHierarchyPos(pos);
-//	SetParam("precision", _precision);
-//	SetParam("exp", _exp);
-//	solved = false;
-//}
-
+/**
+ * Destructor.
+ */
 ParserExpression::~ParserExpression()
 {
 }
 
+/**
+ * == casting operator.
+ * @param expr The expression.
+ * @return The result of the operation.
+ */
 bool ParserExpression::operator==(const ParserExpression& expr)
 {
-	//return pos == expr.pos && precision == expr.precision && type == expr.type;
-	//for (ParamsIter iter = params.begin(); iter != params.end(); ++iter)
-	//{
-	//	if ((*iter).second != expr.params[(*iter).first])
-	//		return false;
-	//}
-	
 	return pos == expr.pos;
 }
-
-//void ParserExpression::SetParam(char* name, int p)
-//{
-//	params[name] = p;
-//}
-//
-//template<>
-//int ParserExpression::GetParam<int>(char* name)
-//{
-//	return any_cast<int>(params[name]);
-//}
 
 //RealParserExpression
 

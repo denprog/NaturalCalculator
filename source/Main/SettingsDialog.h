@@ -12,10 +12,13 @@ QT_END_NAMESPACE
 
 class FormulaFontsPage;
 
+/**
+ * The settings dialog.
+ */
 class SettingsDialog : public QDialog
 {
 	Q_OBJECT
-	
+
 public:
 	SettingsDialog(Settings* _settings);
 	

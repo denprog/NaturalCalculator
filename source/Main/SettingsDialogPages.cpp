@@ -4,6 +4,11 @@
 
 //FormulaFontsPage
 
+/**
+ * Constructor.
+ * @param [in] _settings The application settings.
+ * @param [in] parent	The parent widget.
+ */
 FormulaFontsPage::FormulaFontsPage(Settings* _settings, QWidget* parent) : QWidget(parent), settings(_settings)
 {
 	QVBoxLayout* mainLayout = new QVBoxLayout;
@@ -12,6 +17,7 @@ FormulaFontsPage::FormulaFontsPage(Settings* _settings, QWidget* parent) : QWidg
 	fontGroups[1].fontGroup = new QGroupBox(tr("First level index font"));
 	fontGroups[2].fontGroup = new QGroupBox(tr("Second level index font"));
 	
+	//fill the font group widgets
 	for (int i = 0; i < 3; ++i)
 	{
 		QFont& font = settings->GetTextFormulaNodeFont((FormulaNodeLevel)(i + 1));
@@ -52,6 +58,9 @@ FormulaFontsPage::FormulaFontsPage(Settings* _settings, QWidget* parent) : QWidg
 	setLayout(mainLayout);
 }
 
+/**
+ * Stores data from this page to the settings.
+ */
 void FormulaFontsPage::Store()
 {
 	for (int i = 0; i < 3; ++i)

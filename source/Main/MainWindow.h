@@ -5,13 +5,11 @@
 #include <QtGui/QToolBar>
 #include "FormulaWnd.h"
 
-//#if defined(WIN32) && defined(_DEBUG)
-//#define DEBUG_NEW new( _NORMAL_BLOCK, __FILE__, __LINE__ )
-//#define new DEBUG_NEW
-//#endif
-
 class QVBoxLayout;
 
+/**
+ * The main window of the application.
+ */
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
@@ -48,7 +46,7 @@ private slots:
 	void OnSin();
 
 public:
-	FormulaWnd* formulaWnd;
+	FormulaWnd* formulaWnd; ///< The formula window
 	
 private:
 	QVBoxLayout* mainLayout;

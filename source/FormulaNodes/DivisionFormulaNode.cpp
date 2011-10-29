@@ -2,10 +2,18 @@
 #include "../FormulaNodes/ShapeFormulaNode.h"
 #include "../Main/FormulaWnd.h"
 
+/**
+ * Default constructor.
+ */
 DivisionFormulaNode::DivisionFormulaNode()
 {
 }
 
+/**
+ * Constructor.
+ * @param [in,out] _parent The parent node.
+ * @param [in,out] wnd The formula window.
+ */
 DivisionFormulaNode::DivisionFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : CompoundFormulaNode(_parent, wnd)
 {
 	shape = AddShapeNode();
@@ -15,10 +23,17 @@ DivisionFormulaNode::DivisionFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) 
 #endif
 }
 
+/**
+ * Destructor.
+ */
 DivisionFormulaNode::~DivisionFormulaNode()
 {
 }
 	
+/**
+ * Adds a child node.
+ * @param [in,out] node If non-null, the node.
+ */
 void DivisionFormulaNode::AddChild(FormulaNode* node)
 {
 	if (childNodes->Count() == 1)
@@ -27,6 +42,11 @@ void DivisionFormulaNode::AddChild(FormulaNode* node)
 		CompoundFormulaNode::AddChild(node);
 }
 
+/**
+ * Inserts a child node concerning the shape node.
+ * @param [in,out] node The node.
+ * @param pos The position.
+ */
 void DivisionFormulaNode::InsertChild(FormulaNode* node, int pos)
 {
 	switch (pos)
@@ -34,7 +54,7 @@ void DivisionFormulaNode::InsertChild(FormulaNode* node, int pos)
 	case 0:
 		CompoundFormulaNode::InsertChild(node, 0);
 		break;
-	case 1:
+	case 1: //the shape node
 	case 2:
 		if (childNodes->Count() == 2)
 			CompoundFormulaNode::InsertChild(node, 2);
@@ -42,6 +62,9 @@ void DivisionFormulaNode::InsertChild(FormulaNode* node, int pos)
 	}
 }
 
+/**
+ * Remakes this node.
+ */
 void DivisionFormulaNode::Remake()
 {
 	childNodes->Remake();
@@ -66,12 +89,19 @@ void DivisionFormulaNode::Remake()
 	}
 }
 
+/**
+ * Updates the bounding rectangle.
+ */
 void DivisionFormulaNode::UpdateBoundingRect()
 {
 	FormulaNode::UpdateBoundingRect();
 	shape->boundingRect.setHeight(1);
 }
 
+/**
+ * Parses the child nodes and makes output expression.
+ * @param [in,out] expr The expression.
+ */
 void DivisionFormulaNode::Parse(ParserString& expr)
 {
 	expr.Add("(", this);
@@ -81,48 +111,52 @@ void DivisionFormulaNode::Parse(ParserString& expr)
 	expr.Add(")", this);
 }
 
+/**
+ * Makes a deep copy of this object.
+ * @return A copy of this object.
+ */
 FormulaNode* DivisionFormulaNode::Clone()
 {
 	return new DivisionFormulaNode(parent, wnd);
 }
 
+/**
+ * Gets the next caret position of the node.
+ * @param [in,out] relativeState Relative caret state.
+ * @return The next position.
+ */
 SharedCaretState DivisionFormulaNode::GetNextPosition(SharedCaretState& relativeState)
 {
 	if (!relativeState)
 		return CompoundFormulaNode::GetNextPosition(relativeState);
 	
-	SharedCaretState res = CompoundFormulaNode::GetNextPosition(relativeState);
-	//FormulaNode* n = res->GetNode();
-	//FormulaNode* dividend = (*this)[0];
-	//if (!res->CheckOnNode(this) && n != dividend && dividend->IsChild(n))
-	//	return parent->GetNextPosition(relativeState);
-	
-	return res;
+	return CompoundFormulaNode::GetNextPosition(relativeState);
 }
 
+/**
+ * Gets the previous caret position.
+ * @param [in,out] relativeState Relative caret state.
+ * @return The previous position.
+ */
 SharedCaretState DivisionFormulaNode::GetPreviousPosition(SharedCaretState& relativeState)
 {
 	if (!relativeState)
 		return CompoundFormulaNode::GetPreviousPosition(relativeState);
 	
-	//FormulaNode* divisor = (*this)[2];
-	SharedCaretState res = CompoundFormulaNode::GetPreviousPosition(relativeState);
-	//if (!res.Empty())
-	//{
-	//	FormulaNode* n = res.GetNode();
-	//	if (!res.CheckOnNode(this) && n != divisor && !divisor->IsChild(n))
-	//		return parent->GetPreviousPosition(relativeState);
-	//}
-	
-	return res;
+	return CompoundFormulaNode::GetPreviousPosition(relativeState);
 }
 
+/**
+ * Renders the caret inside this node.
+ * @param pos	The position.
+ * @param anchor The anchor.
+ */
 void DivisionFormulaNode::RenderCaret(const int pos, const int anchor)
 {
 	if (pos == 1)
 	{
+		//render the shape's caret
 		QRectF r = GetDocumentPosBounds(pos);
-		
 		QGraphicsItemGroup* g = wnd->caret->caretShape;
 		
 		qDeleteAll(g->childItems());

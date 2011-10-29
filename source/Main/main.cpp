@@ -5,6 +5,12 @@
 #include <QLocale>
 #include <QLibraryInfo>
 
+/**
+ * Main entry-point for this application.
+ * @param argc Number of command-line arguments.
+ * @param argv Array of command-line argument strings.
+ * @return Exit-code for the process - 0 for success, else an error code.
+ */
 int main(int argc, char *argv[])
 {
 	NaturalCalculatorApp app(argc, argv);

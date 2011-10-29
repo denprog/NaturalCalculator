@@ -9,10 +9,17 @@
 #include "SquareRootFormulaNode.h"
 #include "../Main/FormulaWnd.h"
 
+/**
+ * Default constructor.
+ */
 TextFormulaNode::TextFormulaNode()
 {
 }
 
+/**
+ * Constructor.
+ * @param [in,out] parent The parent node.
+ */
 TextFormulaNode::TextFormulaNode(FormulaNode* parent) : FormulaNode(parent, parent->wnd)
 {
 	item = new FormulaTextItem(settings, level, boundingRect, parent->item);
@@ -25,10 +32,16 @@ TextFormulaNode::TextFormulaNode(FormulaNode* parent) : FormulaNode(parent, pare
 #endif
 }
 
+/**
+ * Destructor.
+ */
 TextFormulaNode::~TextFormulaNode()
 {
 }
 
+/**
+ * Updates the bounding rectangle.
+ */
 void TextFormulaNode::UpdateBoundingRect()
 {
 	QFont& font = settings->GetTextFormulaNodeFont(level);
@@ -41,6 +54,9 @@ void TextFormulaNode::UpdateBoundingRect()
 	boundingRect.moveTo(item->pos().x(), item->pos().y());
 }
 
+/**
+ * Remakes this node.
+ */
 void TextFormulaNode::Remake()
 {
 	((FormulaTextItem*)item)->level = level;
@@ -48,6 +64,10 @@ void TextFormulaNode::Remake()
 	baseline = ((FormulaTextItem*)item)->font().pointSize();
 }
 
+/**
+ * Makes a deep copy of this object.
+ * @return A copy of this object.
+ */
 FormulaNode* TextFormulaNode::Clone()
 {
 	TextFormulaNode* res = new TextFormulaNode(parent);
@@ -56,31 +76,47 @@ FormulaNode* TextFormulaNode::Clone()
 	return res;
 }
 
+/**
+ * Sets a text.
+ * @param _text The text.
+ */
 void TextFormulaNode::SetText(QString _text)
 {
 	((QGraphicsTextItem*)item)->setPlainText(_text);
 }
 
+/**
+ * Gets the text.
+ * @return The text.
+ */
 QString TextFormulaNode::GetText()
 {
 	return ((QGraphicsTextItem*)item)->toPlainText();
 }
 
-//void TextFormulaNode::SetFont(QFont font)
-//{
-//	((QGraphicsTextItem*)item)->setFont(font);
-//}
-
+/**
+ * Gets the first caret position of the node.
+ * @return The first caret position.
+ */
 SharedCaretState TextFormulaNode::GetFirstPosition()
 {
 	return SharedCaretState(new CaretState(this, 0));
 }
 
+/**
+ * Gets the last caret position of the node.
+ * @return The last position.
+ */
 SharedCaretState TextFormulaNode::GetLastPosition()
 {
 	return SharedCaretState(new CaretState(this, GetText().length()));
 }
 
+/**
+ * Gets the next caret position of the node.
+ * @param [in,out] relativeState Relative caret state.
+ * @return The next caret position.
+ */
 SharedCaretState TextFormulaNode::GetNextPosition(SharedCaretState& relativeState)
 {
 	if (relativeState && relativeState->CheckInNode(this))
@@ -94,6 +130,11 @@ SharedCaretState TextFormulaNode::GetNextPosition(SharedCaretState& relativeStat
 	return GetFirstPosition();
 }
 
+/**
+ * Gets the previous caret position of the node.
+ * @param [in,out] relativeState Relative caret state.
+ * @return The previous caret position.
+ */
 SharedCaretState TextFormulaNode::GetPreviousPosition(SharedCaretState& relativeState)
 {
 	if (relativeState && relativeState->CheckInNode(this))
@@ -107,6 +148,11 @@ SharedCaretState TextFormulaNode::GetPreviousPosition(SharedCaretState& relative
 	return GetLastPosition();
 }
 
+/**
+ * Gets a position bounds relatively to the document.
+ * @param pos The position.
+ * @return The position bounds.
+ */
 QRectF TextFormulaNode::GetDocumentPosBounds(int pos)
 {
 	QRectF r = parent->GetDocumentPosBounds(parent->GetChildPos(this));
@@ -124,6 +170,11 @@ QRectF TextFormulaNode::GetDocumentPosBounds(int pos)
 	return r;
 }
 
+/**
+ * Renders the caret inside this node.
+ * @param pos	The caret position.
+ * @param anchor The anchor.
+ */
 void TextFormulaNode::RenderCaret(const int pos, const int anchor)
 {
 	QRectF r = GetDocumentPosBounds(pos);
@@ -138,6 +189,10 @@ void TextFormulaNode::RenderCaret(const int pos, const int anchor)
 	g->addToGroup(i);
 }
 
+/**
+ * Adds the current string to the expression.
+ * @param [in,out] expr The expression.
+ */
 void TextFormulaNode::Parse(ParserString& expr)
 {
 	expr.Add(GetText().toUtf8().data(), this);
@@ -153,6 +208,11 @@ bool TextFormulaNode::UndoInsertNode(NodeEvent& nodeEvent)
 	return false;
 }
 
+/**
+ * Executes the insert text operation.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool TextFormulaNode::DoInsertText(NodeEvent& nodeEvent)
 {
 	command = any_cast<Command*>(nodeEvent["command"]);
@@ -173,6 +233,11 @@ bool TextFormulaNode::DoInsertText(NodeEvent& nodeEvent)
 	return true;
 }
 
+/**
+ * Undo insert text.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool TextFormulaNode::UndoInsertText(NodeEvent& nodeEvent)
 {
 	command = any_cast<Command*>(nodeEvent["command"]);
@@ -190,6 +255,11 @@ bool TextFormulaNode::UndoInsertText(NodeEvent& nodeEvent)
 	return true;
 }
 
+/**
+ * Executes the remove item operation.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool TextFormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
 {
 	command = any_cast<Command*>(nodeEvent["command"]);
@@ -230,6 +300,11 @@ bool TextFormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
 	return true;
 }
 
+/**
+ * Undo remove item.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool TextFormulaNode::UndoRemoveItem(NodeEvent& nodeEvent)
 {
 	command = any_cast<Command*>(nodeEvent["command"]);
@@ -245,6 +320,11 @@ bool TextFormulaNode::UndoRemoveItem(NodeEvent& nodeEvent)
 	return true;
 }
 
+/**
+ * Executes the create plus formula node operation.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool TextFormulaNode::DoCreatePlusFormulaNode(NodeEvent& nodeEvent)
 {
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
@@ -269,6 +349,11 @@ bool TextFormulaNode::DoCreatePlusFormulaNode(NodeEvent& nodeEvent)
 	return true;
 }
 
+/**
+ * Undo create plus formula node.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool TextFormulaNode::UndoCreatePlusFormulaNode(NodeEvent& nodeEvent)
 {
 	bool right = any_cast<bool>(command->GetParam(this, "right"));
@@ -277,6 +362,11 @@ bool TextFormulaNode::UndoCreatePlusFormulaNode(NodeEvent& nodeEvent)
 	return true;
 }
 
+/**
+ * Executes the create minus formula node operation.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool TextFormulaNode::DoCreateMinusFormulaNode(NodeEvent& nodeEvent)
 {
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
@@ -301,6 +391,11 @@ bool TextFormulaNode::DoCreateMinusFormulaNode(NodeEvent& nodeEvent)
 	return true;
 }
 
+/**
+ * Undo create minus formula node.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool TextFormulaNode::UndoCreateMinusFormulaNode(NodeEvent& nodeEvent)
 {
 	bool right = any_cast<bool>(nodeEvent["right"]);
@@ -309,6 +404,11 @@ bool TextFormulaNode::UndoCreateMinusFormulaNode(NodeEvent& nodeEvent)
 	return true;
 }
 
+/**
+ * Executes the create multiply formula node operation.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool TextFormulaNode::DoCreateMultiplyFormulaNode(NodeEvent& nodeEvent)
 {
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
@@ -333,6 +433,11 @@ bool TextFormulaNode::DoCreateMultiplyFormulaNode(NodeEvent& nodeEvent)
 	return true;
 }
 
+/**
+ * Undo create multiply formula node.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool TextFormulaNode::UndoCreateMultiplyFormulaNode(NodeEvent& nodeEvent)
 {
 	bool right = any_cast<bool>(nodeEvent["right"]);
@@ -341,6 +446,11 @@ bool TextFormulaNode::UndoCreateMultiplyFormulaNode(NodeEvent& nodeEvent)
 	return true;
 }
 
+/**
+ * Executes the create division formula node operation.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool TextFormulaNode::DoCreateDivisionFormulaNode(NodeEvent& nodeEvent)
 {
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
@@ -363,17 +473,26 @@ bool TextFormulaNode::DoCreateDivisionFormulaNode(NodeEvent& nodeEvent)
 	return true;
 }
 
+/**
+ * Undo create division formula node.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool TextFormulaNode::UndoCreateDivisionFormulaNode(NodeEvent& nodeEvent)
 {
 	FormulaNode* p = parent->parent->parent;
 	int pos = p->GetChildPos(parent->parent);
 	p->MoveChild(this, pos);
-	//delete p->(*this)[pos + 1];
 	p->RemoveChild(pos + 1);
 	
 	return true;
 }
 
+/**
+ * Executes the create power formula node operation.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool TextFormulaNode::DoCreatePowerFormulaNode(NodeEvent& nodeEvent)
 {
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
@@ -396,6 +515,11 @@ bool TextFormulaNode::DoCreatePowerFormulaNode(NodeEvent& nodeEvent)
 	return true;
 }
 
+/**
+ * Undo create power formula node.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool TextFormulaNode::UndoCreatePowerFormulaNode(NodeEvent& nodeEvent)
 {
 	FormulaNode* p = parent->parent->parent;
@@ -406,6 +530,11 @@ bool TextFormulaNode::UndoCreatePowerFormulaNode(NodeEvent& nodeEvent)
 	return true;
 }
 
+/**
+ * Executes the create square root formula node operation.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool TextFormulaNode::DoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
 {
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
@@ -424,6 +553,11 @@ bool TextFormulaNode::DoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
 	return true;
 }
 
+/**
+ * Undo create square root formula node.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool TextFormulaNode::UndoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
 {
 	FormulaNode* p = parent->parent->parent;
@@ -436,15 +570,24 @@ bool TextFormulaNode::UndoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
 
 //FormulaTextItem
 
+/**
+ * Constructor.
+ * @param [in,out] _settings Application's settings.
+ * @param _level The node level.
+ * @param [in,out] _boundingRect The bounding rectangle.
+ * @param [in,out] parent The parent item.
+ */
 FormulaTextItem::FormulaTextItem(Settings* _settings, FormulaNodeLevel _level, QRectF& _boundingRect, QGraphicsItem* parent) : 
 	QGraphicsTextItem(parent), settings(_settings), level(_level), boundingRect(_boundingRect)
 {
 }
 
-FormulaTextItem::~FormulaTextItem()
-{
-}
-
+/**
+ * Paints the current text.
+ * @param [in,out] painter The painter.
+ * @param option The options.
+ * @param [in,out] widget The widget for the painting.
+ */
 void FormulaTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
 	QFont& font = settings->GetTextFormulaNodeFont(level);

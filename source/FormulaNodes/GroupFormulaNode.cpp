@@ -5,10 +5,18 @@
 #include "FormulaNodesCollection.h"
 #include <QGraphicsItemGroup>
 
+/**
+ * Default constructor.
+ */
 GroupFormulaNode::GroupFormulaNode()
 {
 }
 
+/**
+ * Constructor.
+ * @param [in,out] _parent The parent node.
+ * @param [in,out] wnd The formula window.
+ */
 GroupFormulaNode::GroupFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : FormulaNode(_parent, wnd)
 {
 	item = new QGraphicsItemGroup(_parent ? _parent->item : NULL);
@@ -18,10 +26,16 @@ GroupFormulaNode::GroupFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : Form
 #endif
 }
 
+/**
+ * Destructor.
+ */
 GroupFormulaNode::~GroupFormulaNode()
 {
 }
 
+/**
+ * Remakes this node.
+ */
 void GroupFormulaNode::Remake()
 {
 	int x = 0;
@@ -40,6 +54,9 @@ void GroupFormulaNode::Remake()
 	UpdateBoundingRect();
 }
 
+/**
+ * Updates this node.
+ */
 void GroupFormulaNode::Update()
 {
 	baseline = 0;
@@ -52,22 +69,10 @@ void GroupFormulaNode::Update()
 	}
 }
 
-//void GroupFormulaNode::UpdateBoundingRect()
-//{
-//	childNodes->UpdateBoundingRect();
-//	boundingRect = item->boundingRect();
-//	boundingRect.moveTo(item->pos().x(), item->pos().y());
-//}
-
-//void GroupFormulaNode::Move(int x, int y)
-//{
-//	item->setPos(x, y);
-//	
-//	//QRectF r = item->boundingRect();
-//	//QPointF p = item->pos();
-//	//boundingRect.moveTo(item->pos().x(), item->pos().y());
-//}
-
+/**
+ * Makes a deep copy of this node.
+ * @return null A copy of this object.
+ */
 FormulaNode* GroupFormulaNode::Clone()
 {
 	GroupFormulaNode* res = new GroupFormulaNode(parent, wnd);
@@ -76,6 +81,10 @@ FormulaNode* GroupFormulaNode::Clone()
 	return res;
 }
 
+/**
+ * Adds a shape node.
+ * @return The shape node.
+ */
 ShapeFormulaNode* GroupFormulaNode::AddShapeNode()
 {
 	ShapeFormulaNode* n = new ShapeFormulaNode(this, wnd);
@@ -83,6 +92,10 @@ ShapeFormulaNode* GroupFormulaNode::AddShapeNode()
 	return n;
 }
 
+/**
+ * Gets the first caret position of the node.
+ * @return The first caret position.
+ */
 SharedCaretState GroupFormulaNode::GetFirstPosition()
 {
 	if (childNodes->Count() == 0)
@@ -108,6 +121,10 @@ SharedCaretState GroupFormulaNode::GetFirstPosition()
 	return res;
 }
 
+/**
+ * Gets the last caret position of the node.
+ * @return The last position.
+ */
 SharedCaretState GroupFormulaNode::GetLastPosition()
 {
 	if (childNodes->Count() == 0)
@@ -129,6 +146,11 @@ SharedCaretState GroupFormulaNode::GetLastPosition()
 	return SharedCaretState(new CaretState(this, childNodes->Count()));
 }
 
+/**
+ * Gets the next position of the node.
+ * @param [in,out] relativeState Relative caret state.
+ * @return The next position.
+ */
 SharedCaretState GroupFormulaNode::GetNextPosition(SharedCaretState& relativeState)
 {
 	SharedCaretState res;
@@ -186,6 +208,11 @@ SharedCaretState GroupFormulaNode::GetNextPosition(SharedCaretState& relativeSta
 	return res;
 }
 
+/**
+ * Gets the previous caret position of the node.
+ * @param [in,out] relativeState Relative caret state.
+ * @return The previous position.
+ */
 SharedCaretState GroupFormulaNode::GetPreviousPosition(SharedCaretState& relativeState)
 {
 	SharedCaretState res;

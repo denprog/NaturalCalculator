@@ -6,14 +6,26 @@
 #include "FormulaNodesCollection.h"
 #include "../Main/FormulaWnd.h"
 
+/**
+ * Constructor.
+ * @param [in,out] _parent The parent node.
+ * @param [in,out] wnd The formula window.
+ */
 ResultFormulaNode::ResultFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : GroupFormulaNode(_parent, wnd)
 {
 }
 
+/**
+ * Destructor.
+ */
 ResultFormulaNode::~ResultFormulaNode()
 {
 }
 
+/**
+ * Sets an parser expression to be solved.
+ * @param [in,out] expr The expression.
+ */
 void ResultFormulaNode::SetExpression(ParserString& expr)
 {
 	for (int i = 0; i < (int)parserExpressions.size(); ++i)
@@ -31,6 +43,10 @@ void ResultFormulaNode::SetExpression(ParserString& expr)
 	}
 }
 
+/**
+ * Adds a result node.
+ * @param [in,out] expr The expression.
+ */
 void ResultFormulaNode::AddResultNode(ParserExpressionVariant& expr)
 {
 	AddChild(new GroupFormulaNode(this, wnd));
@@ -92,6 +108,9 @@ void ResultFormulaNode::RemoveResultNode()
 //	return true;
 //}
 
+/**
+ * Remakes this node.
+ */
 void ResultFormulaNode::Remake()
 {
 	ParserExpression expr;
@@ -170,10 +189,17 @@ void ResultFormulaNode::Remake()
 	//GroupFormulaNode::Remake();
 }
 
+/**
+ * Constructor of the visitor.
+ * @param [in,out] _parent If non-null, the parent.
+ */
 ResultFormulaNode::ResultNodeMaker::ResultNodeMaker(FormulaNode* _parent) : parent(_parent)
 {
 }
 
+/**
+ * () casting operator of the visitor for RealParserExpression expressions.
+ */
 void ResultFormulaNode::ResultNodeMaker::operator()(RealParserExpression const& expr) const
 {
 	parent->childNodes->Clear();
@@ -221,6 +247,9 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RealParserExpression const& 
 	}
 }
 
+/**
+ * () casting operator of the visitor for IntegerParserExpression expressions.
+ */
 void ResultFormulaNode::ResultNodeMaker::operator()(IntegerParserExpression const& expr) const
 {
 	parent->childNodes->Clear();
@@ -246,6 +275,9 @@ void ResultFormulaNode::ResultNodeMaker::operator()(IntegerParserExpression cons
 	t->SetText(num.c_str());
 }
 
+/**
+ * () casting operator of the visitor for RationalParserExpression expressions.
+ */
 void ResultFormulaNode::ResultNodeMaker::operator()(RationalParserExpression const& expr) const
 {
 	parent->childNodes->Clear();
@@ -309,6 +341,9 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RationalParserExpression con
 	}
 }
 
+/**
+ * () casting operator of the visitor for AutoParserExpression expressions.
+ */
 void ResultFormulaNode::ResultNodeMaker::operator()(AutoParserExpression const& expr) const
 {
 	RealParserExpression realExpr;

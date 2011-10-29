@@ -4,21 +4,37 @@
 #include "MainWindow.h"
 #include "SettingsDialog.h"
 
+/**
+ * Constructor.
+ * @param [in,out] parent The parent widget.
+ * @param flags	The flags.
+ */
 MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags), settings("naturaleditor.org", "MainWindow")
 {
 	SetupUi();
 }
 
+/**
+ * Destructor.
+ */
 MainWindow::~MainWindow()
 {
 }
 
+/**
+ * The close event.
+ * @param [in,out] event The event.
+ */
 void MainWindow::closeEvent(QCloseEvent* event)
 {
+	//save the settings
 	settings.Save("NaturalCalculator", "position", pos());
 	settings.Save("NaturalCalculator", "size", size());
 }
 
+/**
+ * Sets up the user interface.
+ */
 void MainWindow::SetupUi()
 {
 	resize(600, 400);
@@ -135,11 +151,17 @@ void MainWindow::SetupUi()
 	formulaWnd->activateWindow();
 }
 
+/**
+ * The new button event.
+ */
 void MainWindow::OnNew()
 {
 	formulaWnd->New();
 }
 
+/**
+ * The open button event.
+ */
 void MainWindow::OnOpen()
 {
 	QFileDialog d(this);
@@ -150,6 +172,9 @@ void MainWindow::OnOpen()
 		formulaWnd->Open(d.selectedFiles()[0]);
 }
 
+/**
+ * The save button event.
+ */
 void MainWindow::OnSave()
 {
 	QFileDialog d(this);
@@ -161,16 +186,25 @@ void MainWindow::OnSave()
 		formulaWnd->Save(d.selectedFiles()[0]);
 }
 
+/**
+ * The undo button event.
+ */
 void MainWindow::OnUndo()
 {
 	formulaWnd->Undo();
 }
 
+/**
+ * The redo button event.
+ */
 void MainWindow::OnRedo()
 {
 	formulaWnd->Redo();
 }
 
+/**
+ * The settings button event.
+ */
 void MainWindow::OnSettings()
 {
 	SettingsDialog d(&settings);
@@ -178,40 +212,64 @@ void MainWindow::OnSettings()
 		formulaWnd->UpdateView();
 }
 
+/**
+ * The plus button event.
+ */
 void MainWindow::OnPlus()
 {
 	formulaWnd->InsertNode(&FormulaNode::DoCreatePlusFormulaNode);
 }
 
+/**
+ * The sin button event.
+ */
 void MainWindow::OnSin()
 {
 }
 
+/**
+ * The minus button event.
+ */
 void MainWindow::OnMinus()
 {
 	formulaWnd->InsertNode(&FormulaNode::DoCreateMinusFormulaNode);
 }
 
+/**
+ * The multiply button event.
+ */
 void MainWindow::OnMultiply()
 {
 	formulaWnd->InsertNode(&FormulaNode::DoCreateMultiplyFormulaNode);
 }
 
+/**
+ * The division button event.
+ */
 void MainWindow::OnDivision()
 {
 	formulaWnd->InsertNode(&FormulaNode::DoCreateDivisionFormulaNode);
 }
 
+/**
+ * The power button event.
+ */
 void MainWindow::OnPower()
 {
 	formulaWnd->InsertNode(&FormulaNode::DoCreatePowerFormulaNode);
 }
 
+/**
+ * The sqrt button event.
+ */
 void MainWindow::OnSqrt()
 {
 	formulaWnd->InsertNode(&FormulaNode::DoCreateSquareRootFormulaNode);
 }
 
+/**
+ * The equality button event.
+ */
 void MainWindow::OnEquality()
 {
 	formulaWnd->InsertNode(&FormulaNode::DoCreateEquationFormulaNode);

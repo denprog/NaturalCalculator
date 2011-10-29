@@ -2,12 +2,19 @@
 #include "../Main/FormulaWnd.h"
 #include <QCoreApplication>
 
+/**
+ * Constructor.
+ * @param [in] _wnd The formula window.
+ */
 ParserThread::ParserThread(FormulaWnd* _wnd) : wnd(_wnd)
 {
 	exit = false;
 	thread = new boost::thread(SolvingThread(this));
 }
 
+/**
+ * Destructor.
+ */
 ParserThread::~ParserThread()
 {
 	exit = true;
@@ -16,6 +23,10 @@ ParserThread::~ParserThread()
 	delete thread;
 }
 
+/**
+ * Adds an expression to be solved.
+ * @param [in,out] expr The expression.
+ */
 void ParserThread::AddExpression(ParserExpressionVariant& expr)
 {
 	boost::mutex::scoped_lock lock(expressionsMutex);
@@ -23,6 +34,10 @@ void ParserThread::AddExpression(ParserExpressionVariant& expr)
 	expressionsReady.notify_one();
 }
 
+/**
+ * Removes a expression.
+ * @param [in,out] expr The expression.
+ */
 void ParserThread::RemoveExpression(ParserExpressionVariant& expr)
 {
 	boost::mutex::scoped_lock lock(expressionsMutex);
@@ -35,6 +50,11 @@ void ParserThread::RemoveExpression(ParserExpressionVariant& expr)
 		solvedExpressions.erase(it);
 }
 
+/**
+ * Gets a solved expression.
+ * @param [in,out] expr The expression.
+ * @return true if it succeeds, false if it fails.
+ */
 bool ParserThread::GetSolvedExpression(ParserExpressionVariant& expr)
 {
 	boost::mutex::scoped_lock lock(expressionsMutex);
@@ -50,21 +70,32 @@ bool ParserThread::GetSolvedExpression(ParserExpressionVariant& expr)
 	return false;
 }
 
+/**
+ * Constructor.
+ * @param [in,out] _parserThread The parser thread.
+ */
 ParserThread::SolvingThread::SolvingThread(ParserThread* _parserThread)
 {
 	parserThread = _parserThread;
 }
 
+/**
+ * Destructor.
+ */
 ParserThread::SolvingThread::~SolvingThread()
 {
 }
 
+/**
+ * The solving thread
+ */
 void ParserThread::SolvingThread::operator()()
 {
 	using BigNumbersParser::Parser;
 	
 	boost::mutex mut;
 
+	//init the parsers
 	realParser = new Parser<Real>(10);
 	integerParser = new Parser<Integer>(10);
 	rationalParser = new Parser<Rational>(10);
@@ -73,6 +104,7 @@ void ParserThread::SolvingThread::operator()()
 	parsers.push_back(integerParser);
 	parsers.push_back(rationalParser);
 
+	//the solving loop
 	while (!parserThread->exit)
 	{
 		boost::unique_lock<boost::mutex> lock(mut);
@@ -83,6 +115,7 @@ void ParserThread::SolvingThread::operator()()
 		parserThread->expressionsToSolve.clear();
 		parserThread->expressionsMutex.unlock();
 
+		//wait until the expressions are ready
 		while (expressions.size() == 0 && !parserThread->exit)
 		{
 			parserThread->expressionsReady.wait(lock);
@@ -121,6 +154,9 @@ void ParserThread::SolvingThread::operator()()
 	delete rationalParser;
 }
 
+/**
+ * The solving visitor for RealParserExpression.
+ */
 void ParserThread::SolvingThread::operator()(RealParserExpression const& expr) const
 {
 	try
@@ -133,6 +169,9 @@ void ParserThread::SolvingThread::operator()(RealParserExpression const& expr) c
 	}
 }
 
+/**
+ * The solving visitor for IntegerParserExpression.
+ */
 void ParserThread::SolvingThread::operator()(IntegerParserExpression const& expr) const
 {
 	try
@@ -145,6 +184,9 @@ void ParserThread::SolvingThread::operator()(IntegerParserExpression const& expr
 	}
 }
 
+/**
+ * The solving visitor for RationalParserExpression.
+ */
 void ParserThread::SolvingThread::operator()(RationalParserExpression const& expr) const
 {
 	try
@@ -157,6 +199,9 @@ void ParserThread::SolvingThread::operator()(RationalParserExpression const& exp
 	}
 }
 
+/**
+ * The solving visitor for AutoParserExpression.
+ */
 void ParserThread::SolvingThread::operator()(AutoParserExpression const& expr) const
 {
 	int j;

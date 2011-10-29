@@ -10,8 +10,14 @@ class FormulaNode;
 class FormulaWnd;
 class CurrentNode;
 
+/**
+ * Defines hierarchy position of a node, which is an array of node positions in their collections towards the root node.
+ */
 typedef vector<int> HierarchyPos;
 
+/**
+ * Caret state.
+ */
 class CaretState
 {
 public:
@@ -48,6 +54,9 @@ private:
 	CurrentNode* currentNode;
 };
 
+/**
+ * Caret position.
+ */
 class CaretPosition
 {
 public:
@@ -60,10 +69,13 @@ public:
 	int GetPos();
 	
 private:
-	vector<int> positions;
+	vector<int> positions; ///< The caret positions
 	FormulaWnd* wnd;
 };
 
+/**
+ * Current node.
+ */
 class CurrentNode
 {
 public:

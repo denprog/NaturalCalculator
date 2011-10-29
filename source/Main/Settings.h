@@ -10,6 +10,9 @@ typedef QMap<int, QFont> FontMap;
 
 Q_DECLARE_METATYPE(FontMap);
 
+/**
+ * The application settings.
+ */
 class Settings : public QSettings
 {
 public:
