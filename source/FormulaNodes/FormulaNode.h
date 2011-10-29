@@ -153,18 +153,18 @@ public:
 	FormulaNodesCollection* childNodes;
 	QRectF boundingRect;
 	QGraphicsItem* item;
-	int baseline;
+	qreal baseline;
 	FormulaWnd* wnd;
 	FormulaNodeLevel level;
+
+protected:
+	Command* command;	
 	
 protected:
 	Settings* settings;
 #ifdef _DEBUG
 	QString name;
 #endif
-
-private:
-	Command* command;	
 };
 
 //#if defined(WIN32) && defined(_DEBUG)

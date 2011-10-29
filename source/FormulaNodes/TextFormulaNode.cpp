@@ -31,7 +31,8 @@ TextFormulaNode::~TextFormulaNode()
 
 void TextFormulaNode::UpdateBoundingRect()
 {
-	QFont font = settings->GetTextFormulaNodeFont(level);
+	QFont& font = settings->GetTextFormulaNodeFont(level);
+	((FormulaTextItem*)item)->setFont(font);
 	QFontMetrics m(font);
 	QRectF b = m.boundingRect(((QGraphicsTextItem*)item)->toPlainText());
 	
@@ -44,7 +45,7 @@ void TextFormulaNode::Remake()
 {
 	((FormulaTextItem*)item)->level = level;
 	UpdateBoundingRect();
-	baseline = ((QGraphicsTextItem*)item)->font().pointSize();
+	baseline = ((FormulaTextItem*)item)->font().pointSize();
 }
 
 FormulaNode* TextFormulaNode::Clone()
@@ -154,7 +155,7 @@ bool TextFormulaNode::UndoInsertNode(NodeEvent& nodeEvent)
 
 bool TextFormulaNode::DoInsertText(NodeEvent& nodeEvent)
 {
-	Command* command = any_cast<Command*>(nodeEvent["command"]);
+	command = any_cast<Command*>(nodeEvent["command"]);
 	QString str = any_cast<QString>(nodeEvent["text"]);
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	int pos = c->GetPos();
@@ -174,7 +175,7 @@ bool TextFormulaNode::DoInsertText(NodeEvent& nodeEvent)
 
 bool TextFormulaNode::UndoInsertText(NodeEvent& nodeEvent)
 {
-	Command* command = any_cast<Command*>(nodeEvent["command"]);
+	command = any_cast<Command*>(nodeEvent["command"]);
 	int pos = any_cast<int>(command->GetParam(this, "pos"));
 	QString str = any_cast<QString>(nodeEvent["text"]);
 	QString text = GetText();
@@ -191,7 +192,7 @@ bool TextFormulaNode::UndoInsertText(NodeEvent& nodeEvent)
 
 bool TextFormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
 {
-	Command* command = any_cast<Command*>(nodeEvent["command"]);
+	command = any_cast<Command*>(nodeEvent["command"]);
 	bool right = any_cast<bool>(nodeEvent["right"]);
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	int pos = c->GetPos();
@@ -231,7 +232,7 @@ bool TextFormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
 
 bool TextFormulaNode::UndoRemoveItem(NodeEvent& nodeEvent)
 {
-	Command* command = any_cast<Command*>(nodeEvent["command"]);
+	command = any_cast<Command*>(nodeEvent["command"]);
 	bool right = any_cast<bool>(nodeEvent["right"]);
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	int pos = c->GetPos();
@@ -247,20 +248,31 @@ bool TextFormulaNode::UndoRemoveItem(NodeEvent& nodeEvent)
 bool TextFormulaNode::DoCreatePlusFormulaNode(NodeEvent& nodeEvent)
 {
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	//create a plus node and insert it into the parent after this node
+	//create a plus node and insert it into the parent after or before this node
 	FormulaNode* p = new PlusFormulaNode(this, wnd);
-	parent->InsertChild(p, parent->GetChildPos(this) + 1);
+	command = any_cast<Command*>(nodeEvent["command"]);
+	if (c->GetPos() == 0)
+	{
+		parent->InsertChild(p, parent->GetChildPos(this));
+		command->SetParam(this, "right", false);
+		c->SetToNode(this, c->GetPos());
+	}
+	else
+	{
+		parent->InsertChild(p, parent->GetChildPos(this) + 1);
+		command->SetParam(this, "right", true);
+		c->SetToNode(parent, parent->GetChildPos(p) + 1);
+	}
 
 	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreatePlusFormulaNode);
-	c->SetToNode(parent, parent->GetChildPos(p) + 1);
 
 	return true;
 }
 
 bool TextFormulaNode::UndoCreatePlusFormulaNode(NodeEvent& nodeEvent)
 {
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	parent->RemoveChild(parent->GetChildPos(this) + 1);
+	bool right = any_cast<bool>(command->GetParam(this, "right"));
+	parent->RemoveChild(right ? parent->GetChildPos(this) + 1 : parent->GetChildPos(this) - 1);
 	
 	return true;
 }
@@ -268,20 +280,31 @@ bool TextFormulaNode::UndoCreatePlusFormulaNode(NodeEvent& nodeEvent)
 bool TextFormulaNode::DoCreateMinusFormulaNode(NodeEvent& nodeEvent)
 {
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	//create a plus node and insert it into the parent after this node
+	//create a minus node and insert it into the parent after or before this node
 	FormulaNode* p = new MinusFormulaNode(this, wnd);
-	parent->InsertChild(p, parent->GetChildPos(this) + 1);
+	command = any_cast<Command*>(nodeEvent["command"]);
+	if (c->GetPos() == 0)
+	{
+		parent->InsertChild(p, parent->GetChildPos(this));
+		command->SetParam(this, "right", false);
+		c->SetToNode(this, c->GetPos());
+	}
+	else
+	{
+		parent->InsertChild(p, parent->GetChildPos(this) + 1);
+		command->SetParam(this, "right", true);
+		c->SetToNode(parent, parent->GetChildPos(p) + 1);
+	}
 
-	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreateMinusFormulaNode);
-	c->SetToNode(parent, parent->GetChildPos(p) + 1);
+	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreatePlusFormulaNode);
 
 	return true;
 }
 
 bool TextFormulaNode::UndoCreateMinusFormulaNode(NodeEvent& nodeEvent)
 {
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	parent->RemoveChild(parent->GetChildPos(this) + 1);
+	bool right = any_cast<bool>(nodeEvent["right"]);
+	parent->RemoveChild(right ? parent->GetChildPos(this) + 1 : parent->GetChildPos(this) - 1);
 	
 	return true;
 }
@@ -289,20 +312,31 @@ bool TextFormulaNode::UndoCreateMinusFormulaNode(NodeEvent& nodeEvent)
 bool TextFormulaNode::DoCreateMultiplyFormulaNode(NodeEvent& nodeEvent)
 {
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	//create a plus node and insert it into the parent after this node
+	//create a multiply node and insert it into the parent after or before this node
 	FormulaNode* p = new MultiplyFormulaNode(this, wnd);
-	parent->InsertChild(p, parent->GetChildPos(this) + 1);
+	command = any_cast<Command*>(nodeEvent["command"]);
+	if (c->GetPos() == 0)
+	{
+		parent->InsertChild(p, parent->GetChildPos(this));
+		command->SetParam(this, "right", false);
+		c->SetToNode(this, c->GetPos());
+	}
+	else
+	{
+		parent->InsertChild(p, parent->GetChildPos(this) + 1);
+		command->SetParam(this, "right", true);
+		c->SetToNode(parent, parent->GetChildPos(p) + 1);
+	}
 
-	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreateMultiplyFormulaNode);
-	c->SetToNode(parent, parent->GetChildPos(p) + 1);
+	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreatePlusFormulaNode);
 
 	return true;
 }
 
 bool TextFormulaNode::UndoCreateMultiplyFormulaNode(NodeEvent& nodeEvent)
 {
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	parent->RemoveChild(parent->GetChildPos(this) + 1);
+	bool right = any_cast<bool>(nodeEvent["right"]);
+	parent->RemoveChild(right ? parent->GetChildPos(this) + 1 : parent->GetChildPos(this) - 1);
 	
 	return true;
 }
@@ -413,7 +447,7 @@ FormulaTextItem::~FormulaTextItem()
 
 void FormulaTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-	QFont font = settings->GetTextFormulaNodeFont(level);
+	QFont& font = settings->GetTextFormulaNodeFont(level);
 	painter->setFont(font);
 	painter->drawText(boundingRect, Qt::AlignVCenter | Qt::AlignLeft, toPlainText());
 }

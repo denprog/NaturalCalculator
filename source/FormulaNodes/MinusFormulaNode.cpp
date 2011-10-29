@@ -19,11 +19,11 @@ void MinusFormulaNode::Remake()
 	QRect r = m.boundingRect("T");
 	
 	qreal w = r.width();
-	baseline = font.pointSize() / 2 - w / 2;
+	baseline = font.pointSize() / 2 + 2;
 
 	ClearShapes();
 	
-	AddFillRect(w * 0.1, w / 2 - w * 0.45, w * 0.8, w * 0.1, QColor("black"));
+	AddFillRect(w * 0.1, w / 2, w * 0.8, w * 0.1, QColor("black"));
 	
 	//UpdateBoundingRect();
 	boundingRect.setCoords(0, 0, w, w);

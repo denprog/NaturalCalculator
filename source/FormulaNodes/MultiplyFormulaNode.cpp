@@ -18,12 +18,12 @@ void MultiplyFormulaNode::Remake()
 	QFontMetrics m(font);
 	QRect r = m.boundingRect("T");
 	
-	int w = r.width();
-	baseline = font.pointSize() / 2;
+	qreal w = r.width();
+	baseline = font.pointSize() / 2 + 2;
 
 	ClearShapes();
 	
-	AddFillCircle(w / 2, w / 2, w / 3, QColor("black"));
+	AddFillCircle(w / 2 - w / 3, w / 2 - w / 3, w / 3, QColor("black"));
 	
 	//UpdateBoundingRect();
 	boundingRect.setCoords(0, 0, w, w);
