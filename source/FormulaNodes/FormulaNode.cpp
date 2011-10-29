@@ -4,6 +4,8 @@
 #include "EmptyFormulaNode.h"
 #include "MinusFormulaNode.h"
 #include "MultiplyFormulaNode.h"
+#include "PowerFormulaNode.h"
+#include "SquareRootFormulaNode.h"
 #include "DivisionFormulaNode.h"
 #include "../Main/FormulaWnd.h"
 
@@ -413,22 +415,6 @@ bool FormulaNode::UndoRemoveItem(NodeEvent& nodeEvent)
 	return true;
 }
 
-//template<>
-//bool FormulaNode::DoCreateNode<PlusFormulaNode>(NodeEvent& nodeEvent)
-//{
-//	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-//	int pos = c->GetPos();
-//	FormulaNode* res = new PlusFormulaNode(this, 0, wnd);
-//	
-//	return true;
-//}
-
-//template<>
-//bool FormulaNode::DoCreateNode<DivisionFormulaNode>(NodeEvent& nodeEvent)
-//{
-//	return false;
-//}
-
 bool FormulaNode::DoCreatePlusFormulaNode(NodeEvent& nodeEvent)
 {
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
@@ -494,22 +480,60 @@ bool FormulaNode::UndoCreateMultiplyFormulaNode(NodeEvent& nodeEvent)
 
 bool FormulaNode::DoCreatePowerFormulaNode(NodeEvent& nodeEvent)
 {
-	return false;
+	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	int pos = c->GetPos();
+	//create a power node, insert current node into it and insert the result into the parent
+	FormulaNode* d = new PowerFormulaNode(this, wnd);
+	FormulaNode* g = new GroupFormulaNode(d, wnd);
+	g->MoveChild((*this)[pos], 0);
+	d->InsertChild(g, 0);
+	g = new GroupFormulaNode(d, wnd);
+	FormulaNode* n = new EmptyFormulaNode(g);
+	g->AddChild(n);
+	d->AddChild(g);
+	InsertChild(d, pos);
+
+	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreatePowerFormulaNode);
+	c->SetToNode(g, 0);
+	
+	return true;
 }
 
 bool FormulaNode::UndoCreatePowerFormulaNode(NodeEvent& nodeEvent)
 {
-	return false;
+	FormulaNode* p = parent->parent->parent;
+	int pos = p->GetChildPos(parent->parent);
+	p->MoveChild(this, pos);
+	p->RemoveChild(pos + 1);
+	
+	return true;
 }
 
 bool FormulaNode::DoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
 {
-	return false;
+	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	int pos = c->GetPos();
+	//create a power node, insert current node into it and insert the result into the parent
+	FormulaNode* d = new SquareRootFormulaNode(this, wnd);
+	FormulaNode* g = new GroupFormulaNode(d, wnd);
+	g->MoveChild((*this)[pos], 0);
+	d->InsertChild(g, 1);
+	InsertChild(d, pos);
+
+	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreateSquareRootFormulaNode);
+	c->SetToNode(g, 0);
+	
+	return true;
 }
 
 bool FormulaNode::UndoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
 {
-	return false;
+	FormulaNode* p = parent->parent->parent;
+	int pos = p->GetChildPos(parent->parent);
+	p->MoveChild(this, pos);
+	p->RemoveChild(pos + 1);
+	
+	return true;
 }
 
 bool FormulaNode::DoCreateDivisionFormulaNode(NodeEvent& nodeEvent)

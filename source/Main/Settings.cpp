@@ -15,6 +15,7 @@ Settings::Settings(const QString& organization, const QString& application, QObj
 	v.setValue(textFormulaNodeFonts);
 	textFormulaNodeFonts = Load("Formulas", "textFormulaNodeFonts", v).value<FontMap>();
 	
+	setValue("InterNodeSpace", 5);
 	setValue("InterSymbolSpace", 2);
 }
 

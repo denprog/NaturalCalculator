@@ -87,27 +87,38 @@ void FormulaWnd::keyPressEvent(QKeyEvent* event)
 			UpdateView();
 		break;
 	case Qt::Key_Plus:
-		if (commandManager.InsertNode(NULL, CommandAction(caret->currentState, &FormulaNode::DoCreatePlusFormulaNode)))
-			UpdateView();
+		InsertNode(&FormulaNode::DoCreatePlusFormulaNode);
+		break;
+	case Qt::Key_Minus:
+		InsertNode(&FormulaNode::DoCreateMinusFormulaNode);
+		break;
+	case Qt::Key_Asterisk:
+		InsertNode(&FormulaNode::DoCreateMultiplyFormulaNode);
 		break;
 	case Qt::Key_Slash:
-		if (commandManager.InsertNode(NULL, CommandAction(caret->currentState, &FormulaNode::DoCreateDivisionFormulaNode)))
-			UpdateView();
+		InsertNode(&FormulaNode::DoCreateDivisionFormulaNode);
+		break;
+	case Qt::Key_Backslash:
+		InsertNode(&FormulaNode::DoCreateSquareRootFormulaNode);
 		break;
 	case Qt::Key_Equal:
-		if (commandManager.InsertNode(NULL, CommandAction(caret->currentState, &FormulaNode::DoCreateEquationFormulaNode)))
-			UpdateView();
+		InsertNode(&FormulaNode::DoCreateEquationFormulaNode);
 		break;
 	default:
 		QString str = event->text();
 		if (str == "^")
 		{
-			if (commandManager.InsertNode(NULL, CommandAction(caret->currentState, &FormulaNode::DoCreatePowerFormulaNode)))
-				UpdateView();
+			InsertNode(&FormulaNode::DoCreatePowerFormulaNode);
 			break;
 		}
 		if (!str.isEmpty())
 		{
+			for (int i = 0; i < str.length(); ++i)
+			{
+				if (!str[i].isLetter() && !str[i].isDigit())
+					return;
+			}
+			
 			if (commandManager.InsertText(str, CommandAction(caret->currentState, &FormulaNode::DoInsertText)))
 				UpdateView();
 		}

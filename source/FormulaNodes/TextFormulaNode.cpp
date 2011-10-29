@@ -6,6 +6,7 @@
 #include "MinusFormulaNode.h"
 #include "MultiplyFormulaNode.h"
 #include "PowerFormulaNode.h"
+#include "SquareRootFormulaNode.h"
 #include "../Main/FormulaWnd.h"
 
 TextFormulaNode::TextFormulaNode()
@@ -373,12 +374,30 @@ bool TextFormulaNode::UndoCreatePowerFormulaNode(NodeEvent& nodeEvent)
 
 bool TextFormulaNode::DoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
 {
-	return false;
+	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	FormulaNode* p = parent;
+	int pos = parent->GetChildPos(this);
+	//create a power node, insert current node into it and insert the result into the parent
+	FormulaNode* d = new SquareRootFormulaNode(parent, wnd);
+	FormulaNode* g = new GroupFormulaNode(d, wnd);
+	g->MoveChild(this, 0);
+	d->InsertChild(g, 1);
+	p->InsertChild(d, pos);
+
+	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreateSquareRootFormulaNode);
+	c->SetToNode(this, c->GetPos());
+	
+	return true;
 }
 
 bool TextFormulaNode::UndoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
 {
-	return false;
+	FormulaNode* p = parent->parent->parent;
+	int pos = p->GetChildPos(parent->parent);
+	p->MoveChild(this, pos);
+	p->RemoveChild(pos + 1);
+	
+	return true;
 }
 
 //FormulaTextItem
