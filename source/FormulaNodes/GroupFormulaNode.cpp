@@ -148,7 +148,7 @@ SharedCaretState GroupFormulaNode::GetLastPosition()
 
 /**
  * Gets the next position of the node.
- * @param [in,out] relativeState Relative caret state.
+ * @param [in] relativeState Relative caret state.
  * @return The next position.
  */
 SharedCaretState GroupFormulaNode::GetNextPosition(SharedCaretState& relativeState)
@@ -190,9 +190,10 @@ SharedCaretState GroupFormulaNode::GetNextPosition(SharedCaretState& relativeSta
 			
 			if (i + 1 < childNodes->Count())
 			{
+				//check the next node
 				FormulaNode* n = (*this)[i + 1];
 				res = n->GetNextPosition();
-				if (res && n->CanSetCaret())
+				if (!res && n->CanSetCaret())
 					res = SharedCaretState(new CaretState(this, i + 1));
 			}
 			else if (i == childNodes->Count() - 1 && *relativeState != *GetLastPosition())
