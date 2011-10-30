@@ -162,6 +162,7 @@ void ParserThread::SolvingThread::operator()(RealParserExpression const& expr) c
 	try
 	{
 		((RealParserExpression&)expr).result = realParser->Parse((string&)expr.expression.expression, expr.precision);
+		((RealParserExpression&)expr).exception.id = None;
 	}
 	catch (ParserException e)
 	{
@@ -177,6 +178,7 @@ void ParserThread::SolvingThread::operator()(IntegerParserExpression const& expr
 	try
 	{
 		((IntegerParserExpression&)expr).result = integerParser->Parse((string&)expr.expression.expression);
+		((IntegerParserExpression&)expr).exception.id = None;
 	}
 	catch (ParserException e)
 	{
@@ -192,6 +194,7 @@ void ParserThread::SolvingThread::operator()(RationalParserExpression const& exp
 	try
 	{
 		((RationalParserExpression&)expr).result = rationalParser->Parse((string&)expr.expression.expression);
+		((RationalParserExpression&)expr).exception.id = None;
 	}
 	catch (ParserException e)
 	{
@@ -217,6 +220,7 @@ void ParserThread::SolvingThread::operator()(AutoParserExpression const& expr) c
 			{
 				Parser<Real>* p = boost::get<Parser<Real>*>(parsers[j]);
 				expression.result = p->Parse(expression.expression.expression, expression.precision);
+				expression.exception.id = None;
 				break;
 			}
 			catch (boost::bad_get)
@@ -227,6 +231,7 @@ void ParserThread::SolvingThread::operator()(AutoParserExpression const& expr) c
 			{
 				Parser<Integer>* p = boost::get<Parser<Integer>*>(parsers[j]);
 				expression.result = p->Parse(expression.expression.expression);
+				expression.exception.id = None;
 				break;
 			}
 			catch (boost::bad_get)
@@ -237,6 +242,7 @@ void ParserThread::SolvingThread::operator()(AutoParserExpression const& expr) c
 			{
 				Parser<Rational>* p = boost::get<Parser<Rational>*>(parsers[j]);
 				expression.result = p->Parse(expression.expression.expression);
+				expression.exception.id = None;
 				break;
 			}
 			catch (boost::bad_get)
