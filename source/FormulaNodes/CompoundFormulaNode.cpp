@@ -1,10 +1,18 @@
 #include "CompoundFormulaNode.h"
 #include "FormulaNodesCollection.h"
 
+/**
+ * Default constructor.
+ */
 CompoundFormulaNode::CompoundFormulaNode()
 {
 }
 
+/**
+ * Constructor.
+ * @param [in,out] _parent The parent node.
+ * @param [in,out] wnd The formula window.
+ */
 CompoundFormulaNode::CompoundFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : GroupFormulaNode(_parent, wnd)
 {
 #ifdef _DEBUG
@@ -12,15 +20,27 @@ CompoundFormulaNode::CompoundFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) 
 #endif
 }
 
+/**
+ * Destructor.
+ */
 CompoundFormulaNode::~CompoundFormulaNode()
 {
 }
 
+/**
+ * Makes a deep copy of this object.
+ * @return A copy of this object.
+ */
 FormulaNode* CompoundFormulaNode::Clone()
 {
 	return new CompoundFormulaNode(parent, wnd);
 }
 
+/**
+ * Gets the next caret position.
+ * @param [in,out] relativeState Relative caret state.
+ * @return The next caret position.
+ */
 SharedCaretState CompoundFormulaNode::GetNextPosition(SharedCaretState& relativeState)
 {
 	SharedCaretState res;
@@ -73,6 +93,11 @@ SharedCaretState CompoundFormulaNode::GetNextPosition(SharedCaretState& relative
 	return res;
 }
 
+/**
+ * Gets the previous caret position.
+ * @param [in,out] relativeState Relative caret state.
+ * @return The previous caret position.
+ */
 SharedCaretState CompoundFormulaNode::GetPreviousPosition(SharedCaretState& relativeState)
 {
 	SharedCaretState res;

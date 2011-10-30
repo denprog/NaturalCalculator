@@ -12,6 +12,9 @@
 
 using namespace std;
 
+/**
+ * Document of formula nodes.
+ */
 class DocumentFormulaNode : public FormulaNode
 {
 public:

@@ -1,18 +1,31 @@
 #include "DocumentFormulaNode.h"
 #include "FormulaNodesCollection.h"
 
+/**
+ * Default constructor.
+ */
 DocumentFormulaNode::DocumentFormulaNode()
 {
 }
 
+/**
+ * Constructor.
+ * @param [in] wnd The formula window.
+ */
 DocumentFormulaNode::DocumentFormulaNode(FormulaWnd* wnd) : FormulaNode(NULL, wnd), scene(wnd->scene)
 {
 }
 
+/**
+ * Destructor.
+ */
 DocumentFormulaNode::~DocumentFormulaNode()
 {
 }
 
+/**
+ * Remakes this node.
+ */
 void DocumentFormulaNode::Remake()
 {
 	FormulaNode::Remake();
@@ -31,11 +44,18 @@ void DocumentFormulaNode::Remake()
 	boundingRect.setHeight(boundingRect.height() + 2);
 }
 
+/**
+ * The document can not be copied.
+ * @return null.
+ */
 FormulaNode* DocumentFormulaNode::Clone()
 {
 	return NULL;
 }
 
+/**
+ * Adds a formula line.
+ */
 void DocumentFormulaNode::AddLine()
 {
 	RootFormulaNode* rootNode = new RootFormulaNode(this);
@@ -44,22 +64,38 @@ void DocumentFormulaNode::AddLine()
 	AddChild(rootNode);
 }
 
+/**
+ * Clears this node to its blank state.
+ */
 void DocumentFormulaNode::Clear()
 {
 	childNodes->Clear();
 	AddLine();
 }
 
+/**
+ * Gets the first caret position.
+ * @return The first caret position.
+ */
 SharedCaretState DocumentFormulaNode::GetFirstPosition()
 {
 	return childNodes->GetFirst()->GetFirstPosition();
 }
 
+/**
+ * Gets the last caret position.
+ * @return The last caret position.
+ */
 SharedCaretState DocumentFormulaNode::GetLastPosition()
 {
 	return childNodes->GetLast()->GetLastPosition();
 }
 
+/**
+ * Gets the next caret position.
+ * @param [in,out] relativeState Relative caret state.
+ * @return The next caret position.
+ */
 SharedCaretState DocumentFormulaNode::GetNextPosition(SharedCaretState& relativeState)
 {
 	SharedCaretState res;
@@ -75,6 +111,11 @@ SharedCaretState DocumentFormulaNode::GetNextPosition(SharedCaretState& relative
 	return res;
 }
 
+/**
+ * Gets the previous caret position.
+ * @param [in,out] relativeState Relative caret state.
+ * @return The previous caret position.
+ */
 SharedCaretState DocumentFormulaNode::GetPreviousPosition(SharedCaretState& relativeState)
 {
 	SharedCaretState res;
@@ -90,6 +131,11 @@ SharedCaretState DocumentFormulaNode::GetPreviousPosition(SharedCaretState& rela
 	return res;
 }
 
+/**
+ * Executes the insert line operation.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool DocumentFormulaNode::DoInsertLine(NodeEvent& nodeEvent)
 {
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
@@ -106,6 +152,11 @@ bool DocumentFormulaNode::DoInsertLine(NodeEvent& nodeEvent)
 	return true;
 }
 
+/**
+ * Undo insert line.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool DocumentFormulaNode::UndoInsertLine(NodeEvent& nodeEvent)
 {
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);

@@ -4,6 +4,9 @@
 #include "CompoundFormulaNode.h"
 #include "ShapeFormulaNode.h"
 
+/**
+ * Square root formula node.
+ */
 class SquareRootFormulaNode : public CompoundFormulaNode
 {
 public:

@@ -3,6 +3,9 @@
 
 #include "GroupFormulaNode.h"
 
+/**
+ * Shape formula node.
+ */
 class ShapeFormulaNode : public GroupFormulaNode
 {
 public:

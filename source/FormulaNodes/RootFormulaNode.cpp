@@ -4,10 +4,17 @@
 #include "FormulaNodesCollection.h"
 #include "EquationFormulaNode.h"
 
+/**
+ * Default constructor.
+ */
 RootFormulaNode::RootFormulaNode()
 {
 }
 
+/**
+ * Constructor.
+ * @param [in] parent The parent node.
+ */
 RootFormulaNode::RootFormulaNode(FormulaNode* parent) : GroupFormulaNode(parent, parent->wnd), scene(parent->wnd->scene)
 {
 	scene->addItem(item);
@@ -17,10 +24,17 @@ RootFormulaNode::RootFormulaNode(FormulaNode* parent) : GroupFormulaNode(parent,
 #endif
 }
 
+/**
+ * Destructor.
+ */
 RootFormulaNode::~RootFormulaNode()
 {
 }
 
+/**
+ * Makes a deep copy of this object.
+ * @return A copy of this object.
+ */
 FormulaNode* RootFormulaNode::Clone()
 {
 	RootFormulaNode* res = new RootFormulaNode(parent);
@@ -29,6 +43,10 @@ FormulaNode* RootFormulaNode::Clone()
 	return res;
 }
 
+/**
+ * Gets the first caret position.
+ * @return The first caret position.
+ */
 SharedCaretState RootFormulaNode::GetFirstPosition()
 {
 	if (dynamic_cast<CompoundFormulaNode*>(childNodes->GetFirst()))
@@ -39,6 +57,10 @@ SharedCaretState RootFormulaNode::GetFirstPosition()
 	return SharedCaretState(new CaretState(this, 0));
 }
 
+/**
+ * Gets the last caret position.
+ * @return The last caret position.
+ */
 SharedCaretState RootFormulaNode::GetLastPosition()
 {
 	if (dynamic_cast<EmptyFormulaNode*>(childNodes->GetLast()))
@@ -51,6 +73,11 @@ SharedCaretState RootFormulaNode::GetLastPosition()
 	return SharedCaretState(new CaretState(this, childNodes->Count()));
 }
 
+/**
+ * Gets the next caret position.
+ * @param [in,out] relativeState Relative caret state.
+ * @return The next caret position.
+ */
 SharedCaretState RootFormulaNode::GetNextPosition(SharedCaretState& relativeState)
 {
 	SharedCaretState res;
@@ -101,6 +128,11 @@ SharedCaretState RootFormulaNode::GetNextPosition(SharedCaretState& relativeStat
 	return res;
 }
 
+/**
+ * Gets the previous caret position.
+ * @param [in,out] relativeState Relative caret state.
+ * @return The previous caret position.
+ */
 SharedCaretState RootFormulaNode::GetPreviousPosition(SharedCaretState& relativeState)
 {
 	SharedCaretState res;
@@ -138,6 +170,11 @@ SharedCaretState RootFormulaNode::GetPreviousPosition(SharedCaretState& relative
 	return res;
 }
 
+/**
+ * Executes the create equation formula node operation.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool RootFormulaNode::DoCreateEquationFormulaNode(NodeEvent& nodeEvent)
 {
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
@@ -156,6 +193,11 @@ bool RootFormulaNode::DoCreateEquationFormulaNode(NodeEvent& nodeEvent)
 	return true;
 }
 
+/**
+ * Undo create equation formula node.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
 bool RootFormulaNode::UndoCreateEquationFormulaNode(NodeEvent& nodeEvent)
 {
 	return true;

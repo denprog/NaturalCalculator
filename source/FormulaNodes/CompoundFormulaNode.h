@@ -3,6 +3,9 @@
 
 #include "GroupFormulaNode.h"
 
+/**
+ * Compound formula node.
+ */
 class CompoundFormulaNode : public GroupFormulaNode
 {
 public:

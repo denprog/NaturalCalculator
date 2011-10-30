@@ -6,6 +6,9 @@
 #include "GroupFormulaNode.h"
 //#include <QGraphicsItemGroup>
 
+/**
+ * Root node for formula nodes.
+ */
 class RootFormulaNode : public GroupFormulaNode
 {
 public:

@@ -1,6 +1,11 @@
 #include "SquareRootFormulaNode.h"
 #include "../Main/FormulaWnd.h"
 
+/**
+ * Constructor.
+ * @param [in] _parent The parent.
+ * @param [in] wnd The formula window.
+ */
 SquareRootFormulaNode::SquareRootFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : CompoundFormulaNode(_parent, wnd)
 {
 	shape = AddShapeNode();
@@ -10,10 +15,16 @@ SquareRootFormulaNode::SquareRootFormulaNode(FormulaNode* _parent, FormulaWnd* w
 #endif
 }
 
+/**
+ * Destructor.
+ */
 SquareRootFormulaNode::~SquareRootFormulaNode()
 {
 }
 
+/**
+ * Remakes this node.
+ */
 void SquareRootFormulaNode::Remake()
 {
 	childNodes->Remake();
@@ -50,6 +61,10 @@ void SquareRootFormulaNode::Remake()
 	}
 }
 
+/**
+ * Parses child node and adds the function call.
+ * @param [in,out] expr The expression.
+ */
 void SquareRootFormulaNode::Parse(ParserString& expr)
 {
 	expr.Add("sqrt(", this);
@@ -57,21 +72,34 @@ void SquareRootFormulaNode::Parse(ParserString& expr)
 	expr.Add(")", this);
 }
 
+/**
+ * Updates the bounding rectangle.
+ */
 void SquareRootFormulaNode::UpdateBoundingRect()
 {
 	boundingRect = shape->boundingRect;
 	boundingRect.moveTo(item->pos().x(), item->pos().y());
 }
 
+/**
+ * Makes a deep copy of this object.
+ * @return A copy of this object.
+ */
 FormulaNode* SquareRootFormulaNode::Clone()
 {
 	return new SquareRootFormulaNode(parent, wnd);
 }
 
+/**
+ * Renders the caret inside this node.
+ * @param pos	The position.
+ * @param anchor The anchor.
+ */
 void SquareRootFormulaNode::RenderCaret(const int pos, const int anchor)
 {
 	if (pos == 0)
 	{
+		//draw the caret on the shape
 		QRectF r = GetDocumentPosBounds(pos);
 		int cx = (*this)[1]->boundingRect.height() * 5 / 11;
 		
