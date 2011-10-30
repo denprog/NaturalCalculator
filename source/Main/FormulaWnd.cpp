@@ -135,7 +135,7 @@ void FormulaWnd::keyPressEvent(QKeyEvent* event)
 		{
 			for (int i = 0; i < str.length(); ++i)
 			{
-				if (!str[i].isLetter() && !str[i].isDigit())
+				if (!str[i].isLetter() && !str[i].isDigit() && str[i] != '.')
 					return;
 			}
 			
