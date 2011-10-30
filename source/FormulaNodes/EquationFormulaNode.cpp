@@ -85,7 +85,7 @@ void EquationFormulaNode::Remake()
 		//draw the shape
 		shape->AddFillRect(0, h * 0.3, w * 0.8, h * 0.1, QColor("black"));
 		shape->AddFillRect(0, h * 0.55, w * 0.8, h * 0.1, QColor("black"));
-		shape->Move(cx + w * 0.1 + settings->value("InterNodeSpace").toInt(), cy - h / 2);
+		shape->Move(cx + w * 0.1 + settings->value("InterNodeSpace").toInt(), cy - font.pointSize());
 		resNode->Move(cx + w * 1.1 + settings->value("InterNodeSpace").toInt(), baseline - resNode->baseline);
 
 		shape->boundingRect.setCoords(0, 0, w, h);

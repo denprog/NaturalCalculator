@@ -27,7 +27,7 @@ void MinusFormulaNode::Remake()
 {
 	QFont font = settings->GetTextFormulaNodeFont(level);
 	QFontMetrics m(font);
-	QRect r = m.boundingRect("T");
+	QRect r = m.boundingRect("-");
 	
 	qreal w = r.width();
 	baseline = font.pointSize() / 2 + 2;
@@ -35,7 +35,7 @@ void MinusFormulaNode::Remake()
 	ClearShapes();
 	
 	//the shape
-	AddFillRect(w * 0.1, w / 2, w * 0.8, w * 0.1, QColor("black"));
+	AddFillRect(0, w / 2, w, w * 0.1, QColor("black"));
 	
 	//UpdateBoundingRect();
 	boundingRect.setCoords(0, 0, w, w);
@@ -48,10 +48,10 @@ void MinusFormulaNode::UpdateBoundingRect()
 {
 	QFont font = settings->GetTextFormulaNodeFont(level);
 	QFontMetrics m(font);
-	QRect r = m.boundingRect("T");
+	QRect r = m.boundingRect("-");
 	
-	boundingRect.setCoords(0, 0, r.width(), r.width());
-	boundingRect.moveTo(item->pos().x(), item->pos().y());
+	boundingRect.setCoords(0, 0, r.width(), r.height());
+	boundingRect.moveTo(item->pos().x(), 0);
 }
 
 /**

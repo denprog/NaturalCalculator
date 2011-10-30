@@ -27,7 +27,7 @@ void PlusFormulaNode::Remake()
 {
 	QFont font = settings->GetTextFormulaNodeFont(level);
 	QFontMetrics m(font);
-	QRect r = m.boundingRect("T");
+	QRect r = m.boundingRect("+");
 	
 	qreal w = r.width();
 	qreal h = w;
@@ -35,8 +35,8 @@ void PlusFormulaNode::Remake()
 
 	ClearShapes();
 	
-	AddFillRect(w / 2, 1, w * 0.1, h - 2, QColor("black"));
-	AddFillRect(1, h / 2, w - 2, w * 0.1, QColor("black"));
+	AddFillRect(w / 2 - w * 0.0025, 1, w * 0.05, h - 2, QColor("black"));
+	AddFillRect(1, h / 2 - w * 0.0025, w - 2, w * 0.05, QColor("black"));
 	
 	boundingRect.setCoords(0, 0, w, h);
 }
@@ -48,7 +48,7 @@ void PlusFormulaNode::UpdateBoundingRect()
 {
 	QFont font = settings->GetTextFormulaNodeFont(level);
 	QFontMetrics m(font);
-	QRect r = m.boundingRect("T");
+	QRect r = m.boundingRect("+");
 	
 	boundingRect.setCoords(0, 0, r.width(), r.width());
 	boundingRect.moveTo(item->pos().x(), item->pos().y());
