@@ -2,39 +2,70 @@
 #include "../FormulaNodes/FormulaNode.h"
 #include "../Main/FormulaWnd.h"
 
+/**
+ * Constructor.
+ * @param [in] _wnd The formula window.
+ */
 Caret::Caret(FormulaWnd* _wnd)
 {
-	//currentState = NULL;
 	wnd = _wnd;
 	caretShape = new QGraphicsItemGroup();
 	wnd->scene->addItem(caretShape);
+	
+	timer = new QTimer(this);
+	connect(timer, SIGNAL(timeout()), this, SLOT(TimerUpdate()));
+	timer->start(500);
 }
 
+/**
+ * Destructor.
+ */
 Caret::~Caret()
 {
 	qDeleteAll(caretShape->childItems());
 	caretShape->childItems().clear();
+	delete timer;
 }
 
+/**
+ * Renders the caret.
+ */
 void Caret::Render()
 {
 	currentState->GetNode()->RenderCaret(currentState->GetPos(), currentState->GetPos());
+	timer->start(500);
+	caretShape->setVisible(true);
 }
 
+/**
+ * Sets a caret state.
+ * @param state The caret state.
+ */
 void Caret::SetState(SharedCaretState state)
 {
 	currentState = state;
 }
 	
+/**
+ * Sets the caret to the node begin.
+ * @param [in] node The node.
+ */
 void Caret::SetToNodeBegin(FormulaNode* node)
 {
 	currentState = node->GetFirstPosition();
 }
 
+/**
+ * Sets the caret to the node end.
+ * @param [in,out] node The node.
+ */
 void Caret::SetToNodeEnd(FormulaNode* node)
 {
 }
 	
+/**
+ * Moves the caret left.
+ */
 void Caret::MoveLeft()
 {
 	FormulaNode* n = currentState->GetNode();
@@ -49,6 +80,9 @@ void Caret::MoveLeft()
 	Render();
 }
 
+/**
+ * Moves the caret right.
+ */
 void Caret::MoveRight()
 {
 	FormulaNode* n = currentState->GetNode();
@@ -77,4 +111,9 @@ void Caret::MoveHome()
 
 void Caret::MoveEnd()
 {
+}
+
+void Caret::TimerUpdate()
+{
+	caretShape->setVisible(!caretShape->isVisible());
 }

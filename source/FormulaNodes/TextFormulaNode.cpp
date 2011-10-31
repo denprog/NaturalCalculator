@@ -178,7 +178,6 @@ QRectF TextFormulaNode::GetDocumentPosBounds(int pos)
 void TextFormulaNode::RenderCaret(const int pos, const int anchor)
 {
 	QRectF r = GetDocumentPosBounds(pos);
-	
 	QGraphicsItemGroup* g = wnd->caret->caretShape;
 	
 	qDeleteAll(g->childItems());

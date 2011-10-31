@@ -14,8 +14,7 @@
 #include "../ParserThread/ParserThread.h"
 
 /**
- * @class	FormulaWnd
- * @brief	Formula window. 
+ * Formula window. 
  */
 class FormulaWnd : public QGraphicsView
 {

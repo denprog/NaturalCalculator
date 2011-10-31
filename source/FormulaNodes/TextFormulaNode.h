@@ -81,8 +81,6 @@ public:
 
 	virtual bool DoCreateSquareRootFormulaNode(NodeEvent& nodeEvent);
 	virtual bool UndoCreateSquareRootFormulaNode(NodeEvent& nodeEvent);
-
-protected:
 };
 
 class FormulaTextItem : public QGraphicsTextItem

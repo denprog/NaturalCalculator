@@ -1,13 +1,20 @@
 #ifndef CARET_H
 #define CARET_H
 
-#include "CaretState.h"
 #include <QGraphicsItemGroup>
+#include <QObject>
+#include <QTimer>
+#include "CaretState.h"
 
 class FormulaNode;
 
-class Caret
+/**
+ * Caret.
+ */
+class Caret : public QObject
 {
+	Q_OBJECT
+	
 public:
 	Caret(FormulaWnd* _wnd);
 	~Caret();
@@ -26,12 +33,16 @@ public:
 	void MoveHome();
 	void MoveEnd();
 
+public slots:
+	void TimerUpdate();
+	
 public:
-	QGraphicsItemGroup* caretShape;
-	SharedCaretState currentState;
+	QGraphicsItemGroup* caretShape; ///< The caret group shape
+	SharedCaretState currentState; ///< The current caret state
 	
 private:
 	FormulaWnd* wnd;
+	QTimer* timer;
 };
 
 #endif
