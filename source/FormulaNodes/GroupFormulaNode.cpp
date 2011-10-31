@@ -48,7 +48,7 @@ void GroupFormulaNode::Remake()
 	{
 		FormulaNode* n = (*this)[i];
 		n->Move(x, baseline - n->baseline);
-		x += n->boundingRect.width() + settings->value("InterNodeSpace").toInt();
+		x += n->boundingRect.width() + settings->GetValue("InterNodeSpace", level);
 	}
 
 	UpdateBoundingRect();

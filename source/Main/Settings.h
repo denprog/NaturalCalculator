@@ -25,8 +25,12 @@ public:
 	
 	QFont& GetTextFormulaNodeFont(FormulaNodeLevel level);
 	
+	void SetValue(QString name, FormulaNodeLevel level, int value);
+	int GetValue(QString name, FormulaNodeLevel level);
+	
 private:
-	FontMap textFormulaNodeFonts;
+	FontMap textFormulaNodeFonts; ///< The text formula node fonts by node level
+	QMap<QString, QMap<FormulaNodeLevel, int> > values; ///< The values by name and node level
 };
 
 #endif

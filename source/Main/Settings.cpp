@@ -22,8 +22,13 @@ Settings::Settings(const QString& organization, const QString& application, QObj
 	v.setValue(textFormulaNodeFonts);
 	textFormulaNodeFonts = Load("Formulas", "textFormulaNodeFonts", v).value<FontMap>();
 	
-	setValue("InterNodeSpace", 5);
-	setValue("InterSymbolSpace", 2);
+	SetValue("InterNodeSpace", NORMAL_LEVEL, 3);
+	SetValue("InterNodeSpace", LESS_LEVEL, 2);
+	SetValue("InterNodeSpace", STILL_LESS_LEVEL, 1);
+	
+	SetValue("InterSymbolSpace", NORMAL_LEVEL, 3);
+	SetValue("InterSymbolSpace", LESS_LEVEL, 2);
+	SetValue("InterSymbolSpace", STILL_LESS_LEVEL, 1);
 }
 
 /**
@@ -72,4 +77,27 @@ QVariant Settings::Load(const QString& prefix, const QString& key, const QVarian
 QFont& Settings::GetTextFormulaNodeFont(FormulaNodeLevel level)
 {
 	return textFormulaNodeFonts[level];
+}
+
+/**
+ * Sets a value.
+ * @param name The name.
+ * @param level The node level.
+ * @param value The value.
+ */
+void Settings::SetValue(QString name, FormulaNodeLevel level, int value)
+{
+	values[name][level] = value;
+}
+
+/**
+ * Gets a value.
+ * @param name The name.
+ * @param level The node level.
+ * @return The value.
+ */
+int Settings::GetValue(QString name, FormulaNodeLevel level)
+{
+	//in proportion to the font size
+	return values[name][level] * textFormulaNodeFonts[level].pointSize() / 10;
 }
