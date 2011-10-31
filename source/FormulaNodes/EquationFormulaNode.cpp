@@ -83,10 +83,10 @@ void EquationFormulaNode::Remake()
 
 		left->Move(0, baseline - left->baseline);
 		//draw the shape
-		shape->AddFillRect(0, h * 0.3, w * 0.8, h * 0.1, QColor("black"));
-		shape->AddFillRect(0, h * 0.55, w * 0.8, h * 0.1, QColor("black"));
+		shape->AddFillRect(0, h * 0.4, w * 0.8, h < 20 ? 1 : h * 0.05, QColor("black"));
+		shape->AddFillRect(0, h >= 20 ? h * 0.55 : h * 0.5 + 2, w * 0.8, h < 20 ? 1 : h * 0.05, QColor("black"));
 		shape->Move(cx + w * 0.1 + settings->GetValue("InterNodeSpace", level), cy - font.pointSize());
-		resNode->Move(cx + w * 1.1 + settings->GetValue("InterNodeSpace", level), baseline - resNode->baseline);
+		resNode->Move(cx + w * 1.1 + settings->GetValue("InterNodeSpace", level) * 2, baseline - resNode->baseline);
 
 		shape->boundingRect.setCoords(0, 0, w, h);
 

@@ -27,14 +27,14 @@ void MultiplyFormulaNode::Remake()
 {
 	QFont font = settings->GetTextFormulaNodeFont(level);
 	QFontMetrics m(font);
-	QRect r = m.boundingRect("T");
+	QRect r = m.boundingRect("+");
 	
-	qreal w = r.width();
+	qreal w = r.width() / 2;
 	baseline = font.pointSize() / 2 + 2;
 
 	ClearShapes();
 	
-	AddFillCircle(w / 2 - w / 3, w / 2 - w / 3, w / 3, QColor("black"));
+	AddFillCircle(w / 2 - w / 10, w / 2 - w / 10, w / 5, QColor("black"));
 	
 	//UpdateBoundingRect();
 	boundingRect.setCoords(0, 0, w, w);
@@ -56,9 +56,9 @@ void MultiplyFormulaNode::UpdateBoundingRect()
 {
 	QFont font = settings->GetTextFormulaNodeFont(level);
 	QFontMetrics m(font);
-	QRect r = m.boundingRect("T");
+	QRect r = m.boundingRect("+");
 	
-	boundingRect.setCoords(0, 0, r.width(), r.width());
+	boundingRect.setCoords(0, 0, r.width() / 2, r.width());
 	boundingRect.moveTo(item->pos().x(), item->pos().y());
 }
 

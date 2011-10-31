@@ -40,6 +40,16 @@ TextFormulaNode::~TextFormulaNode()
 }
 
 /**
+ * Remakes this node.
+ */
+void TextFormulaNode::Remake()
+{
+	((FormulaTextItem*)item)->level = level;
+	UpdateBoundingRect();
+	baseline = ((FormulaTextItem*)item)->font().pointSize();
+}
+
+/**
  * Updates the bounding rectangle.
  */
 void TextFormulaNode::UpdateBoundingRect()
@@ -49,19 +59,9 @@ void TextFormulaNode::UpdateBoundingRect()
 	QFontMetrics m(font);
 	QRectF b = m.boundingRect(((QGraphicsTextItem*)item)->toPlainText());
 	
-	boundingRect.setCoords(0, 0, b.width(), b.height());
+	boundingRect.setCoords(0, 0, b.width() + 1, b.height());
 	((FormulaTextItem*)item)->boundingRect = boundingRect;
 	boundingRect.moveTo(item->pos().x(), item->pos().y());
-}
-
-/**
- * Remakes this node.
- */
-void TextFormulaNode::Remake()
-{
-	((FormulaTextItem*)item)->level = level;
-	UpdateBoundingRect();
-	baseline = ((FormulaTextItem*)item)->font().pointSize();
 }
 
 /**

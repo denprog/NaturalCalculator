@@ -30,15 +30,14 @@ void PlusFormulaNode::Remake()
 	QRect r = m.boundingRect("+");
 	
 	qreal w = r.width();
-	qreal h = w;
 	baseline = font.pointSize() / 2 + 2;
 
 	ClearShapes();
 	
-	AddFillRect(w / 2 - w * 0.0025, 1, w * 0.05, h - 2, QColor("black"));
-	AddFillRect(1, h / 2 - w * 0.0025, w - 2, w * 0.05, QColor("black"));
+	AddFillRect(w / 2 - w * 0.0025, 1, w * 0.05, w - 2, QColor("black"));
+	AddFillRect(1, w / 2 - w * 0.0025, w - 2, w * 0.05, QColor("black"));
 	
-	boundingRect.setCoords(0, 0, w, h);
+	boundingRect.setCoords(0, 0, w, w);
 }
 
 /**

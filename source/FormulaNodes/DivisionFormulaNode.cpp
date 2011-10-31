@@ -85,7 +85,7 @@ void DivisionFormulaNode::Remake()
 		
 		UpdateBoundingRect();
 		
-		baseline = dividend->boundingRect.height();
+		baseline = dividend->boundingRect.height() + 1;
 	}
 }
 

@@ -42,10 +42,10 @@ void PowerFormulaNode::Remake()
 		shape->AddFillRect(0, 0, left->boundingRect.height() / 10, left->boundingRect.height(), QColor("white"));
 		shape->UpdateBoundingRect();
 		
-		int cy = right->boundingRect.height() - left->boundingRect.height() / 2;
+		int cy = right->boundingRect.height() * 0.5;
 		left->Move(0, cy);
-		shape->Move(left->boundingRect.width() + settings->value("InterSymbolSpace").toInt(), cy);
-		right->Move(shape->boundingRect.right()+ settings->value("InterSymbolSpace").toInt(), 0);
+		shape->Move(left->boundingRect.width() + settings->GetValue("InterSymbolSpace", level) / 2, cy);
+		right->Move(shape->boundingRect.right() + settings->GetValue("InterSymbolSpace", level) / 2, 0);
 
 		UpdateBoundingRect();
 		
