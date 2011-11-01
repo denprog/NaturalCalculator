@@ -46,6 +46,7 @@ public:
 	
 	void InsertNode(boost::function<bool (FormulaNode*, NodeEvent&)> action);
 	void UpdateView();
+	void EnsureVisible();
 	
 private:
 	template<class Archive>

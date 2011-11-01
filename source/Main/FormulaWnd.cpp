@@ -89,9 +89,11 @@ void FormulaWnd::keyPressEvent(QKeyEvent* event)
 	{
 	case Qt::Key_Left:
 		caret->MoveLeft();
+		EnsureVisible();
 		break;
 	case Qt::Key_Right:
 		caret->MoveRight();
+		EnsureVisible();
 		break;
 	case Qt::Key_Return:
 	case Qt::Key_Enter:
@@ -259,8 +261,11 @@ void FormulaWnd::UpdateView()
 	documentNode->Remake();
 	caret->Render();
 	scene->setSceneRect(documentNode->boundingRect);
-	
-	FormulaNode* n = caret->currentState->GetNode();
-	QRectF r = n->GetDocumentBounds();
+	EnsureVisible();
+}
+
+void FormulaWnd::EnsureVisible()
+{
+	QRectF r = caret->currentState->GetNode()->GetDocumentPosBounds(caret->currentState->GetPos());
 	ensureVisible(r);
 }
