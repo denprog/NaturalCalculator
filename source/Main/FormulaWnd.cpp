@@ -16,7 +16,7 @@ int FormulaWnd::updateEventId;
 
 /**
  * Constructor.
- * @param [in,out] parent The parent widget.
+ * @param [in] parent The parent widget.
  */
 FormulaWnd::FormulaWnd(QWidget *parent)	: QGraphicsView(parent), commandManager(this)
 {
@@ -40,6 +40,9 @@ FormulaWnd::FormulaWnd(QWidget *parent)	: QGraphicsView(parent), commandManager(
 	updateEventId = QEvent::registerEventType(1);
 	
 	parserThread = new ParserThread(this);
+	
+	setMouseTracking(true);
+	mouseOverNode = NULL;
 }
 
 /**
@@ -55,7 +58,7 @@ FormulaWnd::~FormulaWnd()
 
 /**
  * Serves custom events.
- * @param [in,out] e The event.
+ * @param [in] e The event.
  * @return true if it succeeds, false if it fails.
  */
 bool FormulaWnd::event(QEvent* e)
@@ -71,7 +74,7 @@ bool FormulaWnd::event(QEvent* e)
 
 /**
  * Resize event.
- * @param [in,out] event The event.
+ * @param [in] event The event.
  */
 void FormulaWnd::resizeEvent(QResizeEvent* event)
 {
@@ -81,7 +84,7 @@ void FormulaWnd::resizeEvent(QResizeEvent* event)
 
 /**
  * Key press event.
- * @param [in,out] event The event.
+ * @param [in] event The event.
  */
 void FormulaWnd::keyPressEvent(QKeyEvent* event)
 {
@@ -145,6 +148,52 @@ void FormulaWnd::keyPressEvent(QKeyEvent* event)
 				UpdateView();
 		}
 		break;
+	}
+}
+
+/**
+ * Mouse move event.
+ * @param [in] event The event.
+ */
+void FormulaWnd::mouseMoveEvent(QMouseEvent* event)
+{
+	//determine the items under the mouse
+	QList<QGraphicsItem*> items = scene->items(event->x(), event->y(), 1, 1, Qt::IntersectsItemBoundingRect, Qt::AscendingOrder);
+	
+	QList<QGraphicsItem*>::iterator iter;
+	for (iter = items.begin(); iter != items.end(); ++iter)
+	{
+		//check the item to be a FormulaNode's field
+		QGraphicsItem* item = *iter;
+		FormulaNode* f = (FormulaNode*)item->data(0).value<void*>();
+		if (f)
+		{
+			mouseOverNode = f;
+			return;
+		}
+	}
+	
+	mouseOverNode = NULL;
+}
+
+/**
+ * Mouse press event.
+ * @param [in] event The event.
+ */
+void FormulaWnd::mousePressEvent(QMouseEvent* event)
+{
+	if (mouseOverNode)
+	{
+		if (event->buttons() == Qt::LeftButton)
+		{
+			if (dynamic_cast<TextFormulaNode*>(mouseOverNode))
+				caret->SetToNode(mouseOverNode, mouseOverNode->GetNearestPos(event->x(), event->y()));
+			else
+				caret->SetToNode(mouseOverNode->parent, mouseOverNode->parent->GetChildPos(mouseOverNode));
+			
+			caret->Render();
+			EnsureVisible();
+		}
 	}
 }
 

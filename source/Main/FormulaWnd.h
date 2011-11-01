@@ -36,6 +36,8 @@ protected:
 	virtual bool event(QEvent* e);
 	virtual void resizeEvent(QResizeEvent* event);
 	virtual void keyPressEvent(QKeyEvent* event);
+	virtual void mouseMoveEvent(QMouseEvent* event);
+	virtual void mousePressEvent(QMouseEvent* event);
 
 public:
 	void New();
@@ -92,6 +94,7 @@ private:
 	QGraphicsScene* scene;
 	CommandManager commandManager;
 	Settings* settings;
+	FormulaNode* mouseOverNode;
 };
 
 #endif // FORMULAWND_H

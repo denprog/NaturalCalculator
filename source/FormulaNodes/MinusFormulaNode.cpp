@@ -3,8 +3,8 @@
 
 /**
  * Constructor.
- * @param [in,out] _parent The parent node.
- * @param [in,out] wnd The formula window.
+ * @param [in] _parent The parent node.
+ * @param [in] wnd The formula window.
  */
 MinusFormulaNode::MinusFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : ShapeFormulaNode(_parent, wnd)
 {
@@ -36,6 +36,9 @@ void MinusFormulaNode::Remake()
 	
 	//the shape
 	AddFillRect(1, w / 2 - w * 0.0025, w - 2, w * 0.05, QColor("black"));
+	
+	//the shape, that widing the node's bounds for getting mouse events
+	AddFillRect(0, 0, w, w, QColor("white"), 0);
 	
 	//UpdateBoundingRect();
 	boundingRect.setCoords(0, 0, w, w);

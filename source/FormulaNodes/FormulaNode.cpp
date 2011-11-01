@@ -8,6 +8,7 @@
 #include "SquareRootFormulaNode.h"
 #include "DivisionFormulaNode.h"
 #include "../Main/FormulaWnd.h"
+#include "../Util/QRectEx.h"
 
 /**
  * Default constructor.
@@ -329,6 +330,28 @@ QRectF FormulaNode::GetDocumentPosBounds(int pos)
 	}
 	
 	return QRectF(cx, cy, pos == childNodes->Count() ? 0 : n->boundingRect.width(), n->boundingRect.height());
+}
+
+/**
+ * Gets a nearest position to the given point in the document.
+ * @param x The x coordinate.
+ * @param y The y coordinate.
+ * @return The nearest position.
+ */
+int FormulaNode::GetNearestPos(qreal x, qreal y)
+{
+	int minDist = std::numeric_limits<int>::max();
+	int res = 0;
+
+	for (int i = 0; i < childNodes->Count(); ++i)
+	{
+		QRectEx rect(GetDocumentPosBounds(i));
+		int j = rect.DistToPoint(x, y);
+		if (j < minDist)
+			res = i;
+	}
+	
+	return res;
 }
 
 /**

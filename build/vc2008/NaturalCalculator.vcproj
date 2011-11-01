@@ -760,6 +760,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Util"
+			>
+			<Filter
+				Name="Header Files"
+				>
+				<File
+					RelativePath="..\..\source\Util\QRectEx.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Source Files"
+				>
+				<File
+					RelativePath="..\..\source\Util\QRectEx.cpp"
+					>
+				</File>
+			</Filter>
+		</Filter>
 	</Files>
 	<Globals>
 		<Global

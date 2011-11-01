@@ -292,7 +292,7 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RationalParserExpression con
 	}
 	
 	Rational res = expr.result;
-	Integer n = res.GetNumerator(), d = res.GetDenomerator();
+	Integer n = abs(res.GetNumerator()), d = abs(res.GetDenomerator());
 
 	//make a result node
 	if (res < 0)

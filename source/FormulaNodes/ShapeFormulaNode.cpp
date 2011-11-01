@@ -66,11 +66,12 @@ void ShapeFormulaNode::AddRect(qreal x, qreal y, qreal width, qreal height, QCol
  * @param height The height.
  * @param [in] color The color.
  */
-void ShapeFormulaNode::AddFillRect(qreal x, qreal y, qreal width, qreal height, QColor& color)
+void ShapeFormulaNode::AddFillRect(qreal x, qreal y, qreal width, qreal height, QColor& color, qreal opacity)
 {
 	QGraphicsRectItem* i = new QGraphicsRectItem(x, y, width, height, item);
 	i->setBrush(QBrush(color));
 	i->setPen(QPen(color));
+	i->setOpacity(opacity);
 	((QGraphicsItemGroup*)item)->addToGroup(i);
 }
 
