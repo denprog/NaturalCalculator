@@ -50,6 +50,8 @@ public:
 
 	virtual QRectF GetDocumentPosBounds(int pos);
 
+	virtual int GetNearestPos(qreal x, qreal y);
+
 	virtual void RenderCaret(const int pos, const int anchor);
 
 	virtual void Parse(ParserString& expr);

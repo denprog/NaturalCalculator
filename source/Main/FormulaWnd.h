@@ -36,6 +36,8 @@ protected:
 	virtual bool event(QEvent* e);
 	virtual void resizeEvent(QResizeEvent* event);
 	virtual void keyPressEvent(QKeyEvent* event);
+	virtual void mouseMoveEvent(QMouseEvent* event);
+	virtual void mousePressEvent(QMouseEvent* event);
 
 public:
 	void New();
@@ -83,15 +85,20 @@ private:
 	}
 
 public:
-	DocumentFormulaNode* documentNode;
+	DocumentFormulaNode* GetDocumentNode();
+	
+public:
 	Caret* caret;
 	static int updateEventId;
 	ParserThread* parserThread;
 	
 private:
-	QGraphicsScene* scene;
-	CommandManager commandManager;
-	Settings* settings;
+	DocumentFormulaNode* documentNode;	///< The main document node
+	QGraphicsScene* scene;	///< The graphics scene
+	CommandManager commandManager;	///< Manager for commands
+	Settings* settings; ///< Options for the application
+	
+	vector<FormulaNode*> mouseOverNodes;
 };
 
 #endif // FORMULAWND_H

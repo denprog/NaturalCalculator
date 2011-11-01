@@ -98,6 +98,8 @@ public:
 	
 	virtual QRectF GetDocumentBounds();
 	virtual QRectF GetDocumentPosBounds(int pos);
+	
+	virtual int GetNearestPos(qreal x, qreal y);
 
 	virtual bool IsEmptySymbol();
 	

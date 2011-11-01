@@ -37,6 +37,9 @@ void PlusFormulaNode::Remake()
 	AddFillRect(w / 2 - w * 0.0025, 1, w * 0.05, w - 2, QColor("black"));
 	AddFillRect(1, w / 2 - w * 0.0025, w - 2, w * 0.05, QColor("black"));
 	
+	//the shape, that wides the node's bounds for getting mouse events
+	AddFillRect(0, 0, w, w, QColor("white"), 0);
+	
 	boundingRect.setCoords(0, 0, w, w);
 }
 

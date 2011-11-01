@@ -23,12 +23,6 @@ public:
 	bool Remove(bool right, bool commit = true);
 	
 	bool DoAction(CommandAction doAction, NodeEvent nodeEvent, bool commit = true);
-
-	//template<class T>
-	//bool Insert(FormulaNode* node, boost::function<bool (T*, NodeEvent&)> doAction)
-	//{
-	//	return true;
-	//}
 	
 	bool Undo();
 	bool Redo();

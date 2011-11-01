@@ -77,12 +77,14 @@ void DivisionFormulaNode::Remake()
 		FormulaNode* divisor = (*this)[2];
 		qreal w = max(dividend->boundingRect.width(), divisor->boundingRect.width());
 		
+		//the shape
 		shape->AddLine(0, 0, w, 0, QColor("black"));
 		
+		//place the elements
 		dividend->Move((w - dividend->boundingRect.width()) / 2, 0);
 		shape->Move(0, dividend->boundingRect.height());
 		divisor->Move((w - divisor->boundingRect.width()) / 2, dividend->boundingRect.height() + shape->boundingRect.height());
-		
+
 		UpdateBoundingRect();
 		
 		baseline = dividend->boundingRect.height() + 1;

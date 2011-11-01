@@ -8,6 +8,7 @@
 #include "PowerFormulaNode.h"
 #include "SquareRootFormulaNode.h"
 #include "../Main/FormulaWnd.h"
+#include "../Util/QRectEx.h"
 
 /**
  * Default constructor.
@@ -23,6 +24,7 @@ TextFormulaNode::TextFormulaNode()
 TextFormulaNode::TextFormulaNode(FormulaNode* parent) : FormulaNode(parent, parent->wnd)
 {
 	item = new FormulaTextItem(settings, level, boundingRect, parent->item);
+	item->setData(0, qVariantFromValue((void*)this));
 	
 	QFont font = settings->GetTextFormulaNodeFont(level);
 	((QGraphicsTextItem*)item)->setFont(font);
@@ -59,7 +61,7 @@ void TextFormulaNode::UpdateBoundingRect()
 	QFontMetrics m(font);
 	QRectF b = m.boundingRect(((QGraphicsTextItem*)item)->toPlainText());
 	
-	boundingRect.setCoords(0, 0, b.width() + 1, b.height());
+	boundingRect.setCoords(0, 0, b.width(), b.height());
 	((FormulaTextItem*)item)->boundingRect = boundingRect;
 	boundingRect.moveTo(item->pos().x(), item->pos().y());
 }
@@ -157,17 +159,42 @@ QRectF TextFormulaNode::GetDocumentPosBounds(int pos)
 {
 	QRectF r = parent->GetDocumentPosBounds(parent->GetChildPos(this));
 
-	if (pos > 0)
-	{
+	//if (pos > 0)
+	//{
 		QFont font = settings->GetTextFormulaNodeFont(level);
 		QFontMetrics m(font);
 		QString text = ((QGraphicsTextItem*)item)->toPlainText();
 		QRectF b = m.boundingRect(text.right(text.length() - pos));
 		r.setLeft(r.left() + r.width() - b.width());
 		r.setRight(r.left());
-	}
+	//}
 	
 	return r;
+}
+
+/**
+ * Gets a nearest position to the given point in the document.
+ * @param x The x coordinate.
+ * @param y The y coordinate.
+ * @return The nearest position.
+ */
+int TextFormulaNode::GetNearestPos(qreal x, qreal y)
+{
+	int minDist = std::numeric_limits<int>::max();
+	int res = 0;
+
+	for (int i = 0; i <= GetText().length(); ++i)
+	{
+		QRectEx rect(GetDocumentPosBounds(i));
+		int j = rect.DistToPoint(x, y);
+		if (j < minDist)
+		{
+			minDist = j;
+			res = i;
+		}
+	}
+	
+	return res;
 }
 
 /**

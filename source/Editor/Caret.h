@@ -23,6 +23,7 @@ public:
 	void Render();
 	
 	void SetState(SharedCaretState state);
+	void SetToNode(FormulaNode* node, int pos);
 	void SetToNodeBegin(FormulaNode* node);
 	void SetToNodeEnd(FormulaNode* node);
 	

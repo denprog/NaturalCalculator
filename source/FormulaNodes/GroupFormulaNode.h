@@ -5,6 +5,9 @@
 
 class ShapeFormulaNode;
 
+/**
+ * Group formula node.
+ */
 class GroupFormulaNode : public FormulaNode
 {
 public:

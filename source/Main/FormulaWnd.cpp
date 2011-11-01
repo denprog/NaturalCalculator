@@ -11,12 +11,13 @@
 #include "../FormulaNodes/MultiplyFormulaNode.h"
 #include "../FormulaNodes/MinusFormulaNode.h"
 #include "../FormulaNodes/DivisionFormulaNode.h"
+#include "../Util/QRectEx.h"
 
 int FormulaWnd::updateEventId;
 
 /**
  * Constructor.
- * @param [in,out] parent The parent widget.
+ * @param [in] parent The parent widget.
  */
 FormulaWnd::FormulaWnd(QWidget *parent)	: QGraphicsView(parent), commandManager(this)
 {
@@ -40,6 +41,8 @@ FormulaWnd::FormulaWnd(QWidget *parent)	: QGraphicsView(parent), commandManager(
 	updateEventId = QEvent::registerEventType(1);
 	
 	parserThread = new ParserThread(this);
+	
+	setMouseTracking(true);
 }
 
 /**
@@ -55,7 +58,7 @@ FormulaWnd::~FormulaWnd()
 
 /**
  * Serves custom events.
- * @param [in,out] e The event.
+ * @param [in] e The event.
  * @return true if it succeeds, false if it fails.
  */
 bool FormulaWnd::event(QEvent* e)
@@ -71,7 +74,7 @@ bool FormulaWnd::event(QEvent* e)
 
 /**
  * Resize event.
- * @param [in,out] event The event.
+ * @param [in] event The event.
  */
 void FormulaWnd::resizeEvent(QResizeEvent* event)
 {
@@ -81,7 +84,7 @@ void FormulaWnd::resizeEvent(QResizeEvent* event)
 
 /**
  * Key press event.
- * @param [in,out] event The event.
+ * @param [in] event The event.
  */
 void FormulaWnd::keyPressEvent(QKeyEvent* event)
 {
@@ -145,6 +148,85 @@ void FormulaWnd::keyPressEvent(QKeyEvent* event)
 				UpdateView();
 		}
 		break;
+	}
+}
+
+/**
+ * Mouse move event.
+ * @param [in] event The event.
+ */
+void FormulaWnd::mouseMoveEvent(QMouseEvent* event)
+{
+	mouseOverNodes.clear();
+
+	//determine the items under the mouse
+	QList<QGraphicsItem*> items = scene->items(event->x(), event->y(), 1, 1, Qt::IntersectsItemBoundingRect, Qt::AscendingOrder);
+
+	QList<QGraphicsItem*>::iterator iter;
+	for (iter = items.begin(); iter != items.end(); ++iter)
+	{
+		//check the item to be a FormulaNode's field
+		QGraphicsItem* item = *iter;
+		FormulaNode* f = (FormulaNode*)item->data(0).value<void*>();
+		if (f)
+			mouseOverNodes.push_back(f);
+	}
+}
+
+/**
+ * Mouse press event.
+ * @param [in] event The event.
+ */
+void FormulaWnd::mousePressEvent(QMouseEvent* event)
+{
+	if ((int)mouseOverNodes.size() > 0)
+	{
+		if (event->buttons() == Qt::LeftButton)
+		{
+			vector<QRectF> rects;
+			
+			//get position bounds for the nodes
+			for (int i = 0; i < (int)mouseOverNodes.size(); ++i)
+			{
+				FormulaNode* node = mouseOverNodes[i];
+				int pos = node->GetNearestPos(event->x(), event->y());
+				rects.push_back(pos == -1 ? node->GetDocumentBounds() : node->GetDocumentPosBounds(pos));
+			}
+			
+			int minDist = std::numeric_limits<int>::max(), dist;
+			int j = 0;
+			
+			//find a node, which have a minimal distance to the point
+			for (int i = 0; i < (int)rects.size(); ++i)
+			{
+				QRectEx r(rects[i]);
+				dist = r.DistToPoint(event->x(), event->y());
+				if (dist < minDist)
+				{
+					minDist = dist;
+					j = i;
+				}
+			}
+
+			FormulaNode* n = mouseOverNodes[j];
+			
+			//set caret on the node
+			if (dynamic_cast<TextFormulaNode*>(n))
+				caret->SetToNode(n, n->GetNearestPos(event->x(), event->y()));
+			else
+			{
+				if (n->childNodes->Count() == 0)
+					caret->SetToNode(n->parent, n->parent->GetChildPos(n));
+				else
+				{
+					int pos = n->GetNearestPos(event->x(), event->y());
+					caret->SetToNode(n, pos);
+				}
+			}
+			
+			caret->Render();
+			EnsureVisible();
+		}
 	}
 }
 
@@ -268,4 +350,9 @@ void FormulaWnd::EnsureVisible()
 {
 	QRectF r = caret->currentState->GetNode()->GetDocumentPosBounds(caret->currentState->GetPos());
 	ensureVisible(r);
+}
+
+DocumentFormulaNode* FormulaWnd::GetDocumentNode()
+{
+	return documentNode;
 }

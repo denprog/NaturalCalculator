@@ -14,12 +14,15 @@ GroupFormulaNode::GroupFormulaNode()
 
 /**
  * Constructor.
- * @param [in,out] _parent The parent node.
- * @param [in,out] wnd The formula window.
+ * @param [in] _parent The parent node.
+ * @param [in] wnd The formula window.
  */
 GroupFormulaNode::GroupFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : FormulaNode(_parent, wnd)
 {
 	item = new QGraphicsItemGroup(_parent ? _parent->item : NULL);
+	
+	//storing this pointer for identifying the item when getting mouse movements
+	item->setData(0, qVariantFromValue((void*)this));
 
 #ifdef _DEBUG
 	name = "GroupFormulaNode";

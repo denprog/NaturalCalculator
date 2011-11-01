@@ -88,6 +88,10 @@ void EquationFormulaNode::Remake()
 		shape->Move(cx + w * 0.1 + settings->GetValue("InterNodeSpace", level), cy - font.pointSize());
 		resNode->Move(cx + w * 1.1 + settings->GetValue("InterNodeSpace", level) * 2, baseline - resNode->baseline);
 
+		//the shape, that wides the node's bounds for getting mouse events
+		r = m.boundingRect("T");
+		shape->AddFillRect(0, 0, r.width(), r.height(), QColor("white"), 0);
+
 		shape->boundingRect.setCoords(0, 0, w, h);
 
 		UpdateBoundingRect();

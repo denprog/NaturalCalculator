@@ -47,6 +47,16 @@ void Caret::SetState(SharedCaretState state)
 }
 	
 /**
+ * Sets caret to node and its position.
+ * @param [in,out] node The node.
+ * @param pos	The position.
+ */
+void Caret::SetToNode(FormulaNode* node, int pos)
+{
+	currentState->SetToNode(node, pos);
+}
+
+/**
  * Sets the caret to the node begin.
  * @param [in] node The node.
  */

@@ -29,14 +29,17 @@ void MultiplyFormulaNode::Remake()
 	QFontMetrics m(font);
 	QRect r = m.boundingRect("+");
 	
-	qreal w = r.width() / 2;
+	qreal w = r.width() * 0.8;
 	baseline = font.pointSize() / 2 + 2;
 
 	ClearShapes();
 	
+	//the shape
 	AddFillCircle(w / 2 - w / 10, w / 2 - w / 10, w / 5, QColor("black"));
 	
-	//UpdateBoundingRect();
+	//the shape, that wides the node's bounds for getting mouse events
+	AddFillRect(0, 0, w, w, QColor("white"), 0);
+
 	boundingRect.setCoords(0, 0, w, w);
 }
 
@@ -58,7 +61,7 @@ void MultiplyFormulaNode::UpdateBoundingRect()
 	QFontMetrics m(font);
 	QRect r = m.boundingRect("+");
 	
-	boundingRect.setCoords(0, 0, r.width() / 2, r.width());
+	boundingRect.setCoords(0, 0, r.width() * 0.8, r.width());
 	boundingRect.moveTo(item->pos().x(), item->pos().y());
 }
 
