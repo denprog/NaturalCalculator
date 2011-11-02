@@ -8,3 +8,5 @@ build/vc2008/Release
 build/vc2008/GeneratedFiles
 build/vc2008/GeneratedFiles/Debug
 build/vc2008/GeneratedFiles/Release
+build/vc2008/GeneratedFiles/Debug/moc_FormulaWnd.cpp
+build/vc2008/GeneratedFiles/Debug/moc_Caret.cpp

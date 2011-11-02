@@ -341,14 +341,17 @@ QRectF FormulaNode::GetDocumentPosBounds(int pos)
 int FormulaNode::GetNearestPos(qreal x, qreal y)
 {
 	int minDist = std::numeric_limits<int>::max();
-	int res = -1;
+	int res = 0;
 
 	for (int i = 0; i < childNodes->Count(); ++i)
 	{
 		QRectEx rect(GetDocumentPosBounds(i));
 		int j = rect.DistToPoint(x, y);
 		if (j < minDist)
+		{
+			minDist = j;
 			res = i;
+		}
 	}
 	
 	return res;
