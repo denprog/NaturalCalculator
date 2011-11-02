@@ -85,15 +85,40 @@ private:
 	}
 
 public:
-	DocumentFormulaNode* GetDocumentNode();
+	/**
+	 * Getter of the document node.
+	 * @return The document node.
+	 */
+	DocumentFormulaNode* GetDocumentNode()
+	{
+		return documentNode;
+	}
+
+	/**
+	 * Getter of the caret.
+	 * @return The caret.
+	 */
+	Caret* GetCaret()
+	{
+		return caret;
+	}
+
+	/**
+	 * Getter of the parser thread.
+	 * @return The parser thread.
+	 */
+	ParserThread* GetParserThread()
+	{
+		return parserThread;
+	}
 	
 public:
-	Caret* caret;
 	static int updateEventId;
-	ParserThread* parserThread;
 	
 private:
 	DocumentFormulaNode* documentNode;	///< The main document node
+	Caret* caret; ///< The caret
+	ParserThread* parserThread; ///< The parser thread
 	QGraphicsScene* scene;	///< The graphics scene
 	CommandManager commandManager;	///< Manager for commands
 	Settings* settings; ///< Options for the application

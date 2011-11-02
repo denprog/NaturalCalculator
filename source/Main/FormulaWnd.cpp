@@ -79,7 +79,7 @@ bool FormulaWnd::event(QEvent* e)
 void FormulaWnd::resizeEvent(QResizeEvent* event)
 {
 	QGraphicsView::resizeEvent(event);
-	scene->setSceneRect(documentNode->boundingRect);
+	scene->setSceneRect(documentNode->GetBoundingRect());
 }
 
 /**
@@ -215,8 +215,8 @@ void FormulaWnd::mousePressEvent(QMouseEvent* event)
 				caret->SetToNode(n, n->GetNearestPos(event->x(), event->y()));
 			else
 			{
-				if (n->childNodes->Count() == 0)
-					caret->SetToNode(n->parent, n->parent->GetChildPos(n));
+				if (n->GetChildNodes()->Count() == 0)
+					caret->SetToNode(n->GetParent(), n->GetParent()->GetChildPos(n));
 				else
 				{
 					int pos = n->GetNearestPos(event->x(), event->y());
@@ -342,17 +342,15 @@ void FormulaWnd::UpdateView()
 {
 	documentNode->Remake();
 	caret->Render();
-	scene->setSceneRect(documentNode->boundingRect);
+	scene->setSceneRect(documentNode->GetBoundingRect());
 	EnsureVisible();
 }
 
+/**
+ * Makes the current node visible.
+ */
 void FormulaWnd::EnsureVisible()
 {
 	QRectF r = caret->currentState->GetNode()->GetDocumentPosBounds(caret->currentState->GetPos());
 	ensureVisible(r);
-}
-
-DocumentFormulaNode* FormulaWnd::GetDocumentNode()
-{
-	return documentNode;
 }

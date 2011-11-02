@@ -42,14 +42,16 @@ namespace boost
 		template<class Archive>
 		inline void save_construct_data(Archive& ar, const EmptyFormulaNode* node, const BOOST_PFTO unsigned int file_version)
 		{
-			ar << node->parent;
+			FormulaNode* parent = node->GetParent();
+			ar << parent;
 		}
 
 		template<class Archive>
 		inline void load_construct_data(Archive& ar, EmptyFormulaNode* node, const BOOST_PFTO unsigned int file_version)
 		{
-			ar >> node->parent;
-			::new (node)EmptyFormulaNode(node->parent);
+			FormulaNode* parent = node->GetParent();
+			ar >> parent;
+			::new (node)EmptyFormulaNode(parent);
 		}
 	}
 }

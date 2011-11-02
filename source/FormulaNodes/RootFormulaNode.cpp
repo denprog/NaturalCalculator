@@ -15,7 +15,7 @@ RootFormulaNode::RootFormulaNode()
  * Constructor.
  * @param [in] parent The parent node.
  */
-RootFormulaNode::RootFormulaNode(FormulaNode* parent) : GroupFormulaNode(parent, parent->wnd), scene(parent->wnd->scene)
+RootFormulaNode::RootFormulaNode(FormulaNode* parent) : GroupFormulaNode(parent, parent->GetWnd()), scene(parent->GetWnd()->scene)
 {
 	scene->addItem(item);
 

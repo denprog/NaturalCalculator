@@ -5,7 +5,7 @@
  * Constructor.
  * @param [in,out] _parent The parent node.
  */
-EmptyFormulaNode::EmptyFormulaNode(FormulaNode* _parent) : ShapeFormulaNode(_parent, _parent->wnd)
+EmptyFormulaNode::EmptyFormulaNode(FormulaNode* _parent) : ShapeFormulaNode(_parent, _parent->GetWnd())
 {
 #ifdef _DEBUG
 	name = "EmptyFormulaNode";

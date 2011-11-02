@@ -21,9 +21,9 @@ TextFormulaNode::TextFormulaNode()
  * Constructor.
  * @param [in,out] parent The parent node.
  */
-TextFormulaNode::TextFormulaNode(FormulaNode* parent) : FormulaNode(parent, parent->wnd)
+TextFormulaNode::TextFormulaNode(FormulaNode* parent) : FormulaNode(parent, parent->GetWnd())
 {
-	item = new FormulaTextItem(settings, level, boundingRect, parent->item);
+	item = new FormulaTextItem(settings, level, boundingRect, parent->GetItem());
 	item->setData(0, qVariantFromValue((void*)this));
 	
 	QFont font = settings->GetTextFormulaNodeFont(level);
@@ -205,7 +205,7 @@ int TextFormulaNode::GetNearestPos(qreal x, qreal y)
 void TextFormulaNode::RenderCaret(const int pos, const int anchor)
 {
 	QRectF r = GetDocumentPosBounds(pos);
-	QGraphicsItemGroup* g = wnd->caret->caretShape;
+	QGraphicsItemGroup* g = wnd->GetCaret()->caretShape;
 	
 	qDeleteAll(g->childItems());
 	g->childItems().clear();
@@ -506,8 +506,8 @@ bool TextFormulaNode::DoCreateDivisionFormulaNode(NodeEvent& nodeEvent)
  */
 bool TextFormulaNode::UndoCreateDivisionFormulaNode(NodeEvent& nodeEvent)
 {
-	FormulaNode* p = parent->parent->parent;
-	int pos = p->GetChildPos(parent->parent);
+	FormulaNode* p = parent->GetParent()->GetParent();
+	int pos = p->GetChildPos(parent->GetParent());
 	p->MoveChild(this, pos);
 	p->RemoveChild(pos + 1);
 	
@@ -548,8 +548,8 @@ bool TextFormulaNode::DoCreatePowerFormulaNode(NodeEvent& nodeEvent)
  */
 bool TextFormulaNode::UndoCreatePowerFormulaNode(NodeEvent& nodeEvent)
 {
-	FormulaNode* p = parent->parent->parent;
-	int pos = p->GetChildPos(parent->parent);
+	FormulaNode* p = parent->GetParent()->GetParent();
+	int pos = p->GetChildPos(parent->GetParent());
 	p->MoveChild(this, pos);
 	p->RemoveChild(pos + 1);
 	
@@ -586,8 +586,8 @@ bool TextFormulaNode::DoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
  */
 bool TextFormulaNode::UndoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
 {
-	FormulaNode* p = parent->parent->parent;
-	int pos = p->GetChildPos(parent->parent);
+	FormulaNode* p = parent->GetParent()->GetParent();
+	int pos = p->GetChildPos(parent->GetParent());
 	p->MoveChild(this, pos);
 	p->RemoveChild(pos + 1);
 	

@@ -75,19 +75,19 @@ void DivisionFormulaNode::Remake()
 	{
 		FormulaNode* dividend = (*this)[0];
 		FormulaNode* divisor = (*this)[2];
-		qreal w = max(dividend->boundingRect.width(), divisor->boundingRect.width());
+		qreal w = max(dividend->GetBoundingRect().width(), divisor->GetBoundingRect().width());
 		
 		//the shape
 		shape->AddLine(0, 0, w, 0, QColor("black"));
 		
 		//place the elements
-		dividend->Move((w - dividend->boundingRect.width()) / 2, 0);
-		shape->Move(0, dividend->boundingRect.height());
-		divisor->Move((w - divisor->boundingRect.width()) / 2, dividend->boundingRect.height() + shape->boundingRect.height());
+		dividend->Move((w - dividend->GetBoundingRect().width()) / 2, 0);
+		shape->Move(0, dividend->GetBoundingRect().height());
+		divisor->Move((w - divisor->GetBoundingRect().width()) / 2, dividend->GetBoundingRect().height() + shape->GetBoundingRect().height());
 
 		UpdateBoundingRect();
 		
-		baseline = dividend->boundingRect.height() + 1;
+		baseline = dividend->GetBoundingRect().height() + 1;
 	}
 }
 
@@ -97,7 +97,7 @@ void DivisionFormulaNode::Remake()
 void DivisionFormulaNode::UpdateBoundingRect()
 {
 	FormulaNode::UpdateBoundingRect();
-	shape->boundingRect.setHeight(1);
+	shape->GetBoundingRect().setHeight(1);
 }
 
 /**
@@ -159,7 +159,7 @@ void DivisionFormulaNode::RenderCaret(const int pos, const int anchor)
 	{
 		//render the shape's caret
 		QRectF r = GetDocumentPosBounds(pos);
-		QGraphicsItemGroup* g = wnd->caret->caretShape;
+		QGraphicsItemGroup* g = wnd->GetCaret()->caretShape;
 		
 		qDeleteAll(g->childItems());
 		g->childItems().clear();

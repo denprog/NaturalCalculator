@@ -3,57 +3,61 @@
 
 #include <boost/function.hpp>
 #include <QMap>
-//#include <QVariant>
 #include <boost/any.hpp>
 #include "CaretState.h"
 
 typedef QMap<QString, boost::any> NodeEvent;
 typedef boost::function<bool (FormulaNode*, NodeEvent&)> CommandFunc;
 
-//#define TemplateAction template<class T> boost::function<bool (T*, NodeEvent&)>;
-
-//struct CommandAction
-//{
-//	template<class NodeType>
-//	CommandAction(FormulaNode* node, int pos, boost::function<bool (NodeType*, NodeEvent&)>& func)
-//	{
-//	}
-//};
-
+/**
+ * Command action.
+ */
 struct CommandAction
 {
+	/**
+	 * Default constructor.
+	 */
 	CommandAction()
 	{
 	}
 	
+	/**
+	 * Constructor.
+	 * @param [in] node	The parent node.
+	 * @param pos	The caret position.
+	 * @param [in] _action The action's method.
+	 */
 	CommandAction(FormulaNode* node, int pos, boost::function<bool (FormulaNode*, NodeEvent&)> _action) : 
 		caretState(new CaretState(node, pos)), action(_action)
 	{
 	}
 
+	/**
+	 * Constructor.
+	 * @param _caretState	State of the caret.
+	 * @param [in] _action The action's method.
+	 */
 	CommandAction(SharedCaretState _caretState, boost::function<bool (FormulaNode*, NodeEvent&)> _action) : 
 		caretState(_caretState->Dublicate()), action(_action)
 	{
 	}
 	
-	//CommandAction(const CommandAction& source) : caretState(new CaretState(*source.caretState)), action(source.action)
-	//{
-	//}
-	
+	/**
+	 * The functor for executing an action.
+	 * @param nodeEvent The node event
+	 */
 	bool operator()(NodeEvent& nodeEvent)
 	{
 		return action(caretState->GetNode(), nodeEvent);
 	}
 	
-	//void operator=(const boost::function<bool (FormulaNode*, NodeEvent&)> _action)
-	//{
-	//	action = _action;
-	//}
-	
-	SharedCaretState caretState;
-	boost::function<bool (FormulaNode*, NodeEvent&)> action;
+	SharedCaretState caretState;	///< State of the caret
+	boost::function<bool (FormulaNode*, NodeEvent&)> action; ///< The action's method
 };
 
+/**
+ * Command.
+ */
 class Command
 {
 public:

@@ -39,17 +39,17 @@ void PowerFormulaNode::Remake()
 		shape->ClearShapes();
 
 		//the shape
-		shape->AddFillRect(0, 0, left->boundingRect.height() / 10, left->boundingRect.height(), QColor("white"));
+		shape->AddFillRect(0, 0, left->GetBoundingRect().height() / 10, left->GetBoundingRect().height(), QColor("white"));
 		shape->UpdateBoundingRect();
 		
-		int cy = right->boundingRect.height() * 0.5;
+		int cy = right->GetBoundingRect().height() * 0.5;
 		left->Move(0, cy);
-		shape->Move(left->boundingRect.width() + settings->GetValue("InterSymbolSpace", level) / 2, cy);
-		right->Move(shape->boundingRect.right() + settings->GetValue("InterSymbolSpace", level) / 2, 0);
+		shape->Move(left->GetBoundingRect().width() + settings->GetValue("InterSymbolSpace", level) / 2, cy);
+		right->Move(shape->GetBoundingRect().right() + settings->GetValue("InterSymbolSpace", level) / 2, 0);
 
 		UpdateBoundingRect();
 		
-		baseline = left->baseline + cy;
+		baseline = left->GetBaseline() + cy;
 	}
 }
 

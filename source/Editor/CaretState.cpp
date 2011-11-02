@@ -184,7 +184,7 @@ void CaretPosition::SetNodePos(FormulaNode* node, int pos)
 
 /**
  * Gets the current node.
- * @return null if it fails, else the node.
+ * @return The node.
  */
 FormulaNode* CaretPosition::GetNode()
 {

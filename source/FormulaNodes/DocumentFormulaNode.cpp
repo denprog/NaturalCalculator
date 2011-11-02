@@ -36,7 +36,7 @@ void DocumentFormulaNode::Remake()
 	{
 		FormulaNode* n = (*this)[i];
 		n->Move(0, y);
-		y += n->boundingRect.height();
+		y += n->GetBoundingRect().height();
 	}
 	
 	UpdateBoundingRect();

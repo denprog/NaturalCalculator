@@ -149,19 +149,71 @@ public:
 	virtual bool UndoCreateEquationFormulaNode(NodeEvent& nodeEvent);
 
 public:
+	/**
+	 * Getter of the parent of this node.
+	 * @return null The parent.
+	 */
+	FormulaNode* GetParent() const
+	{
+		return parent;
+	}
+
+	/**
+	 * Getter of the child nodes.
+	 * @return The child nodes.
+	 */
+	FormulaNodesCollection* GetChildNodes()
+	{
+		return childNodes;
+	}
+
+	/**
+	 * Getter of the item.
+	 * @return null if it fails, else the item.
+	 */
+	QGraphicsItem* GetItem()
+	{
+		return item;
+	}
+	
+	/**
+	 * Getter of the bounding rectangle.
+	 * @return The bounding rectangle.
+	 */
+	QRectF& GetBoundingRect()
+	{
+		return boundingRect;
+	}
+	
+	/**
+	 * Getter of the window.
+	 * @return The parent window.
+	 */
+	FormulaWnd* GetWnd() const
+	{
+		return wnd;
+	}
+
+	/**
+	 * Getter of the baseline.
+	 * @return The baseline.
+	 */
+	qreal GetBaseline()
+	{
+		return baseline;
+	}
+		
+protected:
 	FormulaNode* parent; ///< The parent node
 	FormulaNodesCollection* childNodes; ///< The child nodes
 	QRectF boundingRect; ///< The bounding rectangle
-	QGraphicsItem* item;
+	QGraphicsItem* item;	///< The graphics item
 	qreal baseline; ///< The baseline
 	FormulaWnd* wnd; ///< The formula window
 	FormulaNodeLevel level; ///< The node level
-
-protected:
 	Command* command;	
-	
-protected:
 	Settings* settings;
+	
 #ifdef _DEBUG
 	QString name;
 #endif

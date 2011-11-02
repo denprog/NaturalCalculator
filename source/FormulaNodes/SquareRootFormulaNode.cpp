@@ -34,9 +34,9 @@ void SquareRootFormulaNode::Remake()
 	if (childNodes->Count() > 0)
 	{
 		FormulaNode* radicand = (*this)[1];
-		int cx = radicand->boundingRect.height() * 5 / 11;
-		int offset = radicand->boundingRect.height() / 5;
-		int cy = radicand->boundingRect.height() + offset * 2;
+		int cx = radicand->GetBoundingRect().height() * 5 / 11;
+		int offset = radicand->GetBoundingRect().height() / 5;
+		int cy = radicand->GetBoundingRect().height() + offset * 2;
 		
 		QVector<QPointF> p;
 		p.push_back(QPointF(cx, cy * 0.01));
@@ -47,17 +47,17 @@ void SquareRootFormulaNode::Remake()
 		p.push_back(QPointF(cx * 0.343, cy * 0.429));
 		p.push_back(QPointF(cx * 0.703, cy * 0.869));
 		p.push_back(QPointF(cx * 0.934, 0));
-		p.push_back(QPointF((cx * 1.32 + radicand->boundingRect.width()), 0));
-		p.push_back(QPointF((cx * 1.32 + radicand->boundingRect.width()), cy * 0.01));
+		p.push_back(QPointF((cx * 1.32 + radicand->GetBoundingRect().width()), 0));
+		p.push_back(QPointF((cx * 1.32 + radicand->GetBoundingRect().width()), cy * 0.01));
 		p.push_back(QPointF(cx * 1.32, cy * 0.01));
 		
 		shape->AddPolygon(p, QColor("black"));
 		
 		radicand->Move(cx * 1.3, offset);
 
-		baseline = radicand->baseline + offset;
+		baseline = radicand->GetBaseline() + offset;
 		shape->UpdateBoundingRect();
-		boundingRect = shape->boundingRect;
+		boundingRect = shape->GetBoundingRect();
 	}
 }
 
@@ -77,7 +77,7 @@ void SquareRootFormulaNode::Parse(ParserString& expr)
  */
 void SquareRootFormulaNode::UpdateBoundingRect()
 {
-	boundingRect = shape->boundingRect;
+	boundingRect = shape->GetBoundingRect();
 	boundingRect.moveTo(item->pos().x(), item->pos().y());
 }
 
@@ -101,9 +101,9 @@ void SquareRootFormulaNode::RenderCaret(const int pos, const int anchor)
 	{
 		//draw the caret on the shape
 		QRectF r = GetDocumentPosBounds(pos);
-		int cx = (*this)[1]->boundingRect.height() * 5 / 11;
+		int cx = (*this)[1]->GetBoundingRect().height() * 5 / 11;
 		
-		QGraphicsItemGroup* g = wnd->caret->caretShape;
+		QGraphicsItemGroup* g = wnd->GetCaret()->caretShape;
 		
 		qDeleteAll(g->childItems());
 		g->childItems().clear();

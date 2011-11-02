@@ -51,7 +51,8 @@ namespace boost
 		template<class Archive>
 		inline void save_construct_data(Archive& ar, const PowerFormulaNode* node, const BOOST_PFTO unsigned int file_version)
 		{
-			ar << node->parent;
+			FormulaNode* parent = node->GetParent();
+			ar << parent;
 		}
 
 		template<class Archive>
@@ -59,7 +60,7 @@ namespace boost
 		{
 			FormulaNode* parent;
 			ar >> parent;
-			::new (node)PowerFormulaNode(parent, parent->wnd);
+			::new (node)PowerFormulaNode(parent, parent->GetWnd());
 		}
 	}
 }

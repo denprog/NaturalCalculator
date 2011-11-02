@@ -161,10 +161,10 @@ void FormulaNode::UpdateBoundingRect()
 	for (int i = 0; i < childNodes->Count(); ++i)
 	{
 		FormulaNode* n = (*this)[i];
-		if (n->boundingRect.right() > w)
-			w = n->boundingRect.right();
-		if (n->boundingRect.bottom() > h)
-			h = n->boundingRect.bottom();
+		if (n->GetBoundingRect().right() > w)
+			w = n->GetBoundingRect().right();
+		if (n->GetBoundingRect().bottom() > h)
+			h = n->GetBoundingRect().bottom();
 	}
 
 	if (w == 0 && h == 0 && item)
@@ -319,17 +319,17 @@ QRectF FormulaNode::GetDocumentPosBounds(int pos)
 {
 	FormulaNode* n = (*this)[pos == childNodes->Count() ? pos - 1 : pos];
 	FormulaNode* p = n;
-	qreal cx = (pos == childNodes->Count() ? n->boundingRect.width() : 0);
+	qreal cx = (pos == childNodes->Count() ? n->GetBoundingRect().width() : 0);
 	qreal cy = 0;
 	
 	while (p)
 	{
-		cx += p->boundingRect.left();
-		cy += p->boundingRect.top();
+		cx += p->GetBoundingRect().left();
+		cy += p->GetBoundingRect().top();
 		p = p->parent;
 	}
 	
-	return QRectF(cx, cy, pos == childNodes->Count() ? 0 : n->boundingRect.width(), n->boundingRect.height());
+	return QRectF(cx, cy, pos == childNodes->Count() ? 0 : n->GetBoundingRect().width(), n->GetBoundingRect().height());
 }
 
 /**
@@ -423,7 +423,7 @@ void FormulaNode::RenderCaret(const int pos, const int anchor)
 {
 	QRectF r = GetDocumentPosBounds(pos);
 	
-	QGraphicsItemGroup* g = wnd->caret->caretShape;
+	QGraphicsItemGroup* g = wnd->GetCaret()->caretShape;
 	
 	qDeleteAll(g->childItems());
 	g->childItems().clear();

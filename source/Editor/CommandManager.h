@@ -10,6 +10,9 @@ using namespace std;
 class FormulaWnd;
 class FormulaNode;
 
+/**
+ * Manager for commands.
+ */
 class CommandManager
 {
 public:
