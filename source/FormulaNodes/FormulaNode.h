@@ -5,7 +5,9 @@
 #include <QRect>
 #include <QGraphicsScene>
 #include <QGraphicsItem>
+#include <QMouseEvent>
 #include <vector>
+#include <QObject>
 #include <boost/any.hpp>
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
@@ -22,6 +24,8 @@ using boost::any_cast;
 class FormulaWnd;
 class FormulaNodesCollection;
 
+class QMenu;
+
 enum FormulaNodeLevel
 {
 	NORMAL_LEVEL = 1,
@@ -32,8 +36,10 @@ enum FormulaNodeLevel
 /**
  * Formula node.
  */
-class FormulaNode
+class FormulaNode : public QObject
 {
+	Q_OBJECT
+	
 public:
 	FormulaNode();
 	FormulaNode(FormulaNode* _parent, FormulaWnd* wnd);
@@ -148,6 +154,14 @@ public:
 	virtual bool DoCreateEquationFormulaNode(NodeEvent& nodeEvent);
 	virtual bool UndoCreateEquationFormulaNode(NodeEvent& nodeEvent);
 
+public:
+	virtual void MakeContextMenu(QMenu* menu);
+
+public slots:	
+	virtual void OnCopy();
+	virtual void OnPaste();
+	virtual void OnCut();
+		
 public:
 	/**
 	 * Getter of the parent of this node.

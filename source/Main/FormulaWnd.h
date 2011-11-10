@@ -124,6 +124,8 @@ private:
 	Settings* settings; ///< Options for the application
 	
 	vector<FormulaNode*> mouseOverNodes;
+	
+	QMenu* contextMenu;
 };
 
 #endif // FORMULAWND_H

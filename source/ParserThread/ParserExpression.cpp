@@ -65,6 +65,7 @@ ParserExpression::ParserExpression()
 
 ParserExpression::ParserExpression(FormulaNode* node)
 {
+	node->GetHierarchyPos(pos);
 }
 
 /**

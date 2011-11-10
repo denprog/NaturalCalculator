@@ -594,6 +594,18 @@ bool TextFormulaNode::UndoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
 	return true;
 }
 
+void TextFormulaNode::OnCopy()
+{
+}
+
+void TextFormulaNode::OnPaste()
+{
+}
+
+void TextFormulaNode::OnCut()
+{
+}
+
 //FormulaTextItem
 
 /**

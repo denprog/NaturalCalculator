@@ -44,12 +44,56 @@ void ResultFormulaNode::SetExpression(ParserString& expr)
 }
 
 /**
- * Adds a result node.
- * @param [in,out] expr The expression.
+ * Adds an automatic result node.
+ * @param precision The precision.
+ * @param exp The exponent.
  */
-void ResultFormulaNode::AddResultNode(ParserExpressionVariant& expr)
+void ResultFormulaNode::AddAutoResultNode(int precision, int exp)
 {
-	AddChild(new GroupFormulaNode(this, wnd));
+	GroupFormulaNode* n = new GroupFormulaNode(this, wnd);
+	AddChild(n);
+	
+	AutoParserExpression expr(n, precision, exp);
+	parserExpressions.push_back(expr);
+}
+
+/**
+ * Adds a real result node.
+ * @param precision The precision.
+ * @param exp The exponent.
+ */
+void ResultFormulaNode::AddRealResultNode(int precision, int exp)
+{
+	GroupFormulaNode* n = new GroupFormulaNode(this, wnd);
+	AddChild(n);
+	
+	RealParserExpression expr(n, precision, exp);
+	parserExpressions.push_back(expr);
+}
+
+/**
+ * Adds a integer result node.
+ * @param notation The notation.
+ */
+void ResultFormulaNode::AddIntegerResultNode(ExpressionNotation notation)
+{
+	GroupFormulaNode* n = new GroupFormulaNode(this, wnd);
+	AddChild(n);
+	
+	IntegerParserExpression expr(n, notation);
+	parserExpressions.push_back(expr);
+}
+
+/**
+ * Adds a rational result node.
+ * @param type The fraction type.
+ */
+void ResultFormulaNode::AddRationalResultNode(FractionType type)
+{
+	GroupFormulaNode* n = new GroupFormulaNode(this, wnd);
+	AddChild(n);
+
+	RationalParserExpression expr(n, type);
 	parserExpressions.push_back(expr);
 }
 

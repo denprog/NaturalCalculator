@@ -4,6 +4,9 @@
 #include "GroupFormulaNode.h"
 #include "../ParserThread/ParserExpression.h"
 
+/**
+ * Result formula node.
+ */
 class ResultFormulaNode : public GroupFormulaNode
 {
 public:
@@ -16,13 +19,13 @@ public:
 public:
 	void SetExpression(ParserString& expr);
 	
-	void AddResultNode(ParserExpressionVariant& expr);
+	void AddAutoResultNode(int precision, int exp);
+	void AddRealResultNode(int precision, int exp);
+	void AddIntegerResultNode(ExpressionNotation notation);
+	void AddRationalResultNode(FractionType type);
 	void RemoveResultNode();
 
 private:
-	//template<class Number>
-	//bool MakeResultNode(ParserExpression& expr, FormulaNode* p);
-	
 	struct ResultNodeMaker : boost::static_visitor<void>
 	{
 		ResultNodeMaker(FormulaNode* _parent);
@@ -36,9 +39,6 @@ private:
 	};
 		
 private:
-	//int exp;
-	//ParserExpression parserExpression;
-	//vector<ParserExpression> parserExpressions;
 	vector<ParserExpressionVariant> parserExpressions;
 };
 

@@ -1,12 +1,9 @@
-
 build/vc2008/Debug
 build/vc2008/NaturalCalculator.ncb
 build/vc2008/NaturalCalculator.suo
 build/vc2008/NaturalCalculator.vcproj.Computer.Denis.user
 build/vc2008/sample.ncl
-build/vc2008/Release
-build/vc2008/GeneratedFiles
-build/vc2008/GeneratedFiles/Debug
-build/vc2008/GeneratedFiles/Release
-build/vc2008/GeneratedFiles/Debug/moc_FormulaWnd.cpp
-build/vc2008/GeneratedFiles/Debug/moc_Caret.cpp
+build/vc2008/Release/
+build/vc2008/GeneratedFiles/
+build/vc2008/GeneratedFiles/Debug/
+build/vc2008/GeneratedFiles/Release/

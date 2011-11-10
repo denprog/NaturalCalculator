@@ -9,6 +9,7 @@
 #include "DivisionFormulaNode.h"
 #include "../Main/FormulaWnd.h"
 #include "../Util/QRectEx.h"
+#include <QMenu>
 
 /**
  * Default constructor.
@@ -341,7 +342,7 @@ QRectF FormulaNode::GetDocumentPosBounds(int pos)
 int FormulaNode::GetNearestPos(qreal x, qreal y)
 {
 	int minDist = std::numeric_limits<int>::max();
-	int res = 0;
+	int res = -1;
 
 	for (int i = 0; i < childNodes->Count(); ++i)
 	{
@@ -805,4 +806,43 @@ bool FormulaNode::UndoCreateEquationFormulaNode(NodeEvent& nodeEvent)
 	if (parent)
 		return parent->UndoCreateEquationFormulaNode(nodeEvent);
 	return false;
+}
+
+void FormulaNode::MakeContextMenu(QMenu* menu)
+{
+	QAction* a = new QAction(tr("Cut"), this);
+	a->setShortcuts(QKeySequence::Cut);
+	connect(a, SIGNAL(triggered()), this, SLOT(OnCut()));
+	menu->addAction(a);
+
+	a = new QAction(tr("Copy"), this);
+	a->setShortcuts(QKeySequence::Copy);
+	connect(a, SIGNAL(triggered()), this, SLOT(OnCopy()));
+	menu->addAction(a);
+
+	a = new QAction(tr("Paste"), this);
+	a->setShortcuts(QKeySequence::Paste);
+	connect(a, SIGNAL(triggered()), this, SLOT(OnPaste()));
+	menu->addAction(a);
+}
+	
+/**
+ * Executes the copy context menu action.
+ */
+void FormulaNode::OnCopy()
+{
+}
+
+/**
+ * Executes the paste context menu action.
+ */
+void FormulaNode::OnPaste()
+{
+}
+
+/**
+ * Executes the cut context menu action.
+ */
+void FormulaNode::OnCut()
+{
 }

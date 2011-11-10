@@ -2,6 +2,7 @@
 #include "FormulaNodesCollection.h"
 #include "ShapeFormulaNode.h"
 #include <QFontMetrics>
+#include <QMenu>
 #include "../Main/FormulaWnd.h"
 
 /**
@@ -50,17 +51,7 @@ void EquationFormulaNode::Remake()
 			resNode = new ResultFormulaNode(this, wnd);
 			AddChild(resNode);
 			
-			AutoParserExpression expr1(this, wnd->settings->value("auto/precision", 8).toInt(), wnd->settings->value("auto/exp", 3).toInt());
-			resNode->AddResultNode(ParserExpressionVariant(expr1));
-			
-			RealParserExpression expr2(this, wnd->settings->value("auto/precision", 8).toInt(), wnd->settings->value("auto/exp", 3).toInt());
-			resNode->AddResultNode(ParserExpressionVariant(expr2));
-
-			IntegerParserExpression expr3(this, DECIMAL_NOTATION);
-			resNode->AddResultNode(ParserExpressionVariant(expr3));
-
-			RationalParserExpression expr4(this, IMPROPER_FRACTION);
-			resNode->AddResultNode(ParserExpressionVariant(expr4));
+			resNode->AddAutoResultNode(wnd->settings->value("auto/precision", 8).toInt(), wnd->settings->value("auto/exp", 3).toInt());
 		}
 		
 		FormulaNode* left = (*this)[0];
@@ -119,4 +110,51 @@ void EquationFormulaNode::UpdateBoundingRect()
 FormulaNode* EquationFormulaNode::Clone()
 {
 	return new EquationFormulaNode(parent, wnd);
+}
+
+void EquationFormulaNode::MakeContextMenu(QMenu* menu)
+{
+	QMenu* subMenu = new QMenu("Add result", menu);
+
+	menu->addMenu(subMenu);
+	
+	QAction* a = new QAction(tr("Auto"), subMenu);
+	subMenu->addAction(a);
+	connect(a, SIGNAL(triggered()), this, SLOT(OnAddAutoResult()));
+
+	a = new QAction(tr("Real"), subMenu);
+	subMenu->addAction(a);
+	connect(a, SIGNAL(triggered()), this, SLOT(OnAddRealResult()));
+
+	a = new QAction(tr("Integer"), subMenu);
+	subMenu->addAction(a);
+	connect(a, SIGNAL(triggered()), this, SLOT(OnAddIntegerResult()));
+
+	a = new QAction(tr("Rational"), subMenu);
+	subMenu->addAction(a);
+	connect(a, SIGNAL(triggered()), this, SLOT(OnAddRationalResult()));
+}
+
+void EquationFormulaNode::OnAddAutoResult()
+{
+	resNode->AddAutoResultNode(wnd->settings->value("auto/precision", 8).toInt(), wnd->settings->value("auto/exp", 3).toInt());
+	Remake();
+}
+
+void EquationFormulaNode::OnAddRealResult()
+{
+	resNode->AddRealResultNode(wnd->settings->value("auto/precision", 8).toInt(), wnd->settings->value("auto/exp", 3).toInt());
+	Remake();
+}
+
+void EquationFormulaNode::OnAddIntegerResult()
+{
+	resNode->AddIntegerResultNode(DECIMAL_NOTATION);
+	Remake();
+}
+
+void EquationFormulaNode::OnAddRationalResult()
+{
+	resNode->AddRationalResultNode(IMPROPER_FRACTION);
+	Remake();
 }

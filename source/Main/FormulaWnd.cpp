@@ -3,6 +3,7 @@
 #include <QKeyEvent>
 #include <QMessageBox>
 #include <QScrollBar>
+#include <QMenu>
 #include "MainWindow.h"
 #include "../FormulaNodes/DocumentFormulaNode.h"
 #include "../FormulaNodes/TextFormulaNode.h"
@@ -43,6 +44,8 @@ FormulaWnd::FormulaWnd(QWidget *parent)	: QGraphicsView(parent), commandManager(
 	parserThread = new ParserThread(this);
 	
 	setMouseTracking(true);
+	
+	contextMenu = new QMenu(this);
 }
 
 /**
@@ -54,6 +57,7 @@ FormulaWnd::~FormulaWnd()
 	delete documentNode;
 	delete scene;
 	delete parserThread;
+	delete contextMenu;
 }
 
 /**
@@ -181,7 +185,7 @@ void FormulaWnd::mousePressEvent(QMouseEvent* event)
 {
 	if ((int)mouseOverNodes.size() > 0)
 	{
-		if (event->buttons() == Qt::LeftButton)
+		if (event->buttons() == Qt::LeftButton || event->buttons() == Qt::RightButton)
 		{
 			vector<QRectF> rects;
 			
@@ -223,9 +227,29 @@ void FormulaWnd::mousePressEvent(QMouseEvent* event)
 					caret->SetToNode(n, pos);
 				}
 			}
-			
+
 			caret->Render();
 			EnsureVisible();
+			
+			if (event->buttons() == Qt::RightButton)
+			{
+				contextMenu->clear();
+				
+				if (dynamic_cast<TextFormulaNode*>(n))
+					n->MakeContextMenu(contextMenu);
+				else
+				{
+					if (n->GetChildNodes()->Count() == 0)
+						n->GetParent()->MakeContextMenu(contextMenu);
+					else
+					{
+						int pos = n->GetNearestPos(event->x(), event->y());
+						(*n)[pos]->MakeContextMenu(contextMenu);
+					}
+				}
+				
+				contextMenu->popup(QPoint(event->globalX(), event->globalY()));
+			}
 		}
 	}
 }

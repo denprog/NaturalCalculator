@@ -6,6 +6,8 @@
 
 class EquationFormulaNode : public CompoundFormulaNode
 {
+	Q_OBJECT
+	
 public:
 	EquationFormulaNode();
 	EquationFormulaNode(FormulaNode* _parent, FormulaWnd* wnd);
@@ -36,6 +38,15 @@ public:
 	virtual void UpdateBoundingRect();
 
 	virtual FormulaNode* Clone();
+
+public:
+	virtual void MakeContextMenu(QMenu* menu);
+	
+public slots:
+	virtual void OnAddAutoResult();
+	virtual void OnAddRealResult();
+	virtual void OnAddIntegerResult();
+	virtual void OnAddRationalResult();
 
 private:
 	ShapeFormulaNode* shape;
