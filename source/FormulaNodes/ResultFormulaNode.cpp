@@ -4,6 +4,7 @@
 #include "MultiplyFormulaNode.h"
 #include "DivisionFormulaNode.h"
 #include "FormulaNodesCollection.h"
+#include "ResultItemFormulaNode.h"
 #include "../Main/FormulaWnd.h"
 
 /**
@@ -22,83 +23,10 @@ ResultFormulaNode::~ResultFormulaNode()
 {
 }
 
-/**
- * Sets an parser expression to be solved.
- * @param [in,out] expr The expression.
- */
-void ResultFormulaNode::SetExpression(ParserString& expr)
+void ResultFormulaNode::AddChild(FormulaNode* node)
 {
-	for (int i = 0; i < (int)parserExpressions.size(); ++i)
-	{
-		ParserExpressionVariant& p = parserExpressions[i];
-		if (expr.expression != p.GetExpression()->expression)
-		{
-			*p.GetExpression() = expr;
-			*p.GetSolved() = false;
-			
-			//solve the expression
-			wnd->GetParserThread()->AddExpression(p);
-			Remake();
-		}
-	}
-}
-
-/**
- * Adds an automatic result node.
- * @param precision The precision.
- * @param exp The exponent.
- */
-void ResultFormulaNode::AddAutoResultNode(int precision, int exp)
-{
-	GroupFormulaNode* n = new GroupFormulaNode(this, wnd);
-	AddChild(n);
-	
-	AutoParserExpression expr(n, precision, exp);
-	parserExpressions.push_back(expr);
-}
-
-/**
- * Adds a real result node.
- * @param precision The precision.
- * @param exp The exponent.
- */
-void ResultFormulaNode::AddRealResultNode(int precision, int exp)
-{
-	GroupFormulaNode* n = new GroupFormulaNode(this, wnd);
-	AddChild(n);
-	
-	RealParserExpression expr(n, precision, exp);
-	parserExpressions.push_back(expr);
-}
-
-/**
- * Adds a integer result node.
- * @param notation The notation.
- */
-void ResultFormulaNode::AddIntegerResultNode(ExpressionNotation notation)
-{
-	GroupFormulaNode* n = new GroupFormulaNode(this, wnd);
-	AddChild(n);
-	
-	IntegerParserExpression expr(n, notation);
-	parserExpressions.push_back(expr);
-}
-
-/**
- * Adds a rational result node.
- * @param type The fraction type.
- */
-void ResultFormulaNode::AddRationalResultNode(FractionType type)
-{
-	GroupFormulaNode* n = new GroupFormulaNode(this, wnd);
-	AddChild(n);
-
-	RationalParserExpression expr(n, type);
-	parserExpressions.push_back(expr);
-}
-
-void ResultFormulaNode::RemoveResultNode()
-{
+	GroupFormulaNode::AddChild(node);
+	((ResultItemFormulaNode*)node)->UpdateExpression();
 }
 
 /**
@@ -111,8 +39,10 @@ void ResultFormulaNode::Remake()
 	//solve all the result's variants
 	for (int i = 0; i < childNodes->Count(); ++i)
 	{
-		FormulaNode* n = (*childNodes)[i];
-		ParserExpressionVariant& p = parserExpressions[i];
+		//FormulaNode* n = (*childNodes)[i];
+		//ParserExpressionVariant& p = parserExpressions[i];
+		ResultItemFormulaNode* n = (ResultItemFormulaNode*)(*childNodes)[i];
+		ParserExpressionVariant& p = n->GetExpression();
 		
 		if (*p.GetSolved())
 			continue;
@@ -142,8 +72,98 @@ void ResultFormulaNode::Remake()
 	}
 	
 	UpdateBoundingRect();
+}
+
+/**
+ * Sets an parser expression to be solved.
+ * @param [in,out] expr The expression.
+ */
+void ResultFormulaNode::SetExpression(ParserString& expr)
+{
+	for (int i = 0; i < childNodes->Count(); ++i)
+	{
+		ResultItemFormulaNode* node = (ResultItemFormulaNode*)(*childNodes)[i];
+		ParserExpressionVariant& p = node->GetExpression();
+
+		if (expr.expression != p.GetExpression()->expression)
+		{
+			*p.GetExpression() = expr;
+			*p.GetSolved() = false;
+			
+			//solve the expression
+			wnd->GetParserThread()->AddExpression(p);
+			Remake();
+		}
+	}
 	
-	//GroupFormulaNode::Remake();
+	//for (int i = 0; i < (int)parserExpressions.size(); ++i)
+	//{
+	//	ParserExpressionVariant& p = parserExpressions[i];
+	//	if (expr.expression != p.GetExpression()->expression)
+	//	{
+	//		*p.GetExpression() = expr;
+	//		*p.GetSolved() = false;
+	//		
+	//		//solve the expression
+	//		wnd->GetParserThread()->AddExpression(p);
+	//		Remake();
+	//	}
+	//}
+}
+
+/**
+ * Adds an automatic result node.
+ * @param precision The precision.
+ * @param exp The exponent.
+ */
+void ResultFormulaNode::AddAutoResultNode(int precision, int exp)
+{
+	AutoResultItemFormulaNode* n = new AutoResultItemFormulaNode(this, wnd, precision, exp);
+	AddChild(n);
+}
+
+/**
+ * Adds a real result node.
+ * @param precision The precision.
+ * @param exp The exponent.
+ */
+void ResultFormulaNode::AddRealResultNode(int precision, int exp)
+{
+	GroupFormulaNode* n = new GroupFormulaNode(this, wnd);
+	AddChild(n);
+	
+	RealParserExpression expr(n, precision, exp);
+	parserExpressions.push_back(expr);
+}
+
+/**
+ * Adds an integer result node.
+ * @param notation The notation.
+ */
+void ResultFormulaNode::AddIntegerResultNode(ExpressionNotation notation)
+{
+	GroupFormulaNode* n = new GroupFormulaNode(this, wnd);
+	AddChild(n);
+	
+	IntegerParserExpression expr(n, notation);
+	parserExpressions.push_back(expr);
+}
+
+/**
+ * Adds a rational result node.
+ * @param type The fraction type.
+ */
+void ResultFormulaNode::AddRationalResultNode(FractionType type)
+{
+	GroupFormulaNode* n = new GroupFormulaNode(this, wnd);
+	AddChild(n);
+
+	RationalParserExpression expr(n, type);
+	parserExpressions.push_back(expr);
+}
+
+void ResultFormulaNode::RemoveResultNode()
+{
 }
 
 /**

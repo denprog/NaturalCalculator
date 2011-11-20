@@ -122,7 +122,7 @@ void EquationFormulaNode::MakeContextMenu(QMenu* menu)
 	subMenu->addAction(a);
 	connect(a, SIGNAL(triggered()), this, SLOT(OnAddAutoResult()));
 
-	a = new QAction(tr("Real"), subMenu);
+	a = new QAction(tr("Scientific"), subMenu);
 	subMenu->addAction(a);
 	connect(a, SIGNAL(triggered()), this, SLOT(OnAddRealResult()));
 

@@ -14,6 +14,7 @@ public:
 	virtual ~ResultFormulaNode();
 
 public:
+	virtual void AddChild(FormulaNode* node);
 	virtual void Remake();
 	
 public:

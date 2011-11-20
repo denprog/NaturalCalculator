@@ -78,6 +78,7 @@ public:
 	virtual void InsertChild(FormulaNode* node, int pos);
 	virtual void MoveChild(FormulaNode* node, int pos);
 	virtual void RemoveChild(int pos);
+	virtual void ReplaceChild(FormulaNode* node, int pos);
 	
 	virtual FormulaNode* Clone();
 	
@@ -156,6 +157,7 @@ public:
 
 public:
 	virtual void MakeContextMenu(QMenu* menu);
+	bool MenuContainsAction(QMenu* menu, QString& action);
 
 public slots:	
 	virtual void OnCopy();

@@ -1,0 +1,118 @@
+#ifndef RESULTITEMFORMULANODE_H
+#define RESULTITEMFORMULANODE_H
+
+#include "GroupFormulaNode.h"
+
+/**
+ * Result item formula node.
+ */
+class ResultItemFormulaNode : public GroupFormulaNode
+{
+	Q_OBJECT
+	
+public:
+	ResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd);
+	virtual ~ResultItemFormulaNode();
+
+public:
+	virtual void UpdateExpression() = 0;
+	
+public slots:
+	void OnPresentAsAutoResult();
+	void OnPresentAsRealResult();
+	void OnPresentAsIntegerResult();
+	void OnPresentAsRationalResult();
+	
+public:
+	ParserExpressionVariant& GetExpression()
+	{
+		return expression;
+	}
+	
+protected:
+	ParserExpressionVariant expression;
+};
+
+/**
+ * Automatic result item formula node.
+ */
+class AutoResultItemFormulaNode : public ResultItemFormulaNode
+{
+	Q_OBJECT
+	
+public:
+	AutoResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, int _precision, int _exp);
+	virtual ~AutoResultItemFormulaNode();
+
+public:
+	virtual void UpdateExpression();
+
+	virtual void MakeContextMenu(QMenu* menu);
+
+private:
+	int precision;
+	int exp;
+};
+
+/**
+ * Real result item formula node.
+ */
+class RealResultItemFormulaNode : public ResultItemFormulaNode
+{
+	Q_OBJECT
+
+public:
+	RealResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, int _precision, int _exp);
+	virtual ~RealResultItemFormulaNode();
+
+public:
+	virtual void UpdateExpression();
+
+	virtual void MakeContextMenu(QMenu* menu);
+
+private:
+	int precision;
+	int exp;
+};
+
+/**
+ * Integer result item formula node.
+ */
+class IntegerResultItemFormulaNode : public ResultItemFormulaNode
+{
+	Q_OBJECT
+
+public:
+	IntegerResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, ExpressionNotation _notation);
+	virtual ~IntegerResultItemFormulaNode();
+
+public:
+	virtual void UpdateExpression();
+
+	virtual void MakeContextMenu(QMenu* menu);
+	
+private:
+	ExpressionNotation notation;
+};
+
+/**
+ * Rational result item formula node.
+ */
+class RationalResultItemFormulaNode : public ResultItemFormulaNode
+{
+	Q_OBJECT
+
+public:
+	RationalResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, FractionType _fractionType);
+	virtual ~RationalResultItemFormulaNode();
+
+public:
+	virtual void UpdateExpression();
+
+	virtual void MakeContextMenu(QMenu* menu);
+	
+private:
+	FractionType fractionType;
+};
+
+#endif

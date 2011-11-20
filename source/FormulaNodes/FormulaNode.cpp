@@ -116,6 +116,13 @@ void FormulaNode::RemoveChild(int pos)
 	childNodes->Remove(pos);
 }
 
+void FormulaNode::ReplaceChild(FormulaNode* node, int pos)
+{
+	RemoveChild(pos);
+	InsertChild(node, pos);
+	wnd->GetDocumentNode()->Remake();
+}
+
 /**
  * Makes a deep copy of this object.
  * @return The copy of this object.
@@ -810,22 +817,49 @@ bool FormulaNode::UndoCreateEquationFormulaNode(NodeEvent& nodeEvent)
 
 void FormulaNode::MakeContextMenu(QMenu* menu)
 {
-	QAction* a = new QAction(tr("Cut"), this);
-	a->setShortcuts(QKeySequence::Cut);
-	connect(a, SIGNAL(triggered()), this, SLOT(OnCut()));
-	menu->addAction(a);
-
-	a = new QAction(tr("Copy"), this);
-	a->setShortcuts(QKeySequence::Copy);
-	connect(a, SIGNAL(triggered()), this, SLOT(OnCopy()));
-	menu->addAction(a);
-
-	a = new QAction(tr("Paste"), this);
-	a->setShortcuts(QKeySequence::Paste);
-	connect(a, SIGNAL(triggered()), this, SLOT(OnPaste()));
-	menu->addAction(a);
-}
+	QAction* a;
 	
+	if (!MenuContainsAction(menu, tr("Cut")))
+	{	
+		a = new QAction(tr("Cut"), this);
+		a->setShortcuts(QKeySequence::Cut);
+		connect(a, SIGNAL(triggered()), this, SLOT(OnCut()));
+		menu->addAction(a);
+	}
+
+	if (!MenuContainsAction(menu, tr("Copy")))
+	{	
+		a = new QAction(tr("Copy"), this);
+		a->setShortcuts(QKeySequence::Copy);
+		connect(a, SIGNAL(triggered()), this, SLOT(OnCopy()));
+		menu->addAction(a);
+	}
+
+	if (!MenuContainsAction(menu, tr("Paste")))
+	{	
+		a = new QAction(tr("Paste"), this);
+		a->setShortcuts(QKeySequence::Paste);
+		connect(a, SIGNAL(triggered()), this, SLOT(OnPaste()));
+		menu->addAction(a);
+	}
+
+	if (parent)	
+		parent->MakeContextMenu(menu);
+}
+
+bool FormulaNode::MenuContainsAction(QMenu* menu, QString& action)
+{
+	QList<QAction*> actions = menu->actions();
+	
+	for (QList<QAction*>::const_iterator iter = actions.begin(); iter != actions.end(); ++iter)
+	{
+		if ((*iter)->text() == action)
+			return true;
+	}
+	
+	return false;
+}
+
 /**
  * Executes the copy context menu action.
  */

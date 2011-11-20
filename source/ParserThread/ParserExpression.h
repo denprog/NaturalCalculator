@@ -160,6 +160,10 @@ struct AutoParserExpression : ParserExpression
  */
 struct ParserExpressionVariant
 {
+	ParserExpressionVariant()
+	{
+	}
+	
 	ParserExpressionVariant(AutoParserExpression& expr)
 	{
 		var = expr;
