@@ -112,6 +112,20 @@ FormulaNode* EquationFormulaNode::Clone()
 	return new EquationFormulaNode(parent, wnd);
 }
 
+/**
+ * Executes the insert text operation.
+ * @param [in] nodeEvent The node event.
+ * @return false because there is no possibility of inserting a text into this node
+ */
+bool EquationFormulaNode::DoInsertText(NodeEvent& nodeEvent)
+{
+	return false;
+}
+
+/**
+ * Makes a context menu.
+ * @param [in] menu The parent menu.
+ */
 void EquationFormulaNode::MakeContextMenu(QMenu* menu)
 {
 	QMenu* subMenu = new QMenu("Add result", menu);
@@ -135,24 +149,36 @@ void EquationFormulaNode::MakeContextMenu(QMenu* menu)
 	connect(a, SIGNAL(triggered()), this, SLOT(OnAddRationalResult()));
 }
 
+/**
+ * Executes the add automatic result node.
+ */
 void EquationFormulaNode::OnAddAutoResult()
 {
 	resNode->AddAutoResultNode(wnd->settings->value("auto/precision", 8).toInt(), wnd->settings->value("auto/exp", 3).toInt());
 	Remake();
 }
 
+/**
+ * Executes the add real result node.
+ */
 void EquationFormulaNode::OnAddRealResult()
 {
 	resNode->AddRealResultNode(wnd->settings->value("auto/precision", 8).toInt(), wnd->settings->value("auto/exp", 3).toInt());
 	Remake();
 }
 
+/**
+ * Executes the add integer result node.
+ */
 void EquationFormulaNode::OnAddIntegerResult()
 {
 	resNode->AddIntegerResultNode(DECIMAL_NOTATION);
 	Remake();
 }
 
+/**
+ * Executes the add rational result node.
+ */
 void EquationFormulaNode::OnAddRationalResult()
 {
 	resNode->AddRationalResultNode(IMPROPER_FRACTION);

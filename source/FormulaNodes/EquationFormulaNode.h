@@ -4,6 +4,9 @@
 #include "CompoundFormulaNode.h"
 #include "ResultFormulaNode.h"
 
+/**
+ * Equation formula node.
+ */
 class EquationFormulaNode : public CompoundFormulaNode
 {
 	Q_OBJECT
@@ -38,6 +41,9 @@ public:
 	virtual void UpdateBoundingRect();
 
 	virtual FormulaNode* Clone();
+
+	//command functions
+	virtual bool DoInsertText(NodeEvent& nodeEvent);
 
 public:
 	virtual void MakeContextMenu(QMenu* menu);
