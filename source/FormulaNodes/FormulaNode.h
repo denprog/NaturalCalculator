@@ -94,12 +94,12 @@ public:
 	
 	virtual void Move(int x, int y);
 
-	virtual void GetHierarchyPos(HierarchyPos& positions);
+	virtual void GetHierarchyPos(HierarchyPos& positions) const;
 	virtual void Render();
 	
 	virtual void Parse(ParserString& expr);
 	
-	int GetChildPos(FormulaNode* node);
+	int GetChildPos(const FormulaNode* node) const;
 	bool IsChild(const FormulaNode* node);
 	int GetFirstLevelChildPos(FormulaNode* node);
 	

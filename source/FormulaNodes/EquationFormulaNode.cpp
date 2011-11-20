@@ -112,6 +112,12 @@ FormulaNode* EquationFormulaNode::Clone()
 	return new EquationFormulaNode(parent, wnd);
 }
 
+void EquationFormulaNode::Parse(ParserString& expr)
+{
+	if (childNodes->Count() > 0)
+		(*childNodes)[0]->Parse(expr);
+}
+
 /**
  * Executes the insert text operation.
  * @param [in] nodeEvent The node event.

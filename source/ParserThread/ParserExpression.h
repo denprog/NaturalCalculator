@@ -80,12 +80,14 @@ struct ParserString
 struct ParserExpression
 {
 	ParserExpression();
-	ParserExpression(FormulaNode* node);
+	ParserExpression(const FormulaNode* node);
 	~ParserExpression();
 	
 	bool operator==(const ParserExpression& expr);
 	
-	HierarchyPos pos; //position of the node, which created this object
+	void UpdatePos(const FormulaNode* node) const;
+	
+	mutable HierarchyPos pos; //position of the node, which created this object
 	ParserException exception; //a possible solving exception
 	ParserString expression;
 	bool solved;
@@ -235,6 +237,35 @@ struct ParserExpressionVariant
 		}
 	};
 	
+	struct UpdatePosVisitor : boost::static_visitor<const void>
+	{
+		UpdatePosVisitor(const FormulaNode* _node) : node(_node)
+		{
+		}
+		
+		const void operator()(RealParserExpression const& expr) const
+		{
+			expr.UpdatePos(node);
+		}
+
+		const void operator()(IntegerParserExpression const& expr) const
+		{
+			expr.UpdatePos(node);
+		}
+
+		const void operator()(RationalParserExpression const& expr) const
+		{
+			expr.UpdatePos(node);
+		}
+
+		const void operator()(AutoParserExpression const& expr) const
+		{
+			expr.UpdatePos(node);
+		}
+		
+		const FormulaNode* node;
+	};
+	
 	ParserString* GetExpression()
 	{
 		return (ParserString*)boost::apply_visitor(ParserStringVisitor(), var);
@@ -242,7 +273,12 @@ struct ParserExpressionVariant
 
 	bool* GetSolved()
 	{
-		return (bool*)boost::apply_visitor(ParserStringVisitor(), var);
+		return (bool*)boost::apply_visitor(SolvedVisitor(), var);
+	}
+	
+	void UpdatePos(const FormulaNode* node)
+	{
+		boost::apply_visitor(UpdatePosVisitor(node), var);
 	}
 	
 	boost::variant<RealParserExpression, IntegerParserExpression, RationalParserExpression, AutoParserExpression> var;

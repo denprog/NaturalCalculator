@@ -63,8 +63,14 @@ ParserExpression::ParserExpression()
 	solved = false;
 }
 
-ParserExpression::ParserExpression(FormulaNode* node)
+ParserExpression::ParserExpression(const FormulaNode* node)
 {
+	node->GetHierarchyPos(pos);
+}
+
+void ParserExpression::UpdatePos(const FormulaNode* node) const
+{
+	pos.clear();
 	node->GetHierarchyPos(pos);
 }
 

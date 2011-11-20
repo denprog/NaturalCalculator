@@ -64,7 +64,7 @@ public:
 
 	FormulaNode* operator[](int pos) const;
 	
-	int GetPos(FormulaNode* node);
+	int GetPos(const FormulaNode* node) const;
 
 	FormulaNode* GetFirst();
 	FormulaNode* GetLast();

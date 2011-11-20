@@ -38,9 +38,6 @@ private:
 		
 		FormulaNode* parent;
 	};
-		
-private:
-	vector<ParserExpressionVariant> parserExpressions;
 };
 
 #endif

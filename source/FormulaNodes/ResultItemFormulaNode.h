@@ -26,6 +26,7 @@ public slots:
 public:
 	ParserExpressionVariant& GetExpression()
 	{
+		expression.UpdatePos(this);
 		return expression;
 	}
 	

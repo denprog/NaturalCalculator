@@ -122,7 +122,7 @@ FormulaNode* FormulaNodesCollection::operator[](int pos) const
  * @param [in,out] node The node.
  * @return The position.
  */
-int FormulaNodesCollection::GetPos(FormulaNode* node)
+int FormulaNodesCollection::GetPos(const FormulaNode* node) const
 {
 	for (int i = 0; i < (int)nodes.size(); ++i)
 	{
