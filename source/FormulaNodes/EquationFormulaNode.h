@@ -42,6 +42,8 @@ public:
 
 	virtual FormulaNode* Clone();
 
+	virtual void Parse(ParserString& expr);
+
 	//command functions
 	virtual bool DoInsertText(NodeEvent& nodeEvent);
 

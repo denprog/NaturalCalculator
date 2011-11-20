@@ -39,8 +39,6 @@ void ResultFormulaNode::Remake()
 	//solve all the result's variants
 	for (int i = 0; i < childNodes->Count(); ++i)
 	{
-		//FormulaNode* n = (*childNodes)[i];
-		//ParserExpressionVariant& p = parserExpressions[i];
 		ResultItemFormulaNode* n = (ResultItemFormulaNode*)(*childNodes)[i];
 		ParserExpressionVariant& p = n->GetExpression();
 		
@@ -92,23 +90,10 @@ void ResultFormulaNode::SetExpression(ParserString& expr)
 			
 			//solve the expression
 			wnd->GetParserThread()->AddExpression(p);
-			Remake();
 		}
+
+		Remake();
 	}
-	
-	//for (int i = 0; i < (int)parserExpressions.size(); ++i)
-	//{
-	//	ParserExpressionVariant& p = parserExpressions[i];
-	//	if (expr.expression != p.GetExpression()->expression)
-	//	{
-	//		*p.GetExpression() = expr;
-	//		*p.GetSolved() = false;
-	//		
-	//		//solve the expression
-	//		wnd->GetParserThread()->AddExpression(p);
-	//		Remake();
-	//	}
-	//}
 }
 
 /**
@@ -129,11 +114,8 @@ void ResultFormulaNode::AddAutoResultNode(int precision, int exp)
  */
 void ResultFormulaNode::AddRealResultNode(int precision, int exp)
 {
-	GroupFormulaNode* n = new GroupFormulaNode(this, wnd);
+	RealResultItemFormulaNode* n = new RealResultItemFormulaNode(this, wnd, precision, exp);
 	AddChild(n);
-	
-	RealParserExpression expr(n, precision, exp);
-	parserExpressions.push_back(expr);
 }
 
 /**
@@ -142,11 +124,8 @@ void ResultFormulaNode::AddRealResultNode(int precision, int exp)
  */
 void ResultFormulaNode::AddIntegerResultNode(ExpressionNotation notation)
 {
-	GroupFormulaNode* n = new GroupFormulaNode(this, wnd);
+	IntegerResultItemFormulaNode* n = new IntegerResultItemFormulaNode(this, wnd, notation);
 	AddChild(n);
-	
-	IntegerParserExpression expr(n, notation);
-	parserExpressions.push_back(expr);
 }
 
 /**
@@ -155,11 +134,8 @@ void ResultFormulaNode::AddIntegerResultNode(ExpressionNotation notation)
  */
 void ResultFormulaNode::AddRationalResultNode(FractionType type)
 {
-	GroupFormulaNode* n = new GroupFormulaNode(this, wnd);
+	RationalResultItemFormulaNode* n = new RationalResultItemFormulaNode(this, wnd, type);
 	AddChild(n);
-
-	RationalParserExpression expr(n, type);
-	parserExpressions.push_back(expr);
 }
 
 void ResultFormulaNode::RemoveResultNode()

@@ -232,9 +232,9 @@ void FormulaNode::Move(int x, int y)
  * Gets a hierarchy position of this node.
  * @param [out] positions The positions.
  */
-void FormulaNode::GetHierarchyPos(HierarchyPos& positions)
+void FormulaNode::GetHierarchyPos(HierarchyPos& positions) const
 {
-	FormulaNode* n = this;
+	const FormulaNode* n = this;
 	while (n->parent)
 	{
 		positions.push_back(n->parent->GetChildPos(n));
@@ -268,7 +268,7 @@ void FormulaNode::Parse(ParserString& expr)
  * @param [in,out] node The node.
  * @return The child position.
  */
-int FormulaNode::GetChildPos(FormulaNode* node)
+int FormulaNode::GetChildPos(const FormulaNode* node) const
 {
 	return childNodes->GetPos(node);
 }
