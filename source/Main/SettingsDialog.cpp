@@ -28,17 +28,25 @@ SettingsDialog::SettingsDialog(Settings* _settings) : settings(_settings)
 
 	i = new QTreeWidgetItem((QTreeWidget*)0, QStringList(tr("Math")));
 	contentsWidget->addTopLevelItem(i);
+	j = new QTreeWidgetItem((QTreeWidget*)0, QStringList(tr("Result")));
+	j->setData(0, Qt::UserRole, QVariant(2));
+	i->addChild(j);
 
 	contentsWidget->expandAll();
 	
 	//fill the pages widget
 	pagesWidget = new QStackedWidget;
+	
 	formulaFontsPage = new FormulaFontsPage(settings);
 	pagesWidget->addWidget(formulaFontsPage);
+	
 	pagesWidget->addWidget(new FormulaColorsPage);
+	
+	mathResultPage = new MathResultPage(settings);
+	pagesWidget->addWidget(mathResultPage);
 
 	QHBoxLayout *horizontalLayout = new QHBoxLayout;
-	horizontalLayout->addWidget(contentsWidget);
+	horizontalLayout->addWidget(contentsWidget, 1);
 	horizontalLayout->addWidget(pagesWidget, 1);
 
 	QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
@@ -74,10 +82,11 @@ void SettingsDialog::OnChangePage(QTreeWidgetItem *current, QTreeWidgetItem *pre
 	{
 		//switch to a new page
 		pagesWidget->setCurrentIndex(v.toInt());
+		contentsWidget->setMaximumHeight(pagesWidget->currentWidget()->maximumHeight());
 	}
 	else
 	{
-		//pass this item becouse not having a data
+		//pass this item because not having a data
 		QTreeWidgetItem* i = contentsWidget->itemBelow(current);
 		if (i)
 			contentsWidget->setCurrentItem(i);
@@ -90,6 +99,7 @@ void SettingsDialog::OnChangePage(QTreeWidgetItem *current, QTreeWidgetItem *pre
 void SettingsDialog::OnOk()
 {
 	formulaFontsPage->Store();
+	mathResultPage->Store();
 	
 	accept();
 }

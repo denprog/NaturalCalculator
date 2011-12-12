@@ -14,5 +14,7 @@
 			<file>images/math/sqrt.png</file>
 			<file>images/math/equality.png</file>
 			<file>images/math/sin.png</file>
+			<file>images/dialogs/uparrow.png</file>
+			<file>images/dialogs/downarrow.png</file>
     </qresource>
 </RCC>

@@ -11,6 +11,7 @@ class QStackedWidget;
 QT_END_NAMESPACE
 
 class FormulaFontsPage;
+class MathResultPage;
 
 /**
  * The settings dialog.
@@ -28,9 +29,10 @@ public slots:
 
 private:
 	Settings* settings;
-	QTreeWidget *contentsWidget;
-	QStackedWidget *pagesWidget;
+	QTreeWidget* contentsWidget;
+	QStackedWidget* pagesWidget;
 	FormulaFontsPage* formulaFontsPage;
+	MathResultPage* mathResultPage;
 };
 
 #endif
