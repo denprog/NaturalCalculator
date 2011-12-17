@@ -10,6 +10,7 @@ class QTreeWidgetItem;
 class QStackedWidget;
 QT_END_NAMESPACE
 
+class SystemPage;
 class FormulaFontsPage;
 class FormulaColorsPage;
 class MathResultPage;
@@ -29,6 +30,8 @@ public slots:
 
 private:
 	Settings* settings;
+	
+	SystemPage* systemPage;
 	FormulaFontsPage* formulaFontsPage;
 	FormulaColorsPage* formulaColorsPage;
 	MathResultPage* mathResultPage;
