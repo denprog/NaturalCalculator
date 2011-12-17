@@ -51,7 +51,11 @@ void EquationFormulaNode::Remake()
 			resNode = new ResultFormulaNode(this, wnd);
 			AddChild(resNode);
 			
-			resNode->AddAutoResultNode(wnd->settings->value("auto/precision", 8).toInt(), wnd->settings->value("auto/exp", 3).toInt());
+			//resNode->AddAutoResultNode(wnd->settings->value("auto/precision", 8).toInt(), wnd->settings->value("auto/exp", 3).toInt());
+			resNode->AddAutoResultNode(wnd->settings->Load("ScientificNumbers", "resultAccuracy", 3).toInt(), 
+				wnd->settings->Load("ScientificNumbers", "exponentialThreshold", 8).toInt(), 
+				(ExpressionNotation)wnd->settings->Load("IntegerNumbers", "notation", DECIMAL_NOTATION).toInt(), 
+				(FractionType)wnd->settings->Load("RationalNumbers", "form", PROPER_FRACTION).toInt());
 		}
 		
 		FormulaNode* left = (*this)[0];
@@ -160,7 +164,10 @@ void EquationFormulaNode::MakeContextMenu(QMenu* menu)
  */
 void EquationFormulaNode::OnAddAutoResult()
 {
-	resNode->AddAutoResultNode(wnd->settings->value("auto/precision", 8).toInt(), wnd->settings->value("auto/exp", 3).toInt());
+	resNode->AddAutoResultNode(wnd->settings->Load("ScientificNumbers", "resultAccuracy", 3).toInt(), 
+		wnd->settings->Load("ScientificNumbers", "exponentialThreshold", 8).toInt(), 
+		(ExpressionNotation)wnd->settings->Load("IntegerNumbers", "notation", DECIMAL_NOTATION).toInt(), 
+		(FractionType)wnd->settings->Load("RationalNumbers", "form", PROPER_FRACTION).toInt());
 	Remake();
 }
 

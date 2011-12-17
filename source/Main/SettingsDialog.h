@@ -11,6 +11,7 @@ class QStackedWidget;
 QT_END_NAMESPACE
 
 class FormulaFontsPage;
+class FormulaColorsPage;
 class MathResultPage;
 
 /**
@@ -24,14 +25,12 @@ public:
 	SettingsDialog(Settings* _settings);
 	
 public slots:
-	void OnChangePage(QTreeWidgetItem *current, QTreeWidgetItem *previous);
 	void OnOk();
 
 private:
 	Settings* settings;
-	QTreeWidget* contentsWidget;
-	QStackedWidget* pagesWidget;
 	FormulaFontsPage* formulaFontsPage;
+	FormulaColorsPage* formulaColorsPage;
 	MathResultPage* mathResultPage;
 };
 

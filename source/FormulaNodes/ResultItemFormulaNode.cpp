@@ -1,4 +1,5 @@
 #include "ResultItemFormulaNode.h"
+#include "../Main/FormulaWnd.h"
 #include <QMenu>
 
 /**
@@ -22,8 +23,11 @@ ResultItemFormulaNode::~ResultItemFormulaNode()
  */
 void ResultItemFormulaNode::OnPresentAsAutoResult()
 {
-	AutoResultItemFormulaNode* node = new AutoResultItemFormulaNode(parent, wnd, settings->value("auto/precision", 8).toInt(), 
-		settings->value("auto/exp", 3).toInt());
+	AutoResultItemFormulaNode* node = new AutoResultItemFormulaNode(parent, wnd, 
+		settings->Load("ScientificNumbers", "resultAccuracy", 3).toInt(), 
+		settings->Load("ScientificNumbers", "exponentialThreshold", 8).toInt(), 
+		(ExpressionNotation)settings->Load("IntegerNumbers", "notation", DECIMAL_NOTATION).toInt(), 
+		(FractionType)settings->Load("RationalNumbers", "form", PROPER_FRACTION).toInt());
 	node->UpdateExpression();
 	parent->ReplaceChild(node, parent->GetChildPos(this));
 }
@@ -66,8 +70,9 @@ void ResultItemFormulaNode::OnPresentAsRationalResult()
  * @param _precision The precision.
  * @param _exp The exponent.
  */
-AutoResultItemFormulaNode::AutoResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, int _precision, int _exp) : 
-	ResultItemFormulaNode(_parent, wnd), precision(_precision), exp(_exp)
+AutoResultItemFormulaNode::AutoResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, int _realPrecision, int _realExp, 
+	ExpressionNotation _notation, FractionType _fractionType) : 
+	ResultItemFormulaNode(_parent, wnd), realPrecision(_realPrecision), realExp(_realExp), notation(_notation), fractionType(_fractionType)
 {
 }
 
@@ -83,7 +88,7 @@ AutoResultItemFormulaNode::~AutoResultItemFormulaNode()
  */
 void AutoResultItemFormulaNode::UpdateExpression()
 {
-	expression = AutoParserExpression(this, precision, exp);
+	expression = AutoParserExpression(this, realPrecision, realExp);
 }
 
 /**

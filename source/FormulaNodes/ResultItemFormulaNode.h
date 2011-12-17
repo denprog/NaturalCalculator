@@ -42,7 +42,7 @@ class AutoResultItemFormulaNode : public ResultItemFormulaNode
 	Q_OBJECT
 	
 public:
-	AutoResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, int _precision, int _exp);
+	AutoResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, int _precision, int _exp, ExpressionNotation _notation, FractionType _fractionType);
 	virtual ~AutoResultItemFormulaNode();
 
 public:
@@ -51,8 +51,10 @@ public:
 	virtual void MakeContextMenu(QMenu* menu);
 
 private:
-	int precision;
-	int exp;
+	int realPrecision;
+	int realExp;
+	ExpressionNotation notation;
+	FractionType fractionType;
 };
 
 /**

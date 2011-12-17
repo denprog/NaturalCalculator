@@ -20,7 +20,7 @@ public:
 public:
 	void SetExpression(ParserString& expr);
 	
-	void AddAutoResultNode(int precision, int exp);
+	void AddAutoResultNode(int realPrecision, int realExp, ExpressionNotation _notation, FractionType _fractionType);
 	void AddRealResultNode(int precision, int exp);
 	void AddIntegerResultNode(ExpressionNotation notation);
 	void AddRationalResultNode(FractionType type);

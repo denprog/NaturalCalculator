@@ -101,10 +101,10 @@ void ResultFormulaNode::SetExpression(ParserString& expr)
  * @param precision The precision.
  * @param exp The exponent.
  */
-void ResultFormulaNode::AddAutoResultNode(int precision, int exp)
+void ResultFormulaNode::AddAutoResultNode(int realPrecision, int realExp, ExpressionNotation _notation, FractionType _fractionType)
 {
-	AutoResultItemFormulaNode* n = new AutoResultItemFormulaNode(this, wnd, precision, exp);
-	AddChild(n);
+	AutoResultItemFormulaNode* n = new AutoResultItemFormulaNode(this, wnd, realPrecision, realExp, _notation, _fractionType);
+ 	AddChild(n);
 }
 
 /**
