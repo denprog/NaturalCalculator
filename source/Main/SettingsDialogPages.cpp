@@ -74,10 +74,142 @@ void FormulaFontsPage::Store()
 	}
 }
 
+//ColorsComboBox
+
+/**
+ * Constructor.
+ * @param [in] parent	The parent widget.
+ */
+ColorsComboBox::ColorsComboBox(QWidget* parent) : QComboBox(parent)
+{
+	PopulateList();
+}
+
+/**
+ * Returns the item's color
+ */
+QString ColorsComboBox::Color()
+{
+	return qVariantValue<QColor>(itemData(currentIndex(), Qt::UserRole)).name();
+}
+
+/**
+ * Sets the item
+ * @param [in] color The color
+ */
+void ColorsComboBox::SetColor(QString& color)
+{
+	setCurrentIndex(findData(color, int(Qt::UserRole)));
+}
+
+/**
+ * Makes the combobox'es list
+ */
+void ColorsComboBox::PopulateList()
+{
+	QStringList colorNames = QColor::colorNames();
+	int size = style()->pixelMetric(QStyle::PM_SmallIconSize);
+	QPixmap pixmap(size, size);
+
+	for (int i = 0; i < colorNames.size(); ++i)
+	{
+		QColor color(colorNames[i]);
+		insertItem(i, colorNames[i]);
+		pixmap.fill(color);
+		setItemData(i, pixmap, Qt::DecorationRole);
+		setItemData(i, color.name(), Qt::UserRole);
+	}
+}
+
+
 //FormulaColorsPage
 
-FormulaColorsPage::FormulaColorsPage(QWidget* parent) : QWidget(parent)
+/**
+ * Constructor.
+ * @param [in] _settings The application settings.
+ * @param [in] parent	The parent widget.
+ */
+FormulaColorsPage::FormulaColorsPage(Settings* _settings, QWidget* parent) : QWidget(parent), settings(_settings)
 {
+	QGridLayout* mainLayout = new QGridLayout;
+	mainLayout->setAlignment(Qt::AlignTop);
+
+	mainLayout->addWidget(new QLabel(tr("Numbers: ")), 0, 0);
+	numbersColor = new ColorsComboBox;
+	numbersColor->SetColor(settings->Load("Colors", "Numbers", QColor("blue").name()).toString());
+	mainLayout->addWidget(numbersColor, 0, 1);
+
+	mainLayout->addWidget(new QLabel(tr("Variables: ")), 1, 0);
+	variablesColor = new ColorsComboBox;
+	variablesColor->SetColor(settings->Load("Colors", "Variables", QColor("darkblue").name()).toString());
+	mainLayout->addWidget(variablesColor, 1, 1);
+
+	mainLayout->addWidget(new QLabel(tr("Functions: ")), 2, 0);
+	functionsColor = new ColorsComboBox;
+	functionsColor->SetColor(settings->Load("Colors", "Functions", QColor("orange").name()).toString());
+	mainLayout->addWidget(functionsColor, 2, 1);
+
+	mainLayout->addWidget(new QLabel(tr("Units: ")), 3, 0);
+	unitsColor = new ColorsComboBox;
+	unitsColor->SetColor(settings->Load("Colors", "Units", QColor("green").name()).toString());
+	mainLayout->addWidget(unitsColor, 3, 1);
+
+	mainLayout->addWidget(new QLabel(tr("Graphical elements: ")), 4, 0);
+	graphicalElementsColor = new ColorsComboBox;
+	graphicalElementsColor->SetColor(settings->Load("Colors", "GraphicalElements", QColor("black").name()).toString());
+	mainLayout->addWidget(graphicalElementsColor, 4, 1);
+
+	mainLayout->addWidget(new QLabel(tr("Error: ")), 5, 0);
+	errorColor = new ColorsComboBox;
+	errorColor->SetColor(settings->Load("Colors", "Error", QColor("red").name()).toString());
+	mainLayout->addWidget(errorColor, 5, 1);
+
+	mainLayout->addWidget(new QLabel(tr("Solving highlight: ")), 6, 0);
+	solvingHighlightColor = new ColorsComboBox;
+	solvingHighlightColor->SetColor(settings->Load("Colors", "SolvingHightlight", QColor("orange").name()).toString());
+	mainLayout->addWidget(solvingHighlightColor, 6, 1);
+
+	mainLayout->addWidget(new QLabel(tr("Text: ")), 7, 0);
+	textColor = new ColorsComboBox;
+	textColor->SetColor(settings->Load("Colors", "Text", QColor("grey").name()).toString());
+	mainLayout->addWidget(textColor, 7, 1);
+
+	mainLayout->addWidget(new QLabel(tr("Cursor: ")), 8, 0);
+	cursorColor = new ColorsComboBox;
+	cursorColor->SetColor(settings->Load("Colors", "Cursor", QColor("black").name()).toString());
+	mainLayout->addWidget(cursorColor, 8, 1);
+
+	mainLayout->addWidget(new QLabel(tr("Cursor highlight: ")), 9, 0);
+	cursorHighlightColor = new ColorsComboBox;
+	cursorHighlightColor->SetColor(settings->Load("Colors", "CursorHightlight", QColor("grey").name()).toString());
+	mainLayout->addWidget(cursorHighlightColor, 9, 1);
+
+	mainLayout->addWidget(new QLabel(tr("Background: ")), 10, 0);
+	backgroundColor = new ColorsComboBox;
+	backgroundColor->SetColor(settings->Load("Colors", "Background", QColor("white").name()).toString());
+	mainLayout->addWidget(backgroundColor, 10, 1);
+
+	mainLayout->setSizeConstraint(QLayout::SetFixedSize);
+
+	setLayout(mainLayout);
+}
+
+/**
+ * Stores data from this page to the settings.
+ */
+void FormulaColorsPage::Store()
+{
+	settings->Save("Colors", "Numbers", numbersColor->Color());
+	settings->Save("Colors", "Variables", variablesColor->Color());
+	settings->Save("Colors", "Functions", functionsColor->Color());
+	settings->Save("Colors", "Units", unitsColor->Color());
+	settings->Save("Colors", "GraphicalElements", graphicalElementsColor->Color());
+	settings->Save("Colors", "Error", errorColor->Color());
+	settings->Save("Colors", "SolvingHighlight", solvingHighlightColor->Color());
+	settings->Save("Colors", "Text", textColor->Color());
+	settings->Save("Colors", "Cursor", cursorColor->Color());
+	settings->Save("Colors", "CursorHightlight", cursorHighlightColor->Color());
+	settings->Save("Colors", "Background", backgroundColor->Color());
 }
 
 //MathResultPage

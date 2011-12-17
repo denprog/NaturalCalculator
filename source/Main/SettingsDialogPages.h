@@ -37,13 +37,44 @@ private:
 	FontGroup fontGroups[3]; //widget groups for setting font properties
 };
 
+class ColorsComboBox : public QComboBox
+{
+public:
+	ColorsComboBox(QWidget* parent = NULL);
+	
+public:
+	QString Color();
+	void SetColor(QString& color);
+
+private:
+	void PopulateList();
+};
+
 /**
  * Formula colors page.
  */
 class FormulaColorsPage : public QWidget
 {
 public:
-	FormulaColorsPage(QWidget* parent = 0);
+	FormulaColorsPage(Settings* _settings, QWidget* parent = 0);
+
+public:
+	void Store();
+	
+private:
+	Settings* settings;
+	
+	ColorsComboBox* numbersColor;
+	ColorsComboBox* variablesColor;
+	ColorsComboBox* functionsColor;
+	ColorsComboBox* unitsColor;
+	ColorsComboBox* graphicalElementsColor;
+	ColorsComboBox* errorColor;
+	ColorsComboBox* solvingHighlightColor;
+	ColorsComboBox* textColor;
+	ColorsComboBox* cursorColor;
+	ColorsComboBox* cursorHighlightColor;
+	ColorsComboBox* backgroundColor;
 };
 
 class MathResultPage : public QWidget

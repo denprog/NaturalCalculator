@@ -13,7 +13,7 @@ SettingsDialog::SettingsDialog(Settings* _settings) : settings(_settings)
 	formulaFontsPage = new FormulaFontsPage(settings);
 	settingsTab->addTab(formulaFontsPage, tr("Fonts"));
 	
-	formulaColorsPage = new FormulaColorsPage;
+	formulaColorsPage = new FormulaColorsPage(settings);
 	settingsTab->addTab(formulaColorsPage, tr("Colors"));
 	
 	mathResultPage = new MathResultPage(settings);
@@ -38,6 +38,7 @@ SettingsDialog::SettingsDialog(Settings* _settings) : settings(_settings)
  */
 void SettingsDialog::OnOk()
 {
+	formulaColorsPage->Store();
 	formulaFontsPage->Store();
 	mathResultPage->Store();
 	
