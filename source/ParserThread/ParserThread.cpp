@@ -1,5 +1,6 @@
 #include "ParserThread.h"
 #include "../Main/FormulaWnd.h"
+#include "../Main/Settings.h"
 #include <QCoreApplication>
 
 /**
@@ -9,7 +10,7 @@
 ParserThread::ParserThread(FormulaWnd* _wnd) : wnd(_wnd)
 {
 	exit = false;
-	thread = new boost::thread(SolvingThread(this));
+	thread = new boost::thread(SolvingThread(this, wnd->GetSettings()));
 }
 
 /**
@@ -72,42 +73,56 @@ bool ParserThread::GetSolvedExpression(ParserExpressionVariant& expr)
 
 /**
  * Constructor.
- * @param [in,out] _parserThread The parser thread.
+ * @param [in] _parserThread The parser thread.
+ * @param [in] _settings The application's settings.
  */
-ParserThread::SolvingThread::SolvingThread(ParserThread* _parserThread)
+SolvingThread::SolvingThread(ParserThread* _parserThread, Settings* _settings) : parserThread(_parserThread), settings(_settings)
 {
-	parserThread = _parserThread;
+	connect(settings, SIGNAL(SettingsChanged(const QString&, const QString&)), this, SLOT(OnSettingsChanged(const QString&, const QString&)));
+}
+
+/**
+ * Copying constructor.
+ * @param source Source for the object.
+ */
+SolvingThread::SolvingThread(const SolvingThread& source)
+{
+	parserThread = source.parserThread;
+	expressions = source.expressions;
+	settings = source.settings;
+	parsers = source.parsers;
+	realParser = source.realParser;
+	integerParser = source.integerParser;
+	rationalParser = source.rationalParser;
+
+	connect(settings, SIGNAL(SettingsChanged(const QString&, const QString&)), this, SLOT(OnSettingsChanged(const QString&, const QString&)));
 }
 
 /**
  * Destructor.
  */
-ParserThread::SolvingThread::~SolvingThread()
+SolvingThread::~SolvingThread()
 {
 }
 
 /**
  * The solving thread
  */
-void ParserThread::SolvingThread::operator()()
+void SolvingThread::operator()()
 {
 	using BigNumbersParser::Parser;
-	
-	boost::mutex mut;
 
 	//init the parsers
 	realParser = new Parser<Real>(10);
 	integerParser = new Parser<Integer>(10);
 	rationalParser = new Parser<Rational>(10);
 	
-	parsers.push_back(realParser);
-	parsers.push_back(integerParser);
-	parsers.push_back(rationalParser);
+	UpdateParsers();
 
 	//the solving loop
 	while (!parserThread->exit)
 	{
-		boost::unique_lock<boost::mutex> lock(mut);
+		boost::unique_lock<boost::mutex> lock(parserThread->parserMutex);
 
 		//get the expressions
 		parserThread->expressionsMutex.lock();
@@ -136,7 +151,7 @@ void ParserThread::SolvingThread::operator()()
 
 			//push the solved result
 			parserThread->expressionsMutex.lock();
-			ParserExpressionVariantIter it = find(parserThread->solvedExpressions.begin(), parserThread->solvedExpressions.end(), expr);
+			ParserThread::ParserExpressionVariantIter it = find(parserThread->solvedExpressions.begin(), parserThread->solvedExpressions.end(), expr);
 			if (it != parserThread->solvedExpressions.end())
 				*it = expr;
 			else
@@ -157,7 +172,7 @@ void ParserThread::SolvingThread::operator()()
 /**
  * The solving visitor for RealParserExpression.
  */
-void ParserThread::SolvingThread::operator()(RealParserExpression const& expr) const
+void SolvingThread::operator()(RealParserExpression const& expr) const
 {
 	try
 	{
@@ -173,7 +188,7 @@ void ParserThread::SolvingThread::operator()(RealParserExpression const& expr) c
 /**
  * The solving visitor for IntegerParserExpression.
  */
-void ParserThread::SolvingThread::operator()(IntegerParserExpression const& expr) const
+void SolvingThread::operator()(IntegerParserExpression const& expr) const
 {
 	try
 	{
@@ -189,7 +204,7 @@ void ParserThread::SolvingThread::operator()(IntegerParserExpression const& expr
 /**
  * The solving visitor for RationalParserExpression.
  */
-void ParserThread::SolvingThread::operator()(RationalParserExpression const& expr) const
+void SolvingThread::operator()(RationalParserExpression const& expr) const
 {
 	try
 	{
@@ -205,7 +220,7 @@ void ParserThread::SolvingThread::operator()(RationalParserExpression const& exp
 /**
  * The solving visitor for AutoParserExpression.
  */
-void ParserThread::SolvingThread::operator()(AutoParserExpression const& expr) const
+void SolvingThread::operator()(AutoParserExpression const& expr) const
 {
 	int j;
 	AutoParserExpression& expression = (AutoParserExpression&)expr;
@@ -258,4 +273,37 @@ void ParserThread::SolvingThread::operator()(AutoParserExpression const& expr) c
 
 	if (j == (int)parsers.size())
 		expression.exception = firstException;
+}
+
+/**
+ * Updates the parsers' vector.
+ */
+void SolvingThread::UpdateParsers()
+{
+	boost::unique_lock<boost::mutex> lock(parserThread->parserMutex);
+
+	parsers.clear();
+	
+	for (int i = 0; i < 3; ++i)
+	{
+		if (i == settings->Load("ResultsOrder", "scientificResultPos", 0).toInt())
+			parsers.insert(parsers.begin() + i, realParser);
+		else if (i == settings->Load("ResultsOrder", "integerResultPos", 1).toInt())
+			parsers.insert(parsers.begin() + i, integerParser);
+		else if (i == settings->Load("ResultsOrder", "rationalResultPos", 2).toInt())
+			parsers.insert(parsers.begin() + i, rationalParser);
+	}
+	
+	realParser->SetPrecision(settings->Load("ScientificNumbers", "resultAccuracy", 3).toInt());
+}
+
+/**
+ * Slot on the settings changed action.
+ * @param prefix The prefix.
+ * @param key The key.
+ */
+void SolvingThread::OnSettingsChanged(const QString& prefix, const QString& key)
+{
+	if (prefix == "ResultsOrder" || prefix == "ScientificNumbers")
+		UpdateParsers();
 }

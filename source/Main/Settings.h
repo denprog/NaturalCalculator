@@ -2,7 +2,7 @@
 #define SETTINGS_H
 
 #include <QSettings>
-//#include "../FormulaNodes/FormulaNode.h"
+#include <QFont>
 
 enum FormulaNodeLevel;
 
@@ -15,6 +15,8 @@ Q_DECLARE_METATYPE(FontMap);
  */
 class Settings : public QSettings
 {
+	Q_OBJECT
+	
 public:
 	Settings(const QString& organization, const QString& application = QString(), QObject* parent = 0);
 	~Settings();
@@ -27,6 +29,9 @@ public:
 	
 	void SetValue(QString name, FormulaNodeLevel level, int value);
 	int GetValue(QString name, FormulaNodeLevel level);
+
+signals:
+	void SettingsChanged(const QString& prefix, const QString& key);
 	
 private:
 	FontMap textFormulaNodeFonts; ///< The text formula node fonts by node level

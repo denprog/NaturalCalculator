@@ -112,6 +112,11 @@ public:
 		return parserThread;
 	}
 	
+	Settings* GetSettings()
+	{
+		return settings;
+	}
+	
 public:
 	static int updateEventId;
 	

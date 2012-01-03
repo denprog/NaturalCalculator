@@ -52,6 +52,8 @@ void Settings::Save(const QString& prefix, const QString& key, const QVariant& v
 	beginGroup(prefix);
 	setValue(key, value);
 	endGroup();
+	
+	emit SettingsChanged(prefix, key);
 }
 
 /**
