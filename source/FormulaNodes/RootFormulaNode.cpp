@@ -185,9 +185,8 @@ bool RootFormulaNode::DoCreateEquationFormulaNode(NodeEvent& nodeEvent)
 		g->MoveChild((*childNodes)[0], j);
 	e->InsertChild(g, 0);
 	AddChild(e);
-	//e->MoveChild((*childNodes)[0], 0);
 
-	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreateDivisionFormulaNode);
+	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreateEquationFormulaNode);
 	c->SetToNode(e, 1);
 	
 	return true;
@@ -200,5 +199,11 @@ bool RootFormulaNode::DoCreateEquationFormulaNode(NodeEvent& nodeEvent)
  */
 bool RootFormulaNode::UndoCreateEquationFormulaNode(NodeEvent& nodeEvent)
 {
+	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	FormulaNode* node = c->GetNode();
+	int pos = GetFirstLevelChildPos(node);
+	MoveChild((*(*node)[0])[0], pos);
+	RemoveChild(pos + 1);
+	
 	return true;
 }

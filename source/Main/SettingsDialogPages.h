@@ -69,19 +69,6 @@ private:
 	FontGroup fontGroups[3]; //widget groups for setting font properties
 };
 
-class ColorsComboBox : public QComboBox
-{
-public:
-	ColorsComboBox(QWidget* parent = NULL);
-	
-public:
-	QString Color();
-	void SetColor(QString& color);
-
-private:
-	void PopulateList();
-};
-
 /**
  * Colors combobox.
  */
