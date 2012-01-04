@@ -284,14 +284,15 @@ void SolvingThread::UpdateParsers()
 
 	parsers.clear();
 	
+	//fill the parsers' vector
 	for (int i = 0; i < 3; ++i)
 	{
-		if (i == settings->Load("ResultsOrder", "scientificResultPos", 0).toInt())
-			parsers.insert(parsers.begin() + i, realParser);
-		else if (i == settings->Load("ResultsOrder", "integerResultPos", 1).toInt())
-			parsers.insert(parsers.begin() + i, integerParser);
-		else if (i == settings->Load("ResultsOrder", "rationalResultPos", 2).toInt())
-			parsers.insert(parsers.begin() + i, rationalParser);
+		if (i == settings->Load("ResultsOrder", "scientificResultPos", 0).toInt() && settings->Load("ResultsOrder", "scientificResultState", 1).toInt())
+			parsers.push_back(realParser);
+		else if (i == settings->Load("ResultsOrder", "integerResultPos", 1).toInt() && settings->Load("ResultsOrder", "integerResultState", 1).toInt())
+			parsers.push_back(integerParser);
+		else if (i == settings->Load("ResultsOrder", "rationalResultPos", 2).toInt() && settings->Load("ResultsOrder", "rationalResultState", 1).toInt())
+			parsers.push_back(rationalParser);
 	}
 	
 	realParser->SetPrecision(settings->Load("ScientificNumbers", "resultAccuracy", 3).toInt());

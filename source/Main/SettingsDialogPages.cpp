@@ -335,7 +335,7 @@ MathResultPage::MathResultPage(Settings* _settings, QWidget* parent) : QWidget(p
 			QListWidgetItem* i = new QListWidgetItem(tr("Scientific"), resultsOrderList);
 			i->setData(Qt::UserRole, REAL);
 			i->setFlags(i->flags() | Qt::ItemIsUserCheckable);
-			i->setCheckState(Qt::Checked);
+			i->setCheckState((Qt::CheckState)settings->Load("ResultsOrder", "scientificResultState", 1).toInt());
 			resultsOrderList->addItem(i);
 		}
 		else if (i == settings->Load("ResultsOrder", "integerResultPos", 1).toInt())
@@ -343,7 +343,7 @@ MathResultPage::MathResultPage(Settings* _settings, QWidget* parent) : QWidget(p
 			QListWidgetItem* i = new QListWidgetItem(tr("Integer"), resultsOrderList);
 			i->setData(Qt::UserRole, INTEGER);
 			i->setFlags(i->flags() | Qt::ItemIsUserCheckable);
-			i->setCheckState(Qt::Checked);
+			i->setCheckState((Qt::CheckState)settings->Load("ResultsOrder", "integerResultState", 1).toInt());
 			resultsOrderList->addItem(i);
 		}
 		else if (i == settings->Load("ResultsOrder", "rationalResultPos", 2).toInt())
@@ -351,7 +351,7 @@ MathResultPage::MathResultPage(Settings* _settings, QWidget* parent) : QWidget(p
 			QListWidgetItem* i = new QListWidgetItem(tr("Rational"), resultsOrderList);
 			i->setData(Qt::UserRole, RATIONAL);
 			i->setFlags(i->flags() | Qt::ItemIsUserCheckable);
-			i->setCheckState(Qt::Checked);
+			i->setCheckState((Qt::CheckState)settings->Load("ResultsOrder", "rationalResultState", 1).toInt());
 			resultsOrderList->addItem(i);
 		}
 	}
@@ -478,12 +478,15 @@ void MathResultPage::Store()
 		{
 		case REAL:
 			settings->Save("ResultsOrder", "scientificResultPos", i);
+			settings->Save("ResultsOrder", "scientificResultState", item->checkState());
 			break;
 		case INTEGER:
 			settings->Save("ResultsOrder", "integerResultPos", i);
+			settings->Save("ResultsOrder", "integerResultState", item->checkState());
 			break;
 		case RATIONAL:
 			settings->Save("ResultsOrder", "rationalResultPos", i);
+			settings->Save("ResultsOrder", "rationalResultState", item->checkState());
 			break;
 		}
 	}

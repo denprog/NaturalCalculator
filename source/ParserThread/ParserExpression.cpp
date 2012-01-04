@@ -142,7 +142,8 @@ AutoParserExpression::AutoParserExpression()
 {
 }
 
-AutoParserExpression::AutoParserExpression(FormulaNode* node, int _precision, int _exp) : ParserExpression(node), precision(_precision), exp(_exp)
+AutoParserExpression::AutoParserExpression(FormulaNode* node, int _precision, int _exp, ExpressionNotation _notation, FractionType _fractionType) : 
+	ParserExpression(node), precision(_precision), exp(_exp), notation(_notation), fractionType(_fractionType)
 {
 }
 
@@ -162,6 +163,46 @@ bool AutoParserExpression::ToReal(RealParserExpression& expr)
 		expr.pos = pos;
 		expr.precision = precision;
 		expr.result = res;
+		expr.solved = solved;
+		return true;
+	}
+	catch (boost::bad_get)
+	{
+	}
+	
+	return false;
+}
+
+bool AutoParserExpression::ToInteger(IntegerParserExpression& expr)
+{
+	try
+	{
+		Integer res = boost::get<Integer>(result);
+		expr.expression = expression;
+		expr.exception = exception;
+		expr.pos = pos;
+		expr.result = res;
+		expr.notation = notation;
+		expr.solved = solved;
+		return true;
+	}
+	catch (boost::bad_get)
+	{
+	}
+	
+	return false;
+}
+
+bool AutoParserExpression::ToRational(RationalParserExpression& expr)
+{
+	try
+	{
+		Rational res = boost::get<Rational>(result);
+		expr.expression = expression;
+		expr.exception = exception;
+		expr.pos = pos;
+		expr.result = res;
+		expr.fractionType = fractionType;
 		expr.solved = solved;
 		return true;
 	}

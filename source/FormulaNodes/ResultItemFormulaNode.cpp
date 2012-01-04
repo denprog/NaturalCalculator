@@ -88,7 +88,7 @@ AutoResultItemFormulaNode::~AutoResultItemFormulaNode()
  */
 void AutoResultItemFormulaNode::UpdateExpression()
 {
-	expression = AutoParserExpression(this, realPrecision, realExp);
+	expression = AutoParserExpression(this, realPrecision, realExp, notation, fractionType);
 }
 
 /**

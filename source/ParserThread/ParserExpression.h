@@ -145,14 +145,18 @@ struct RationalParserExpression : ParserExpression
 struct AutoParserExpression : ParserExpression
 {
 	AutoParserExpression();
-	AutoParserExpression(FormulaNode* node, int _precision, int _exp);
+	AutoParserExpression(FormulaNode* node, int _precision, int _exp, ExpressionNotation _notation, FractionType _fractionType);
 
 	bool operator==(const AutoParserExpression& expr) const;
 
 	bool ToReal(RealParserExpression& expr);
+	bool ToInteger(IntegerParserExpression& expr);
+	bool ToRational(RationalParserExpression& expr);
 	
 	int precision;
 	int exp;
+	ExpressionNotation notation;
+	FractionType fractionType;
 	
 	boost::variant<Integer, Real, Rational> result;
 };

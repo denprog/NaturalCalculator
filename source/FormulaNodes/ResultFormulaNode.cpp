@@ -300,9 +300,15 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RationalParserExpression con
 void ResultFormulaNode::ResultNodeMaker::operator()(AutoParserExpression const& expr) const
 {
 	RealParserExpression realExpr;
+	IntegerParserExpression intExpr;
+	RationalParserExpression rationalExpr;
+	
 	if (((AutoParserExpression&)expr).ToReal(realExpr))
-	{
 		(*this)(realExpr);
-		return;
-	}
+	else if (((AutoParserExpression&)expr).ToInteger(intExpr))
+		(*this)(intExpr);
+	else if (((AutoParserExpression&)expr).ToRational(rationalExpr))
+		(*this)(rationalExpr);
+	else
+		assert(false);
 }

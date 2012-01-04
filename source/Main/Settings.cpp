@@ -53,6 +53,7 @@ void Settings::Save(const QString& prefix, const QString& key, const QVariant& v
 	setValue(key, value);
 	endGroup();
 	
+	//call the slots being concerned with
 	emit SettingsChanged(prefix, key);
 }
 
