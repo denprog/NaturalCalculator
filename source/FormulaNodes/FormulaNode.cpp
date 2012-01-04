@@ -762,10 +762,11 @@ bool FormulaNode::DoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
  */
 bool FormulaNode::UndoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
 {
-	FormulaNode* p = parent->parent->parent;
-	int pos = p->GetChildPos(parent->parent);
-	p->MoveChild(this, pos);
-	p->RemoveChild(pos + 1);
+	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	FormulaNode* node = c->GetNode();
+	int pos = GetFirstLevelChildPos(node);
+	MoveChild((*node)[0], pos);
+	RemoveChild(pos + 1);
 	
 	return true;
 }
