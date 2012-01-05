@@ -109,9 +109,10 @@ void EquationFormulaNode::UpdateBoundingRect()
 
 /**
  * Makes a deep copy of this object.
+ * @param [in] p The parent node.
  * @return A copy of this object.
  */
-FormulaNode* EquationFormulaNode::Clone()
+FormulaNode* EquationFormulaNode::Clone(FormulaNode* p)
 {
 	return new EquationFormulaNode(parent, wnd);
 }

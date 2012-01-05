@@ -40,7 +40,7 @@ public:
 	virtual void Remake();
 	virtual void UpdateBoundingRect();
 
-	virtual FormulaNode* Clone();
+	virtual FormulaNode* Clone(FormulaNode* p);
 
 	virtual void Parse(ParserString& expr);
 

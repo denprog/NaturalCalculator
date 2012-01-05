@@ -125,11 +125,15 @@ void FormulaNode::ReplaceChild(FormulaNode* node, int pos)
 
 /**
  * Makes a deep copy of this object.
+ * @param [in] p The parent node.
  * @return The copy of this object.
  */
-FormulaNode* FormulaNode::Clone()
+FormulaNode* FormulaNode::Clone(FormulaNode* p)
 {
-	return new FormulaNode(parent, wnd);
+	FormulaNode* res = new FormulaNode(parent, wnd);
+	res->childNodes->CopyFrom(*childNodes, res);
+	
+	return res;
 }
 
 /**
@@ -554,9 +558,11 @@ bool FormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
 		if (pos < childNodes->Count())
 		{
 			//store the node
-			command->SetParam(this, "node", (*this)[pos]->Clone());
+			command->SetParam(this, "node", (*this)[pos]->Clone(NULL));
 			//remove the node
 			RemoveChild(pos);
+			if (childNodes->Count() == 0)
+				AddChild(new EmptyFormulaNode(this));
 			c->SetToNode(this, pos);
 		}
 		else
@@ -567,7 +573,7 @@ bool FormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
 		if (pos > 0)
 		{
 			//store the node
-			command->SetParam(this, "node", (*this)[pos - 1]->Clone());
+			command->SetParam(this, "node", (*this)[pos - 1]->Clone(NULL));
 			//remove the node
 			RemoveChild(pos - 1);
 			c->SetToNode(this, pos - 1);
@@ -592,7 +598,9 @@ bool FormulaNode::UndoRemoveItem(NodeEvent& nodeEvent)
 	bool right = any_cast<bool>(nodeEvent["right"]);
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	int pos = c->GetPos();
-	
+
+	if (IsEmptySymbol())
+		RemoveChild(0);	
 	InsertChild(any_cast<FormulaNode*>(command->GetParam(this, "node")), pos);
 	command->RemoveParam(this, "node");
 	

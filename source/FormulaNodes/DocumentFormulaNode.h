@@ -41,7 +41,7 @@ private:
 
 public:
 	virtual void Remake();
-	virtual FormulaNode* Clone();
+	virtual FormulaNode* Clone(FormulaNode* p);
 	
 	void AddLine();
 	

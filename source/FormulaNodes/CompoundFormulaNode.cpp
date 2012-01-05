@@ -29,11 +29,12 @@ CompoundFormulaNode::~CompoundFormulaNode()
 
 /**
  * Makes a deep copy of this object.
+ * @param [in] p The parent node.
  * @return A copy of this object.
  */
-FormulaNode* CompoundFormulaNode::Clone()
+FormulaNode* CompoundFormulaNode::Clone(FormulaNode* p)
 {
-	return new CompoundFormulaNode(parent, wnd);
+	return new CompoundFormulaNode(p, wnd);
 }
 
 /**

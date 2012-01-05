@@ -30,7 +30,7 @@ public:
 
 	virtual void Parse(ParserString& expr);
 
-	virtual FormulaNode* Clone();
+	virtual FormulaNode* Clone(FormulaNode* p);
 };
 
 namespace boost

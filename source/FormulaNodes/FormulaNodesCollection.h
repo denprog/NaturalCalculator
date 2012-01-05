@@ -52,11 +52,11 @@ private:
 public:
 	void Add(FormulaNode* node);
 	void Insert(FormulaNode* node, int pos);
-	void CopyFrom(FormulaNodesCollection& source);
+	void CopyFrom(FormulaNodesCollection& source, FormulaNode* parent);
 	void Remove(int pos);
 	void Clear();
 
-	FormulaNodesCollection* Clone();
+	FormulaNodesCollection* Clone(FormulaNode* parent);
 	
 	void Remake();
 	void UpdateBoundingRect();

@@ -68,9 +68,10 @@ void MinusFormulaNode::Parse(ParserString& expr)
 
 /**
  * Makes a deep copy of this object.
+ * @param [in] p The parent node.
  * @return A copy of this object.
  */
-FormulaNode* MinusFormulaNode::Clone()
+FormulaNode* MinusFormulaNode::Clone(FormulaNode* p)
 {
-	return new MinusFormulaNode(parent, wnd);
+	return new MinusFormulaNode(p, wnd);
 }

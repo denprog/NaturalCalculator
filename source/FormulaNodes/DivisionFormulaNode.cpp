@@ -115,11 +115,16 @@ void DivisionFormulaNode::Parse(ParserString& expr)
 
 /**
  * Makes a deep copy of this object.
+ * @param [in] p The parent node.
  * @return A copy of this object.
  */
-FormulaNode* DivisionFormulaNode::Clone()
+FormulaNode* DivisionFormulaNode::Clone(FormulaNode* p)
 {
-	return new DivisionFormulaNode(parent, wnd);
+	DivisionFormulaNode* res = new DivisionFormulaNode(p, wnd);
+	res->InsertChild((*this)[0]->Clone(res), 0);
+	res->InsertChild((*this)[2]->Clone(res), 2);
+	
+	return res;
 }
 
 /**

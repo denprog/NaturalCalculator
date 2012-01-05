@@ -30,7 +30,7 @@ public:
 	virtual void Remake();
 	virtual void UpdateBoundingRect();
 
-	virtual FormulaNode* Clone();
+	virtual FormulaNode* Clone(FormulaNode* p);
 
 	virtual SharedCaretState GetNextPosition(SharedCaretState& relativeState = SharedCaretState());
 };

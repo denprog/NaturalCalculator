@@ -14,7 +14,7 @@ public:
 	virtual ~CompoundFormulaNode();
 	
 public:
-	virtual FormulaNode* Clone();
+	virtual FormulaNode* Clone(FormulaNode* p);
 
 	virtual SharedCaretState GetNextPosition(SharedCaretState& relativeState = SharedCaretState());
 	virtual SharedCaretState GetPreviousPosition(SharedCaretState& relativeState = SharedCaretState());

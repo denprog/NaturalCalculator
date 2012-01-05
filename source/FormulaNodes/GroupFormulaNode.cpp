@@ -74,12 +74,13 @@ void GroupFormulaNode::Update()
 
 /**
  * Makes a deep copy of this node.
+ * @param [in] p The parent node.
  * @return null A copy of this object.
  */
-FormulaNode* GroupFormulaNode::Clone()
+FormulaNode* GroupFormulaNode::Clone(FormulaNode* p)
 {
-	GroupFormulaNode* res = new GroupFormulaNode(parent, wnd);
-	res->childNodes->CopyFrom(*childNodes);
+	GroupFormulaNode* res = new GroupFormulaNode(p, wnd);
+	res->childNodes->CopyFrom(*childNodes, res);
 	
 	return res;
 }

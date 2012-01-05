@@ -42,7 +42,7 @@ public:
 
 	virtual void Parse(ParserString& expr);
 
-	virtual FormulaNode* Clone();
+	virtual FormulaNode* Clone(FormulaNode* p);
 
 	virtual SharedCaretState GetNextPosition(SharedCaretState& relativeState = SharedCaretState());
 	virtual SharedCaretState GetPreviousPosition(SharedCaretState& relativeState = SharedCaretState());

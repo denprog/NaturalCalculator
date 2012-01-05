@@ -46,9 +46,10 @@ void DocumentFormulaNode::Remake()
 
 /**
  * The document can not be copied.
+ * @param [in] p The parent node.
  * @return null.
  */
-FormulaNode* DocumentFormulaNode::Clone()
+FormulaNode* DocumentFormulaNode::Clone(FormulaNode* p)
 {
 	return NULL;
 }

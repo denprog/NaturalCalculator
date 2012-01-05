@@ -55,11 +55,12 @@ void PowerFormulaNode::Remake()
 
 /**
  * Makes a deep copy of this object.
+ * @param [in] p The parent node.
  * @return A copy of this object.
  */
-FormulaNode* PowerFormulaNode::Clone()
+FormulaNode* PowerFormulaNode::Clone(FormulaNode* p)
 {
-	return new PowerFormulaNode(parent, wnd);
+	return new PowerFormulaNode(p, wnd);
 }
 
 /**

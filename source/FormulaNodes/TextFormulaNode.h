@@ -37,7 +37,7 @@ public:
 	virtual void UpdateBoundingRect();
 	virtual void Remake();
 
-	virtual FormulaNode* Clone();
+	virtual FormulaNode* Clone(FormulaNode* p);
 	
 	void SetText(QString _text);
 	QString GetText();

@@ -83,11 +83,12 @@ void SquareRootFormulaNode::UpdateBoundingRect()
 
 /**
  * Makes a deep copy of this object.
+ * @param [in] p The parent node.
  * @return A copy of this object.
  */
-FormulaNode* SquareRootFormulaNode::Clone()
+FormulaNode* SquareRootFormulaNode::Clone(FormulaNode* p)
 {
-	return new SquareRootFormulaNode(parent, wnd);
+	return new SquareRootFormulaNode(p, wnd);
 }
 
 /**

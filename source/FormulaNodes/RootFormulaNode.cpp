@@ -33,12 +33,13 @@ RootFormulaNode::~RootFormulaNode()
 
 /**
  * Makes a deep copy of this object.
+ * @param [in] p The parent node.
  * @return A copy of this object.
  */
-FormulaNode* RootFormulaNode::Clone()
+FormulaNode* RootFormulaNode::Clone(FormulaNode* p)
 {
-	RootFormulaNode* res = new RootFormulaNode(parent);
-	res->childNodes->CopyFrom(*childNodes);
+	RootFormulaNode* res = new RootFormulaNode(p);
+	res->childNodes->CopyFrom(*childNodes, res);
 	
 	return res;
 }

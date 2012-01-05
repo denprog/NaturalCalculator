@@ -37,7 +37,7 @@ public:
 	//virtual void Remake();
 	//virtual void Render();
 
-	virtual FormulaNode* Clone();
+	virtual FormulaNode* Clone(FormulaNode* p);
 	
 	virtual SharedCaretState GetFirstPosition();
 	virtual SharedCaretState GetLastPosition();

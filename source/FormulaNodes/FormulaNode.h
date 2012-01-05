@@ -80,7 +80,7 @@ public:
 	virtual void RemoveChild(int pos);
 	virtual void ReplaceChild(FormulaNode* node, int pos);
 	
-	virtual FormulaNode* Clone();
+	virtual FormulaNode* Clone(FormulaNode* p);
 	
 	FormulaNode* operator[](int pos);
 	

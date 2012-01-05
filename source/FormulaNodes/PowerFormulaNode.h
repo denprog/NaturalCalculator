@@ -36,7 +36,7 @@ private:
 public:
 	virtual void Remake();
 
-	virtual FormulaNode* Clone();
+	virtual FormulaNode* Clone(FormulaNode* p);
 
 	virtual void Parse(ParserString& expr);
 

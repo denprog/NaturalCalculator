@@ -38,10 +38,10 @@ void FormulaNodesCollection::Insert(FormulaNode* node, int pos)
  * Copies from the source.
  * @param [in,out] source Source collection.
  */
-void FormulaNodesCollection::CopyFrom(FormulaNodesCollection& source)
+void FormulaNodesCollection::CopyFrom(FormulaNodesCollection& source, FormulaNode* parent)
 {
 	for (NodesIter iter = source.nodes.begin(); iter < source.nodes.end(); ++iter)
-		Add((*iter)->Clone());
+		Add((*iter)->Clone(parent));
 }
 
 /**
@@ -66,14 +66,15 @@ void FormulaNodesCollection::Clear()
 
 /**
  * Makes a deep copy of this object.
+ * @param [in] parent The parent node.
  * @return A copy of this object.
  */
-FormulaNodesCollection* FormulaNodesCollection::Clone()
+FormulaNodesCollection* FormulaNodesCollection::Clone(FormulaNode* parent)
 {
 	FormulaNodesCollection* res = new FormulaNodesCollection();
 	
 	for (NodesIter iter = nodes.begin(); iter < nodes.end(); ++iter)
-		res->Add((*iter)->Clone());
+		res->Add((*iter)->Clone(parent));
 	
 	return res;
 }

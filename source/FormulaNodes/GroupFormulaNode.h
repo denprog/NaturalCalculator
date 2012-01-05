@@ -38,7 +38,7 @@ public:
 	//virtual void UpdateBoundingRect();
 	//virtual void Move(int x, int y);
 
-	virtual FormulaNode* Clone();
+	virtual FormulaNode* Clone(FormulaNode* p);
 
 	virtual ShapeFormulaNode* AddShapeNode();
 

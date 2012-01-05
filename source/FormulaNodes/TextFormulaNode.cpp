@@ -68,11 +68,12 @@ void TextFormulaNode::UpdateBoundingRect()
 
 /**
  * Makes a deep copy of this object.
+ * @param [in] p The parent node.
  * @return A copy of this object.
  */
-FormulaNode* TextFormulaNode::Clone()
+FormulaNode* TextFormulaNode::Clone(FormulaNode* p)
 {
-	TextFormulaNode* res = new TextFormulaNode(parent);
+	TextFormulaNode* res = new TextFormulaNode(p);
 	res->SetText(GetText());
 	
 	return res;

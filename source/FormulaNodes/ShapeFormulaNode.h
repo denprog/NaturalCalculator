@@ -30,7 +30,7 @@ private:
 	BOOST_SERIALIZATION_SPLIT_MEMBER()
 	
 public:
-	virtual FormulaNode* Clone();
+	virtual FormulaNode* Clone(FormulaNode* p);
 
 	void AddLine(qreal x1, qreal y1, qreal x2, qreal y2, QColor& color);
 	void AddRect(qreal x, qreal y, qreal width, qreal height, QColor& color);

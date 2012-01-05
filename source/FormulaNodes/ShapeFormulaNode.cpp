@@ -21,11 +21,12 @@ ShapeFormulaNode::~ShapeFormulaNode()
 
 /**
  * Makes a deep copy of this object.
+ * @param [in] p The parent node.
  * @return A copy of this object.
  */
-FormulaNode* ShapeFormulaNode::Clone()
+FormulaNode* ShapeFormulaNode::Clone(FormulaNode* p)
 {
-	return new ShapeFormulaNode(parent, wnd);
+	return new ShapeFormulaNode(p, wnd);
 }
 
 /**

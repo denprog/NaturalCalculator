@@ -67,9 +67,10 @@ void MultiplyFormulaNode::UpdateBoundingRect()
 
 /**
  * Makes a deep copy of this object.
+ * @param [in] p The parent node.
  * @return A copy of this object.
  */
-FormulaNode* MultiplyFormulaNode::Clone()
+FormulaNode* MultiplyFormulaNode::Clone(FormulaNode* p)
 {
-	return new MultiplyFormulaNode(parent, wnd);
+	return new MultiplyFormulaNode(p, wnd);
 }

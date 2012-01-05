@@ -54,11 +54,12 @@ void EmptyFormulaNode::UpdateBoundingRect()
 
 /**
  * Makes a deep copy of this object.
+ * @param [in] p The parent node.
  * @return A copy of this object.
  */
-FormulaNode* EmptyFormulaNode::Clone()
+FormulaNode* EmptyFormulaNode::Clone(FormulaNode* p)
 {
-	return new EmptyFormulaNode(parent);
+	return new EmptyFormulaNode(p);
 }
 
 /**
