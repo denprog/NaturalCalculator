@@ -88,7 +88,10 @@ void SquareRootFormulaNode::UpdateBoundingRect()
  */
 FormulaNode* SquareRootFormulaNode::Clone(FormulaNode* p)
 {
-	return new SquareRootFormulaNode(p, wnd);
+	SquareRootFormulaNode* res = new SquareRootFormulaNode(p, wnd);
+	res->InsertChild((*this)[1]->Clone(res), 1);
+	
+	return res;
 }
 
 /**
