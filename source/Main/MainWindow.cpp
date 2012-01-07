@@ -9,7 +9,7 @@
  * @param [in,out] parent The parent widget.
  * @param flags	The flags.
  */
-MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags), settings("naturaleditor.org", "MainWindow")
+MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags), settings("naturaleditor.org", "NaturalCalculator")
 {
 	SetupUi();
 }
@@ -28,8 +28,8 @@ MainWindow::~MainWindow()
 void MainWindow::closeEvent(QCloseEvent* event)
 {
 	//save the settings
-	settings.Save("NaturalCalculator", "position", pos());
-	settings.Save("NaturalCalculator", "size", size());
+	settings.Save("MainWindow", "state", saveState());
+	settings.Save("MainWindow", "geometry", saveGeometry());
 }
 
 /**
@@ -129,11 +129,9 @@ void MainWindow::SetupUi()
 	functionsToolBar->addAction(action);
 
 	tab->addTab(functionsToolBar, "functions");
-
-	QVariant p = settings.Load("NaturalCalculator", "position");
-	move(p.toPoint());
-	p = settings.Load("NaturalCalculator", "size");
-	resize(p.toSize());
+	
+	restoreState(settings.Load("MainWindow", "state").toByteArray());
+	restoreGeometry(settings.Load("MainWindow", "geometry").toByteArray());
 	
 	//set the main window
 	formulaWnd = new FormulaWnd(this);
