@@ -598,6 +598,14 @@ bool FormulaNode::UndoRemoveItem(NodeEvent& nodeEvent)
 	bool right = any_cast<bool>(nodeEvent["right"]);
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	int pos = c->GetPos();
+	
+	if (command->ContainsParam(this, "removeCount"))
+	{
+		//remove the child nodes, which have been replaced from the deleted node
+		int count = any_cast<int>(command->GetParam(this, "removeCount"));
+		for (int i = 0; i < count; ++i)
+			RemoveChild(pos);
+	}
 
 	if (IsEmptySymbol())
 		RemoveChild(0);	

@@ -42,6 +42,9 @@ public:
 	virtual void Parse(ParserString& expr);
 	
 	virtual void RenderCaret(const int pos, const int anchor);
+	
+	//command functions
+	virtual bool DoRemoveItem(NodeEvent& nodeEvent);
 
 private:
 	ShapeFormulaNode* shape;

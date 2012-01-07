@@ -122,3 +122,41 @@ void SquareRootFormulaNode::RenderCaret(const int pos, const int anchor)
 	else
 		CompoundFormulaNode::RenderCaret(pos, anchor);
 }
+
+/**
+ * Executes the remove item operation.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
+bool SquareRootFormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
+{
+	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	int pos = c->GetPos();
+	
+	if (pos == 0)
+	{
+		//removing the symbol
+		bool right = any_cast<bool>(nodeEvent["right"]);
+		if (!right)
+			return false;
+		
+		FormulaNode* radicand = (*this)[1];
+		command = any_cast<Command*>(nodeEvent["command"]);
+		command->SetParam(parent, "node", Clone(NULL));
+		//count parameter needed to remove the child nodes in the undo
+		command->SetParam(parent, "removeCount", radicand->GetChildNodes()->Count());
+		int j = parent->GetFirstLevelChildPos(this);
+		int i = 0;
+		while (radicand->GetChildNodes()->Count() > 0)
+			parent->MoveChild((*radicand)[0], j + i++);
+		c->SetToNode(parent, j);
+
+		nodeEvent["undoAction"] = CommandAction(parent, j, &FormulaNode::UndoRemoveItem);
+
+		parent->RemoveChild(j + i);		
+		
+		return true;
+	}
+
+	return FormulaNode::DoRemoveItem(nodeEvent);
+}

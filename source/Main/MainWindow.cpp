@@ -147,6 +147,7 @@ void MainWindow::SetupUi()
 	setCentralWidget(c);
 
 	formulaWnd->activateWindow();
+	formulaWnd->setFocus();
 }
 
 /**

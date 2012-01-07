@@ -1,5 +1,6 @@
 #include "CaretState.h"
 #include "../FormulaNodes/FormulaNode.h"
+#include "../FormulaNodes/TextFormulaNode.h"
 #include "../Main/FormulaWnd.h"
 
 //CaretState
@@ -55,6 +56,9 @@ void CaretState::SetState(CaretState& state)
  */
 void CaretState::SetToNode(FormulaNode* node, int pos)
 {
+	//if (!dynamic_cast<TextFormulaNode*>(node) && node->GetChildNodes()->Count() > pos && dynamic_cast<TextFormulaNode*>((*node)[pos]))
+	//	currentNode->SetNodePos((*node)[pos], 0);
+	//else
 	currentNode->SetNodePos(node, pos);
 }
 	
