@@ -208,3 +208,18 @@ bool RootFormulaNode::UndoCreateEquationFormulaNode(NodeEvent& nodeEvent)
 	
 	return true;
 }
+
+/**
+ * Undo create power formula node.
+ * @param [in] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
+bool RootFormulaNode::UndoCreatePowerFormulaNode(NodeEvent& nodeEvent)
+{
+	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	FormulaNode* n = c->GetNode();
+	int pos = GetFirstLevelChildPos(n);
+	RemoveChild(pos);
+
+	return true;
+}

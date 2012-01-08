@@ -79,6 +79,7 @@ public:
 	virtual void MoveChild(FormulaNode* node, int pos);
 	virtual void RemoveChild(int pos);
 	virtual void ReplaceChild(FormulaNode* node, int pos);
+	virtual int ChildrenCount();
 	
 	virtual FormulaNode* Clone(FormulaNode* p);
 	

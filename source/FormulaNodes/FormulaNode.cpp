@@ -124,6 +124,15 @@ void FormulaNode::ReplaceChild(FormulaNode* node, int pos)
 }
 
 /**
+ * Returns the children count.
+ * @return The children count.
+ */
+int FormulaNode::ChildrenCount()
+{
+	return childNodes->Count();
+}
+
+/**
  * Makes a deep copy of this object.
  * @param [in] p The parent node.
  * @return The copy of this object.
@@ -720,6 +729,8 @@ bool FormulaNode::DoCreatePowerFormulaNode(NodeEvent& nodeEvent)
 	//create a power node, insert current node into it and insert the result into the parent
 	FormulaNode* d = new PowerFormulaNode(this, wnd);
 	FormulaNode* g = new GroupFormulaNode(d, wnd);
+	if (ChildrenCount() <= pos)
+		InsertChild(new EmptyFormulaNode(this), pos);
 	g->MoveChild((*this)[pos], 0);
 	d->InsertChild(g, 0);
 	g = new GroupFormulaNode(d, wnd);
@@ -728,7 +739,7 @@ bool FormulaNode::DoCreatePowerFormulaNode(NodeEvent& nodeEvent)
 	d->AddChild(g);
 	InsertChild(d, pos);
 
-	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreatePowerFormulaNode);
+	nodeEvent["undoAction"] = CommandAction(this, pos, &FormulaNode::UndoCreatePowerFormulaNode);
 	c->SetToNode(g, 0);
 	
 	return true;
@@ -758,14 +769,16 @@ bool FormulaNode::DoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
 {
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	int pos = c->GetPos();
-	//create a power node, insert current node into it and insert the result into the parent
+	//create a square root node, insert current node into it and insert the result into the parent
 	FormulaNode* d = new SquareRootFormulaNode(this, wnd);
 	FormulaNode* g = new GroupFormulaNode(d, wnd);
+	if (ChildrenCount() <= pos)
+		InsertChild(new EmptyFormulaNode(this), pos);
 	g->MoveChild((*this)[pos], 0);
 	d->InsertChild(g, 1);
 	InsertChild(d, pos);
 
-	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreateSquareRootFormulaNode);
+	nodeEvent["undoAction"] = CommandAction(this, pos, &FormulaNode::UndoCreateSquareRootFormulaNode);
 	c->SetToNode(g, 0);
 	
 	return true;
@@ -781,8 +794,13 @@ bool FormulaNode::UndoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	FormulaNode* node = c->GetNode();
 	int pos = GetFirstLevelChildPos(node);
-	MoveChild((*node)[0], pos);
-	RemoveChild(pos + 1);
+	if (!node->IsEmptySymbol())
+	{
+		MoveChild((*node)[0], pos);
+		RemoveChild(pos + 1);
+	}
+	else
+		RemoveChild(pos);
 	
 	return true;
 }

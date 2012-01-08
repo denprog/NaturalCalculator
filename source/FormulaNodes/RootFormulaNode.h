@@ -48,6 +48,8 @@ public:
 	virtual bool DoCreateEquationFormulaNode(NodeEvent& nodeEvent);
 	virtual bool UndoCreateEquationFormulaNode(NodeEvent& nodeEvent);
 
+	virtual bool UndoCreatePowerFormulaNode(NodeEvent& nodeEvent);
+
 private:
 	QGraphicsScene* scene;
 };
