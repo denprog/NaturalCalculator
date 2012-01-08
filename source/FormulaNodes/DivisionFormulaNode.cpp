@@ -179,3 +179,45 @@ void DivisionFormulaNode::RenderCaret(const int pos, const int anchor)
 	else
 		CompoundFormulaNode::RenderCaret(pos, anchor);
 }
+
+/**
+ * Executes the remove item operation.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
+bool DivisionFormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
+{
+	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	int pos = c->GetPos();
+	
+	if (pos == 1)
+	{
+		//removing the symbol
+		bool right = any_cast<bool>(nodeEvent["right"]);
+		if (!right)
+			return false;
+
+		FormulaNode* dividend = (*this)[0];
+		FormulaNode* divisor = (*this)[2];
+		
+		command = any_cast<Command*>(nodeEvent["command"]);
+		command->SetParam(parent, "node", Clone(NULL));
+		//count parameter needed to remove the child nodes in the undo
+		command->SetParam(parent, "removeCount", dividend->GetChildNodes()->Count() + divisor->GetChildNodes()->Count());
+		int j = parent->GetFirstLevelChildPos(this);
+		int i = 0;
+		while (dividend->GetChildNodes()->Count() > 0)
+			parent->MoveChild((*dividend)[0], j + i++);
+		while (divisor->GetChildNodes()->Count() > 0)
+			parent->MoveChild((*divisor)[0], j + i++);
+		c->SetToNode(parent, j);
+
+		nodeEvent["undoAction"] = CommandAction(parent, j, &FormulaNode::UndoRemoveItem);
+
+		parent->RemoveChild(j + i);		
+		
+		return true;
+	}
+
+	return FormulaNode::DoRemoveItem(nodeEvent);
+}
