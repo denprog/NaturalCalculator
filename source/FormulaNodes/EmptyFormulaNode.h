@@ -33,6 +33,8 @@ public:
 	virtual FormulaNode* Clone(FormulaNode* p);
 
 	virtual SharedCaretState GetNextPosition(SharedCaretState& relativeState = SharedCaretState());
+	
+	virtual bool IsEmptySymbol();
 };
 
 namespace boost

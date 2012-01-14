@@ -9,6 +9,7 @@ class TextFormulaNode : public FormulaNode
 public:
 	TextFormulaNode();
 	TextFormulaNode(FormulaNode* parent);
+	TextFormulaNode(FormulaNode* parent, FormulaWnd* wnd);
 	virtual ~TextFormulaNode();
 	
 private:
@@ -123,7 +124,7 @@ namespace boost
 		{
 			FormulaNode* parent;
 			ar >> parent;
-			::new (node)TextFormulaNode(parent);
+			::new (node)TextFormulaNode(parent, parent->GetWnd());
 		}
 	}
 }

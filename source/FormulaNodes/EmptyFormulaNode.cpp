@@ -71,3 +71,8 @@ SharedCaretState EmptyFormulaNode::GetNextPosition(SharedCaretState& relativeSta
 {
 	return SharedCaretState();
 }
+
+bool EmptyFormulaNode::IsEmptySymbol()
+{
+	return true;
+}

@@ -566,6 +566,9 @@ bool FormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
 	{
 		if (pos < childNodes->Count())
 		{
+			if (ChildrenCount() == 1 && (*this)[0]->IsEmptySymbol())
+				return false;
+			
 			//store the node
 			command->SetParam(this, "node", (*this)[pos]->Clone(NULL));
 			//remove the node
@@ -581,6 +584,9 @@ bool FormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
 	{
 		if (pos > 0)
 		{
+			if (ChildrenCount() == 1 && (*this)[0]->IsEmptySymbol())
+				return false;
+			
 			//store the node
 			command->SetParam(this, "node", (*this)[pos - 1]->Clone(NULL));
 			//remove the node
@@ -616,8 +622,8 @@ bool FormulaNode::UndoRemoveItem(NodeEvent& nodeEvent)
 			RemoveChild(pos);
 	}
 
-	if (IsEmptySymbol())
-		RemoveChild(0);	
+	if (pos < ChildrenCount() && (*this)[pos]->IsEmptySymbol())
+		RemoveChild(pos);	
 	InsertChild(any_cast<FormulaNode*>(command->GetParam(this, "node")), pos);
 	command->RemoveParam(this, "node");
 	

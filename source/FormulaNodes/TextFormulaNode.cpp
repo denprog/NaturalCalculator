@@ -17,13 +17,27 @@ TextFormulaNode::TextFormulaNode()
 {
 }
 
-/**
- * Constructor.
- * @param [in,out] parent The parent node.
- */
 TextFormulaNode::TextFormulaNode(FormulaNode* parent) : FormulaNode(parent, parent->GetWnd())
 {
 	item = new FormulaTextItem(settings, level, boundingRect, parent->GetItem());
+	item->setData(0, qVariantFromValue((void*)this));
+	
+	QFont font = settings->GetTextFormulaNodeFont(level);
+	((QGraphicsTextItem*)item)->setFont(font);
+
+#ifdef _DEBUG
+	name = "TextFormulaNode";
+#endif
+}
+
+/**
+ * Constructor.
+ * @param [in,out] parent The parent node.
+ * @param [in,out] wnd The parent window.
+ */
+TextFormulaNode::TextFormulaNode(FormulaNode* parent, FormulaWnd* wnd) : FormulaNode(parent, wnd)
+{
+	item = new FormulaTextItem(settings, level, boundingRect, parent ? parent->GetItem() : NULL);
 	item->setData(0, qVariantFromValue((void*)this));
 	
 	QFont font = settings->GetTextFormulaNodeFont(level);
@@ -73,7 +87,7 @@ void TextFormulaNode::UpdateBoundingRect()
  */
 FormulaNode* TextFormulaNode::Clone(FormulaNode* p)
 {
-	TextFormulaNode* res = new TextFormulaNode(p);
+	TextFormulaNode* res = new TextFormulaNode(p, wnd);
 	res->SetText(GetText());
 	
 	return res;
@@ -302,8 +316,22 @@ bool TextFormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
 			command->SetParam(this, "str", QString(text.mid(pos, 1)));
 			//update the item
 			text = text.left(pos) + text.right(text.length() - pos - 1);
-			SetText(text);
-			c->SetToNode(this, pos);
+			if (text == "")
+			{
+				int p = parent->GetFirstLevelChildPos(this);
+				command->SetParam(parent, "node", Clone(NULL));
+				if (parent->ChildrenCount() == 1)
+					parent->InsertChild(new EmptyFormulaNode(this), p);
+				nodeEvent["undoAction"] = CommandAction(parent, p, &FormulaNode::UndoRemoveItem);
+				c->SetToNode(parent, p);
+				parent->RemoveChild(parent->GetFirstLevelChildPos(this));
+			}
+			else
+			{
+				SetText(text);
+				c->SetToNode(this, pos);
+				nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoRemoveItem);
+			}
 		}
 		else
 			return false;
@@ -315,15 +343,27 @@ bool TextFormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
 			command->SetParam(this, "str", QString(text.mid(pos - 1, 1)));
 			//update the item
 			text = text.left(pos - 1) + text.right(text.length() - pos);
-			SetText(text);
-			c->SetToNode(this, pos - 1);
+			if (text == "")
+			{
+				int p = parent->GetFirstLevelChildPos(this);
+				command->SetParam(parent, "node", Clone(NULL));
+				nodeEvent["undoAction"] = CommandAction(parent, p, &FormulaNode::UndoRemoveItem);
+				c->SetToNode(parent, p);
+				if (parent->ChildrenCount() == 1)
+					parent->InsertChild(new EmptyFormulaNode(this), p++);
+				parent->RemoveChild(p);
+			}
+			else
+			{
+				SetText(text);
+				c->SetToNode(this, pos - 1);
+				nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoRemoveItem);
+			}
 		}
 		else
 			return false;
 	}
 
-	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoRemoveItem);
-	
 	return true;
 }
 
@@ -383,6 +423,7 @@ bool TextFormulaNode::DoCreatePlusFormulaNode(NodeEvent& nodeEvent)
  */
 bool TextFormulaNode::UndoCreatePlusFormulaNode(NodeEvent& nodeEvent)
 {
+	command = any_cast<Command*>(nodeEvent["command"]);
 	bool right = any_cast<bool>(command->GetParam(this, "right"));
 	parent->RemoveChild(right ? parent->GetChildPos(this) + 1 : parent->GetChildPos(this) - 1);
 	
