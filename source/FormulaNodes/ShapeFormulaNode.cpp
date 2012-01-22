@@ -104,6 +104,18 @@ void ShapeFormulaNode::AddFillCircle(qreal x, qreal y, qreal radius, QColor& col
 }
 
 /**
+ * Adds a path to the item.
+ * @param [in] path The painter's path.
+ * @param [in] color The color.
+ */
+void ShapeFormulaNode::AddPath(QPainterPath& path, QColor& color)
+{
+	QGraphicsPathItem* i = new QGraphicsPathItem(path, item);
+	i->setBrush(QBrush(color));
+	((QGraphicsItemGroup*)item)->addToGroup(i);
+}
+
+/**
  * Clears the shapes.
  */
 void ShapeFormulaNode::ClearShapes()

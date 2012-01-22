@@ -97,6 +97,18 @@ ShapeFormulaNode* GroupFormulaNode::AddShapeNode()
 }
 
 /**
+ * Inserts a shape node.
+ * @param pos The position.
+ * @return The shape node.
+ */
+ShapeFormulaNode* GroupFormulaNode::InsertShapeNode(int pos)
+{
+	ShapeFormulaNode* n = new ShapeFormulaNode(this, wnd);
+	InsertChild(n, pos);
+	return n;
+}
+
+/**
  * Gets the first caret position of the node.
  * @return The first caret position.
  */

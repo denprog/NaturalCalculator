@@ -130,6 +130,12 @@ void FormulaWnd::keyPressEvent(QKeyEvent* event)
 	case Qt::Key_Backslash:
 		InsertNode(&FormulaNode::DoCreateSquareRootFormulaNode);
 		break;
+	case Qt::Key_ParenLeft:
+		InsertNode(&FormulaNode::DoCreateLeftBraceFormulaNode);
+		break;
+	case Qt::Key_ParenRight:
+		InsertNode(&FormulaNode::DoCreateRightBraceFormulaNode);
+		break;
 	case Qt::Key_Equal:
 		InsertNode(&FormulaNode::DoCreateEquationFormulaNode);
 		break;

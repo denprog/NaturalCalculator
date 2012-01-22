@@ -7,6 +7,7 @@
 #include "PowerFormulaNode.h"
 #include "SquareRootFormulaNode.h"
 #include "DivisionFormulaNode.h"
+#include "BracesFormulaNode.h"
 #include "../Main/FormulaWnd.h"
 #include "../Util/QRectEx.h"
 #include <QMenu>
@@ -132,6 +133,20 @@ int FormulaNode::ChildrenCount()
 	return childNodes->Count();
 }
 
+FormulaNode* FormulaNode::GetExpression(int pos) const
+{
+	return NULL;
+}
+
+void FormulaNode::ShowShape(int pos, bool show)
+{
+}
+
+bool FormulaNode::IsShapeVisible(int pos) const
+{
+	return false;
+}
+
 /**
  * Makes a deep copy of this object.
  * @param [in] p The parent node.
@@ -150,7 +165,7 @@ FormulaNode* FormulaNode::Clone(FormulaNode* p)
  * @param pos The position.
  * @return The child node at the position.
  */
-FormulaNode* FormulaNode::operator[](int pos)
+FormulaNode* FormulaNode::operator[](int pos) const
 {
 	return (*childNodes)[pos];
 }
@@ -829,6 +844,187 @@ bool FormulaNode::DoCreateDivisionFormulaNode(NodeEvent& nodeEvent)
 bool FormulaNode::UndoCreateDivisionFormulaNode(NodeEvent& nodeEvent)
 {
 	return false;
+}
+
+/**
+ * Executes the create a braces formula node operation with a left brace.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
+bool FormulaNode::DoCreateLeftBraceFormulaNode(NodeEvent& nodeEvent)
+{
+	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	FormulaNode* node = c->GetNode();
+	command = any_cast<Command*>(nodeEvent["command"]);
+	int pos = c->GetPos();
+	
+	if (dynamic_cast<BracesFormulaNode*>(node->GetParent()))
+	{
+		FormulaNode* p = node->GetParent()->GetParent();
+		//this is a braces node with a left brace, set a right brace
+		command->SetParam(p, "setLeft", pos);
+		node->GetParent()->ShowShape(0, true);
+		
+		//move the remain child nodes after the caret to the parent node
+		for (int i = pos - 1; i >= 0; --i)
+			p->MoveChild((*node)[i], 0);
+
+		nodeEvent["undoAction"] = CommandAction(p, 0, &FormulaNode::UndoCreateLeftBraceFormulaNode);
+		c->SetToNode(p, pos);
+	
+		return true;
+	}
+
+	//create a braces node, insert the nodes being located to the right in the collection, into it and insert the result into the parent
+	FormulaNode* d = new BracesFormulaNode(this, wnd, true, false);
+	FormulaNode* expr = d->GetExpression(0);
+	for (int i = pos; i < ChildrenCount();)
+		expr->MoveChild((*this)[pos], expr->ChildrenCount());
+	InsertChild(d, pos);
+
+	nodeEvent["undoAction"] = CommandAction(this, pos, &FormulaNode::UndoCreateLeftBraceFormulaNode);
+	c->SetToNode(expr, 0);
+	
+	return true;
+}
+
+/**
+ * Undo create a braces formula node with a left brace.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
+bool FormulaNode::UndoCreateLeftBraceFormulaNode(NodeEvent& nodeEvent)
+{
+	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	BracesFormulaNode* node = (BracesFormulaNode*)c->GetNode()->GetParent();
+	command = any_cast<Command*>(nodeEvent["command"]);
+	
+	if (command->ContainsParam(this, "setLeft"))
+	{
+		//clear the left brace
+		int pos = any_cast<int>(command->GetParam(this, "setLeft"));
+		FormulaNode* n = (*this)[pos];
+		n->ShowShape(0, false);
+		FormulaNode* expr = n->GetExpression(0);
+		
+		//move the child nodes from the parent node back to the braces
+		for (int i = pos - 1; i >= 0; --i)
+			expr->MoveChild((*this)[i], 0);
+		
+		return true;
+	}
+	
+	int pos = GetFirstLevelChildPos(node);
+	FormulaNode* expr = node->GetExpression(0);
+
+	if (!expr->IsEmptySymbol() || ChildrenCount() == 1)
+	{
+		//move the braces' child nodes back in the parent
+		for (int i = 0; i < expr->ChildrenCount();)
+			MoveChild((*expr)[0], ChildrenCount());
+	}
+	RemoveChild(pos);
+	
+	return true;
+}
+
+/**
+ * Executes the create a braces formula node operation with a right shape.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
+bool FormulaNode::DoCreateRightBraceFormulaNode(NodeEvent& nodeEvent)
+{
+	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	command = any_cast<Command*>(nodeEvent["command"]);
+	int pos = c->GetPos();
+	FormulaNode* node = c->GetNode();
+	
+	if (dynamic_cast<BracesFormulaNode*>(node->GetParent()))
+	{
+		FormulaNode* b = node->GetParent();
+		FormulaNode* p = b->GetParent();
+		int j = p->GetFirstLevelChildPos(b);
+		//this is a braces node with a left brace, set a right brace
+		command->SetParam(p, "setRight", j);
+		b->ShowShape(1, true);
+		
+		//move the remain child nodes after the caret to the parent node
+		for (int i = pos; i < node->ChildrenCount();)
+			p->MoveChild((*node)[i], p->ChildrenCount());
+
+		nodeEvent["undoAction"] = CommandAction(p, 0, &FormulaNode::UndoCreateRightBraceFormulaNode);
+		c->SetToNode(p, j + 1);
+	
+		return true;
+	}
+	
+	if (pos == ChildrenCount())
+	{
+		//search for an open brace
+		BracesFormulaNode* n = dynamic_cast<BracesFormulaNode*>((*this)[pos - 1]);
+		if (n && !n->IsShapeVisible(1))
+		{
+			command->SetParam(this, "setRight", pos - 1);
+			n->ShowShape(1, true);
+
+			nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreateRightBraceFormulaNode);
+			c->SetToNodeEnd(this);
+			
+			return true;
+		}
+	}
+
+	//create a braces node, insert the nodes being located to the left in the collection, into it and insert the result into the parent
+	FormulaNode* d = new BracesFormulaNode(this, wnd, false, true);
+	FormulaNode* expr = d->GetExpression(0);
+	for (int i = pos - 1; i >= 0; --i)
+		expr->MoveChild((*this)[i], 0);
+	InsertChild(d, 0);
+
+	nodeEvent["undoAction"] = CommandAction(this, 1, &FormulaNode::UndoCreateRightBraceFormulaNode);
+	c->SetToNode(this, 1);
+	
+	return true;
+}
+
+/**
+ * Undo create a braces formula node with a right shape.
+ * @param [in,out] nodeEvent The node event.
+ * @return true if it succeeds, false if it fails.
+ */
+bool FormulaNode::UndoCreateRightBraceFormulaNode(NodeEvent& nodeEvent)
+{
+	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	command = any_cast<Command*>(nodeEvent["command"]);
+	
+	if (command->ContainsParam(this, "setRight"))
+	{
+		//clear the right brace
+		int pos = any_cast<int>(command->GetParam(this, "setRight"));
+		FormulaNode* n = (*this)[pos];
+		n->ShowShape(1, false);
+		FormulaNode* expr = n->GetExpression(0);
+		
+		//move the child nodes from the parent node back to the braces
+		for (int i = pos + 1; i < ChildrenCount();)
+			expr->MoveChild((*this)[i], expr->ChildrenCount());
+		
+		return true;
+	}
+
+	FormulaNode* node = (*this)[0];
+
+	if (!(*node)[1]->IsEmptySymbol() || ChildrenCount() == 1)
+	{
+		//move the braces' child nodes back in the parent
+		FormulaNode* expr = node->GetExpression(0);
+		for (int i = expr->ChildrenCount() - 1; i >= 0; --i)
+			MoveChild((*expr)[i], 1);
+	}
+	RemoveChild(0);
+	
+	return true;
 }
 
 /**

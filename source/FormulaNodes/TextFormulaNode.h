@@ -85,6 +85,12 @@ public:
 	virtual bool DoCreateSquareRootFormulaNode(NodeEvent& nodeEvent);
 	virtual bool UndoCreateSquareRootFormulaNode(NodeEvent& nodeEvent);
 
+	virtual bool DoCreateLeftBraceFormulaNode(NodeEvent& nodeEvent);
+	virtual bool UndoCreateLeftBraceFormulaNode(NodeEvent& nodeEvent);
+
+	virtual bool DoCreateRightBraceFormulaNode(NodeEvent& nodeEvent);
+	virtual bool UndoCreateRightBraceFormulaNode(NodeEvent& nodeEvent);
+	
 public slots:
 	virtual void OnCopy();
 	virtual void OnPaste();

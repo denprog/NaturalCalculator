@@ -6,6 +6,7 @@
 #include <fstream>
 #include "../FormulaNodes/DocumentFormulaNode.h"
 #include "../FormulaNodes/PowerFormulaNode.h"
+#include "../FormulaNodes/BracesFormulaNode.h"
 #include "../FormulaNodes/EquationFormulaNode.h"
 #include "../FormulaNodes/FormulaNodesCollection.h"
 #include "../Editor/Caret.h"
@@ -66,6 +67,7 @@ private:
 		boost::serialization::void_cast_register<DivisionFormulaNode, FormulaNode>(static_cast<DivisionFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
 		boost::serialization::void_cast_register<PowerFormulaNode, FormulaNode>(static_cast<PowerFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
 		boost::serialization::void_cast_register<SquareRootFormulaNode, FormulaNode>(static_cast<SquareRootFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
+		boost::serialization::void_cast_register<BracesFormulaNode, FormulaNode>(static_cast<BracesFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
 		boost::serialization::void_cast_register<EquationFormulaNode, FormulaNode>(static_cast<EquationFormulaNode*>(NULL), static_cast<FormulaNode*>(NULL));
 		
 		ar.template register_type<FormulaNode>();
@@ -81,6 +83,7 @@ private:
 		ar.template register_type<DivisionFormulaNode>();
 		ar.template register_type<PowerFormulaNode>();
 		ar.template register_type<SquareRootFormulaNode>();
+		ar.template register_type<BracesFormulaNode>();
 		ar.template register_type<EquationFormulaNode>();
 	}
 

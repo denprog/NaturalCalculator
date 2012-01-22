@@ -37,6 +37,7 @@ public:
 	void AddFillRect(qreal x, qreal y, qreal width, qreal height, QColor& color, qreal opacity = 1.0);
 	void AddPolygon(QVector<QPointF>& points, QColor& color);
 	void AddFillCircle(qreal x, qreal y, qreal radius, QColor& color);
+	void AddPath(QPainterPath& path, QColor& color);
 	void ClearShapes();
 
 	virtual SharedCaretState GetNextPosition(SharedCaretState& relativeState = SharedCaretState());

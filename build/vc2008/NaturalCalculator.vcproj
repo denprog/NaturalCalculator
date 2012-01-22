@@ -109,6 +109,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories=".\GeneratedFiles;&quot;$(QTDIR)\include&quot;;&quot;.\GeneratedFiles\$(ConfigurationName)&quot;;&quot;$(QTDIR)\include\qtmain&quot;;&quot;$(QTDIR)\include\QtCore&quot;;&quot;$(QTDIR)\include\QtGui&quot;;.\;&quot;$(SolutionDir)..\..\source\NcParser\Main&quot;;&quot;$(TargetDir)&quot;"
 				PreprocessorDefinitions=",UNICODE,WIN32,QT_LARGEFILE_SUPPORT;QT_CORE_LIB;QT_GUI_LIB"
@@ -546,6 +547,10 @@
 				Name="Source Files"
 				>
 				<File
+					RelativePath="..\..\source\FormulaNodes\BracesFormulaNode.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\FormulaNodes\CompoundFormulaNode.cpp"
 					>
 				</File>
@@ -621,6 +626,10 @@
 			<Filter
 				Name="Header Files"
 				>
+				<File
+					RelativePath="..\..\source\FormulaNodes\BracesFormulaNode.h"
+					>
+				</File>
 				<File
 					RelativePath="..\..\source\FormulaNodes\CompoundFormulaNode.h"
 					>

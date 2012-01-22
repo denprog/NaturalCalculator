@@ -81,9 +81,13 @@ public:
 	virtual void ReplaceChild(FormulaNode* node, int pos);
 	virtual int ChildrenCount();
 	
+	virtual FormulaNode* GetExpression(int pos) const;
+	virtual void ShowShape(int pos, bool show);
+	virtual bool IsShapeVisible(int pos) const;
+	
 	virtual FormulaNode* Clone(FormulaNode* p);
 	
-	FormulaNode* operator[](int pos);
+	FormulaNode* operator[](int pos) const;
 	
 	virtual void Remake();
 	virtual void Update();
@@ -152,10 +156,16 @@ public:
 
 	virtual bool DoCreateSquareRootFormulaNode(NodeEvent& nodeEvent);
 	virtual bool UndoCreateSquareRootFormulaNode(NodeEvent& nodeEvent);
+
+	virtual bool DoCreateLeftBraceFormulaNode(NodeEvent& nodeEvent);
+	virtual bool UndoCreateLeftBraceFormulaNode(NodeEvent& nodeEvent);
+
+	virtual bool DoCreateRightBraceFormulaNode(NodeEvent& nodeEvent);
+	virtual bool UndoCreateRightBraceFormulaNode(NodeEvent& nodeEvent);
 	
 	virtual bool DoCreateEquationFormulaNode(NodeEvent& nodeEvent);
 	virtual bool UndoCreateEquationFormulaNode(NodeEvent& nodeEvent);
-
+	
 public:
 	virtual void MakeContextMenu(QMenu* menu);
 	bool MenuContainsAction(QMenu* menu, QString& action);

@@ -41,6 +41,7 @@ public:
 	virtual FormulaNode* Clone(FormulaNode* p);
 
 	virtual ShapeFormulaNode* AddShapeNode();
+	virtual ShapeFormulaNode* InsertShapeNode(int pos);
 
 	virtual SharedCaretState GetFirstPosition();
 	virtual SharedCaretState GetLastPosition();
