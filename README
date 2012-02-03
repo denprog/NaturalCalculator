@@ -1,2 +1,4 @@
 Natural Calculator is a unique, powerful, and simple program for solving various mathematical tasks. Unlike any other such programs, Natural Calculator does calculations the same way you do them on paper.
+This is a Qt porting of the previous version of the program: http://www.nmathematics.com/.
+Using C++, Qt, boost.
 LGPL license.
