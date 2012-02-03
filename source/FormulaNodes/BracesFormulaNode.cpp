@@ -152,6 +152,21 @@ void BracesFormulaNode::Parse(ParserString& expr)
 	if (rightShape)
 		expr.Add(")", this);
 }
+
+#ifdef TEST
+void BracesFormulaNode::ParseStructure(QString& res)
+{
+	if (leftShape)
+		res += "[";
+	for (int i = 0; i < childNodes->Count(); ++i)
+	{
+		FormulaNode* n = (*this)[i];
+		n->ParseStructure(res);
+	}
+	if (rightShape)
+		res += "]";
+}
+#endif
 	
 /**
  * Renders the caret.

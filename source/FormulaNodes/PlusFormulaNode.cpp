@@ -65,6 +65,13 @@ void PlusFormulaNode::Parse(ParserString& expr)
 	expr.Add("+", this);
 }
 
+#ifdef TEST
+void PlusFormulaNode::ParseStructure(QString& res)
+{
+	res += "+";
+}
+#endif
+
 /**
  * Makes a deep copy of this object.
  * @param [in] p The parent node.

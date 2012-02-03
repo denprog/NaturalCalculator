@@ -5,6 +5,31 @@
 #include <QLocale>
 #include <QLibraryInfo>
 
+#ifdef TEST
+
+#include <QtTest/QtTest>
+#include "../../test/BracesTest.h"
+
+int main(int argc, char *argv[])
+{
+	NaturalCalculatorApp app(argc, argv);
+	
+#ifdef RU_RU_LOCALE
+	QTranslator appTranslator;
+	appTranslator.load("../../source/Translation/naturalcalculator_ru");
+	app.installTranslator(&appTranslator);
+#endif
+
+	MainWindow mainWindow;
+	app.AddFormulaWnd(mainWindow.formulaWnd);
+	mainWindow.show();
+
+	BracesTest bracesTest(&mainWindow);
+	QTest::qExec(&bracesTest, argc, argv);
+	
+	return 0;
+}
+#else
 /**
  * Main entry-point for this application.
  * @param argc Number of command-line arguments.
@@ -27,3 +52,4 @@ int main(int argc, char *argv[])
 	
 	return app.exec();
 }
+#endif

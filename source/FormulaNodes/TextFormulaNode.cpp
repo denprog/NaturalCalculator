@@ -239,6 +239,13 @@ void TextFormulaNode::Parse(ParserString& expr)
 	expr.Add(GetText().toUtf8().data(), this);
 }
 
+#ifdef TEST
+void TextFormulaNode::ParseStructure(QString& res)
+{
+	res += GetText().toUtf8().data();
+}
+#endif
+
 bool TextFormulaNode::DoInsertNode(NodeEvent& nodeEvent)
 {
 	return false;
@@ -673,6 +680,8 @@ bool TextFormulaNode::DoCreateLeftBraceFormulaNode(NodeEvent& nodeEvent)
 	FormulaNode* expr = d->GetExpression(0);
 	for (int i = pos; i < node->ChildrenCount();)
 		expr->MoveChild((*node)[pos], expr->ChildrenCount());
+	if (expr->ChildrenCount() == 0)
+		expr->AddChild(new EmptyFormulaNode(expr));
 	node->InsertChild(d, pos);
 
 	command->SetParam(this, "pos", CaretState(d, pos));
@@ -782,6 +791,8 @@ bool TextFormulaNode::DoCreateRightBraceFormulaNode(NodeEvent& nodeEvent)
 	FormulaNode* expr = d->GetExpression(0);
 	for (int i = pos - 1; i >= 0; --i)
 		expr->MoveChild((*node)[i], 0);
+	if (expr->ChildrenCount() == 0)
+		expr->AddChild(new EmptyFormulaNode(expr));
 	node->InsertChild(d, 0);
 
 	command->SetParam(this, "pos", CaretState(d, pos));
@@ -818,14 +829,13 @@ bool TextFormulaNode::UndoCreateRightBraceFormulaNode(NodeEvent& nodeEvent)
 		return true;
 	}
 
-	FormulaNode* b = GetParent()->GetParent()->GetParent();
-	FormulaNode* node = (*b)[0];
+	FormulaNode* node = bracesPos.GetNode();
 
 	//move the braces' child nodes back in the parent
 	FormulaNode* expr = node->GetExpression(0);
 	for (int i = expr->ChildrenCount() - 1; i >= 0; --i)
-		b->MoveChild((*expr)[i], 1);
-	b->RemoveChild(0);
+		node->GetParent()->MoveChild((*expr)[i], 1);
+	node->GetParent()->RemoveChild(0);
 	
 	return true;
 }	

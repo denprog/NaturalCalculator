@@ -20,6 +20,7 @@ public:
 
 public:
 	friend class FormulaWnd;
+	friend class Tests;
 
 public:
 	virtual void closeEvent(QCloseEvent* event);

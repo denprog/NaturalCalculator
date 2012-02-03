@@ -29,6 +29,13 @@ FormulaNode* ShapeFormulaNode::Clone(FormulaNode* p)
 	return new ShapeFormulaNode(p, wnd);
 }
 
+#ifdef TEST
+void ShapeFormulaNode::ParseStructure(QString& res)
+{
+	res += "s";
+}
+#endif
+
 /**
  * Adds a line.
  * @param x1 The first x value.

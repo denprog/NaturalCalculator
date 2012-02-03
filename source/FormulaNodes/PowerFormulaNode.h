@@ -40,6 +40,10 @@ public:
 
 	virtual void Parse(ParserString& expr);
 
+#ifdef TEST
+	void ParseStructure(QString& res);
+#endif
+
 private:
 	ShapeFormulaNode* shape;
 };

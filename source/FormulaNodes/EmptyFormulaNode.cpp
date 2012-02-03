@@ -62,6 +62,13 @@ FormulaNode* EmptyFormulaNode::Clone(FormulaNode* p)
 	return new EmptyFormulaNode(p);
 }
 
+#ifdef TEST
+void EmptyFormulaNode::ParseStructure(QString& res)
+{
+	res += "e";
+}
+#endif
+
 /**
  * Gets the next caret position of the node.
  * @param [in,out] relativeState State of the relative.

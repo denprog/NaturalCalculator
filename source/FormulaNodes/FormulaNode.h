@@ -103,6 +103,9 @@ public:
 	virtual void Render();
 	
 	virtual void Parse(ParserString& expr);
+#ifdef TEST
+	virtual void ParseStructure(QString& res);
+#endif
 	
 	int GetChildPos(const FormulaNode* node) const;
 	bool IsChild(const FormulaNode* node);

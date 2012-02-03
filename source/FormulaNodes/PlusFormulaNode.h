@@ -29,6 +29,9 @@ public:
 	virtual void UpdateBoundingRect();
 
 	virtual void Parse(ParserString& expr);
+#ifdef TEST
+	virtual void ParseStructure(QString& res);
+#endif
 
 	virtual FormulaNode* Clone(FormulaNode* p);
 };

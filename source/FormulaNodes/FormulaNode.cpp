@@ -291,6 +291,17 @@ void FormulaNode::Parse(ParserString& expr)
 	}
 }
 
+#ifdef TEST
+void FormulaNode::ParseStructure(QString& res)
+{
+	for (int i = 0; i < childNodes->Count(); ++i)
+	{
+		FormulaNode* n = (*this)[i];
+		n->ParseStructure(res);
+	}
+}
+#endif
+
 /**
  * Gets a child position of a node.
  * @param [in,out] node The node.

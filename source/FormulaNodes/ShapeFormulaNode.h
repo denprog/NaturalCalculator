@@ -32,6 +32,10 @@ private:
 public:
 	virtual FormulaNode* Clone(FormulaNode* p);
 
+#ifdef TEST
+	virtual void ParseStructure(QString& res);
+#endif
+
 	void AddLine(qreal x1, qreal y1, qreal x2, qreal y2, QColor& color);
 	void AddRect(qreal x, qreal y, qreal width, qreal height, QColor& color);
 	void AddFillRect(qreal x, qreal y, qreal width, qreal height, QColor& color, qreal opacity = 1.0);

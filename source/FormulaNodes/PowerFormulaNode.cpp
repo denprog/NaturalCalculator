@@ -75,3 +75,16 @@ void PowerFormulaNode::Parse(ParserString& expr)
 	(*this)[2]->Parse(expr);
 	expr.Add(")", this);
 }
+
+#ifdef TEST
+void PowerFormulaNode::ParseStructure(QString& res)
+{
+	res += "pow(";
+	for (int i = 0; i < childNodes->Count(); ++i)
+	{
+		FormulaNode* n = (*this)[i];
+		n->ParseStructure(res);
+	}
+	res += ")";
+}
+#endif

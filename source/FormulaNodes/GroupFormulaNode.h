@@ -40,6 +40,10 @@ public:
 
 	virtual FormulaNode* Clone(FormulaNode* p);
 
+#ifdef TEST
+	virtual void ParseStructure(QString& res);
+#endif
+
 	virtual ShapeFormulaNode* AddShapeNode();
 	virtual ShapeFormulaNode* InsertShapeNode(int pos);
 

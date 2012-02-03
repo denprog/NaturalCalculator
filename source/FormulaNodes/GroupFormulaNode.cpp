@@ -85,6 +85,19 @@ FormulaNode* GroupFormulaNode::Clone(FormulaNode* p)
 	return res;
 }
 
+#ifdef TEST
+void GroupFormulaNode::ParseStructure(QString& res)
+{
+	res += "g(";
+	for (int i = 0; i < childNodes->Count(); ++i)
+	{
+		FormulaNode* n = (*this)[i];
+		n->ParseStructure(res);
+	}
+	res += ")";
+}
+#endif
+
 /**
  * Adds a shape node.
  * @return The shape node.

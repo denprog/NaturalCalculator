@@ -32,6 +32,10 @@ public:
 
 	virtual FormulaNode* Clone(FormulaNode* p);
 
+#ifdef TEST
+	virtual void ParseStructure(QString& res);
+#endif
+
 	virtual SharedCaretState GetNextPosition(SharedCaretState& relativeState = SharedCaretState());
 	
 	virtual bool IsEmptySymbol();
