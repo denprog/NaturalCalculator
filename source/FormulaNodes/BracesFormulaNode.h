@@ -34,7 +34,8 @@ private:
 
 public:
 	virtual void Remake();
-	virtual void UpdateBoundingRect();
+
+	virtual bool CanInsert(int pos);
 
 	virtual FormulaNode* GetExpression(int pos) const;
 	virtual void ShowShape(int pos, bool show);
@@ -42,29 +43,15 @@ public:
 
 	virtual FormulaNode* Clone(FormulaNode* p);
 
+	SharedCaretState GetLastPosition();
+
 	virtual void Parse(ParserString& expr);
 #ifdef TEST
 	virtual void ParseStructure(QString& res);
 #endif
 
-	//virtual void RenderCaret(const int pos, const int anchor);
-	
 	//command functions
 	virtual bool DoRemoveItem(NodeEvent& nodeEvent);
-
-//public:
-//	bool GetLeftShape()
-//	{
-//		return leftShape != NULL;
-//	}
-//	
-//	bool GetRightShape()
-//	{
-//		return rightShape != NULL;
-//	}
-//	
-//	void SetLeftShape(bool setShape);
-//	void SetRightShape(bool setShape);
 	
 private:
 	ShapeFormulaNode *leftShape, *rightShape;

@@ -133,15 +133,50 @@ int FormulaNode::ChildrenCount()
 	return childNodes->Count();
 }
 
+/**
+ * Queries if one can insert a node or a text.
+ * @param pos The position.
+ * @return true if it succeeds, false if it fails.
+ */
+bool FormulaNode::CanInsert(int pos)
+{
+	return true;
+}
+
+/**
+ * Queries if one can remove a node or a text.
+ * @param pos The position.
+ * @return true if it succeeds, false if it fails.
+ */
+bool FormulaNode::CanRemove(int pos)
+{
+	return true;
+}
+
+/**
+ * Returns an expression at the pos.
+ * @param pos The position.
+ * @return null if it fails, else the expression.
+ */
 FormulaNode* FormulaNode::GetExpression(int pos) const
 {
 	return NULL;
 }
 
+/**
+ * Shows the shape at the pos.
+ * @param pos The position.
+ * @param show true to show, false to hide.
+ */
 void FormulaNode::ShowShape(int pos, bool show)
 {
 }
 
+/**
+ * Query if a shape is visible at the pos.
+ * @param pos The position.
+ * @return true if shape visible, false if not.
+ */
 bool FormulaNode::IsShapeVisible(int pos) const
 {
 	return false;
@@ -869,10 +904,10 @@ bool FormulaNode::DoCreateLeftBraceFormulaNode(NodeEvent& nodeEvent)
 	command = any_cast<Command*>(nodeEvent["command"]);
 	int pos = c->GetPos();
 	
-	if (dynamic_cast<BracesFormulaNode*>(node->GetParent()))
+	if (dynamic_cast<BracesFormulaNode*>(node->GetParent()) && node->GetParent()->IsShapeVisible(1))
 	{
 		FormulaNode* p = node->GetParent()->GetParent();
-		//this is a braces node with a left brace, set a right brace
+		//this is a braces node with a right brace, set a left brace
 		command->SetParam(p, "setLeft", pos);
 		node->GetParent()->ShowShape(0, true);
 		
@@ -951,7 +986,7 @@ bool FormulaNode::DoCreateRightBraceFormulaNode(NodeEvent& nodeEvent)
 	int pos = c->GetPos();
 	FormulaNode* node = c->GetNode();
 	
-	if (dynamic_cast<BracesFormulaNode*>(node->GetParent()))
+	if (dynamic_cast<BracesFormulaNode*>(node->GetParent()) && node->GetParent()->IsShapeVisible(0))
 	{
 		FormulaNode* b = node->GetParent();
 		FormulaNode* p = b->GetParent();

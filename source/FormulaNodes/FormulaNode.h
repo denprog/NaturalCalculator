@@ -81,6 +81,9 @@ public:
 	virtual void ReplaceChild(FormulaNode* node, int pos);
 	virtual int ChildrenCount();
 	
+	virtual bool CanInsert(int pos);
+	virtual bool CanRemove(int pos);
+	
 	virtual FormulaNode* GetExpression(int pos) const;
 	virtual void ShowShape(int pos, bool show);
 	virtual bool IsShapeVisible(int pos) const;

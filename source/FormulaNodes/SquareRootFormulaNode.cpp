@@ -62,6 +62,16 @@ void SquareRootFormulaNode::Remake()
 }
 
 /**
+ * One cannot insert a node into this node's child nodes, only into the expression.
+ * @param pos The position.
+ * @return false.
+ */
+bool SquareRootFormulaNode::CanInsert(int pos)
+{
+	return false;
+}
+
+/**
  * Parses child node and adds the function call.
  * @param [in,out] expr The expression.
  */
@@ -71,6 +81,15 @@ void SquareRootFormulaNode::Parse(ParserString& expr)
 	(*this)[1]->Parse(expr);
 	expr.Add(")", this);
 }
+
+#ifdef TEST
+void SquareRootFormulaNode::ParseStructure(QString& res)
+{
+	res += "sqrt(";
+	(*this)[1]->ParseStructure(res);
+	res += ")";
+}
+#endif
 
 /**
  * Updates the bounding rectangle.

@@ -101,6 +101,16 @@ void DivisionFormulaNode::UpdateBoundingRect()
 }
 
 /**
+ * One cannot insert a node into this node's child nodes, only into the expression.
+ * @param pos The position.
+ * @return false.
+ */
+bool DivisionFormulaNode::CanInsert(int pos)
+{
+	return false;
+}
+
+/**
  * Parses the child nodes and makes output expression.
  * @param [in,out] expr The expression.
  */
@@ -112,6 +122,18 @@ void DivisionFormulaNode::Parse(ParserString& expr)
 	(*this)[2]->Parse(expr);
 	expr.Add(")", this);
 }
+
+#ifdef TEST
+void DivisionFormulaNode::ParseStructure(QString& res)
+{
+	res += "g(";
+	(*this)[0]->ParseStructure(res);
+	(*this)[1]->ParseStructure(res);
+	res += "/";
+	(*this)[2]->ParseStructure(res);
+	res += ")";
+}
+#endif
 
 /**
  * Makes a deep copy of this object.

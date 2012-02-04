@@ -14,9 +14,9 @@ CommandManager::~CommandManager()
 bool CommandManager::InsertNode(FormulaNode* node, CommandAction doAction, bool commit)
 {
 	SharedCaretState caretState = SharedCaretState(wnd->GetCaret()->currentState->Dublicate());
-	//if (!doAction)
-	//	doAction = &FormulaNode::DoInsertNode;
-
+	if (!caretState->GetNode()->CanInsert(caretState->GetPos()))
+		return false;
+	
 	NodeEvent nodeEvent;
 	nodeEvent["node"] = node;
 	
@@ -47,6 +47,9 @@ bool CommandManager::InsertNode(FormulaNode* node, CommandAction doAction, bool 
 bool CommandManager::InsertText(QString& text, CommandAction doAction, bool commit)
 {
 	SharedCaretState caretState = SharedCaretState(wnd->GetCaret()->currentState->Dublicate());
+	if (!caretState->GetNode()->CanInsert(caretState->GetPos()))
+		return false;
+	
 	NodeEvent nodeEvent;
 	nodeEvent["text"] = text;
 
@@ -56,6 +59,9 @@ bool CommandManager::InsertText(QString& text, CommandAction doAction, bool comm
 bool CommandManager::InsertLine(bool commit)
 {
 	SharedCaretState caretState = SharedCaretState(wnd->GetCaret()->currentState->Dublicate());
+	if (!caretState->GetNode()->CanInsert(caretState->GetPos()))
+		return false;
+	
 	NodeEvent nodeEvent;
 	CommandAction doAction(caretState, &FormulaNode::DoInsertLine);
 	
@@ -65,6 +71,9 @@ bool CommandManager::InsertLine(bool commit)
 bool CommandManager::Remove(bool right, bool commit)
 {
 	SharedCaretState caretState = SharedCaretState(wnd->GetCaret()->currentState->Dublicate());
+	if (!caretState->GetNode()->CanRemove(caretState->GetPos()))
+		return false;
+	
 	NodeEvent nodeEvent;
 	nodeEvent["right"] = right;
 

@@ -657,10 +657,10 @@ bool TextFormulaNode::DoCreateLeftBraceFormulaNode(NodeEvent& nodeEvent)
 	if (c->GetPos() == GetText().length())
 		++pos;
 	
-	if (dynamic_cast<BracesFormulaNode*>(node->GetParent()))
+	if (dynamic_cast<BracesFormulaNode*>(node->GetParent()) && node->GetParent()->IsShapeVisible(1))
 	{
 		FormulaNode* p = node->GetParent()->GetParent();
-		//this is a braces node with a left brace, set a right brace
+		//this is a braces node with a right brace, set a left brace
 		command->SetParam(p, "setLeft", pos);
 		node->GetParent()->ShowShape(0, true);
 		
@@ -747,7 +747,7 @@ bool TextFormulaNode::DoCreateRightBraceFormulaNode(NodeEvent& nodeEvent)
 	if (c->GetPos() == GetText().length())
 		++pos;
 	
-	if (dynamic_cast<BracesFormulaNode*>(node->GetParent()))
+	if (dynamic_cast<BracesFormulaNode*>(node->GetParent()) && node->GetParent()->IsShapeVisible(0))
 	{
 		FormulaNode* b = node->GetParent();
 		FormulaNode* p = b->GetParent();
@@ -761,7 +761,7 @@ bool TextFormulaNode::DoCreateRightBraceFormulaNode(NodeEvent& nodeEvent)
 			p->MoveChild((*node)[i], p->ChildrenCount());
 
 		command->SetParam(this, "pos", CaretState(node->GetParent(), pos));
-		nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreateRightBraceFormulaNode);
+		nodeEvent["undoAction"] = CommandAction(this, 0, b, &FormulaNode::UndoCreateRightBraceFormulaNode);
 		c->SetToNode(p, j + 1);
 	
 		return true;
@@ -776,7 +776,7 @@ bool TextFormulaNode::DoCreateRightBraceFormulaNode(NodeEvent& nodeEvent)
 			command->SetParam(this, "setRight", pos - 1);
 			n->ShowShape(1, true);
 
-			nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreateRightBraceFormulaNode);
+			nodeEvent["undoAction"] = CommandAction(this, 0, n, &FormulaNode::UndoCreateRightBraceFormulaNode);
 			c->SetToNodeEnd(this);
 			
 			return true;
@@ -792,8 +792,7 @@ bool TextFormulaNode::DoCreateRightBraceFormulaNode(NodeEvent& nodeEvent)
 		expr->AddChild(new EmptyFormulaNode(expr));
 	node->InsertChild(d, 0);
 
-	command->SetParam(this, "pos", CaretState(d, pos));
-	nodeEvent["undoAction"] = CommandAction(this, 1, &FormulaNode::UndoCreateRightBraceFormulaNode);
+	nodeEvent["undoAction"] = CommandAction(this, 1, d, &FormulaNode::UndoCreateRightBraceFormulaNode);
 	c->SetToNode(node, 1);
 	
 	return true;
@@ -808,11 +807,11 @@ bool TextFormulaNode::UndoCreateRightBraceFormulaNode(NodeEvent& nodeEvent)
 {
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	command = any_cast<Command*>(nodeEvent["command"]);
-	CaretState bracesPos = any_cast<CaretState>(command->GetParam(this, "pos"));
+	SharedCaretState bracesPos = any_cast<SharedCaretState>(nodeEvent["actionNode"]);
+	BracesFormulaNode* node = (BracesFormulaNode*)bracesPos->GetCurrentNode();
 	
-	if (command->ContainsParam(bracesPos.GetNode()->GetParent(), "setRight"))
+	if (command->ContainsParam(node->GetParent(), "setRight"))
 	{
-		BracesFormulaNode* node = (BracesFormulaNode*)bracesPos.GetNode();
 		FormulaNode* p = node->GetParent();
 		//clear the right brace
 		int pos = any_cast<int>(command->GetParam(p, "setRight"));
@@ -826,13 +825,15 @@ bool TextFormulaNode::UndoCreateRightBraceFormulaNode(NodeEvent& nodeEvent)
 		return true;
 	}
 
-	FormulaNode* node = bracesPos.GetNode();
-
 	//move the braces' child nodes back in the parent
+	FormulaNode* p = node->GetParent();
 	FormulaNode* expr = node->GetExpression(0);
-	for (int i = expr->ChildrenCount() - 1; i >= 0; --i)
-		node->GetParent()->MoveChild((*expr)[i], 1);
-	node->GetParent()->RemoveChild(0);
+	if (!expr->IsEmptySymbol() || p->ChildrenCount() == 1)
+	{
+		for (int i = expr->ChildrenCount() - 1; i >= 0; --i)
+			p->MoveChild((*expr)[i], 1);
+	}
+	p->RemoveChild(0);
 	
 	return true;
 }	

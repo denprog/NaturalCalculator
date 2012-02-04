@@ -40,7 +40,12 @@ public:
 	virtual void Remake();
 	virtual void UpdateBoundingRect();
 
+	virtual bool CanInsert(int pos);
+
 	virtual void Parse(ParserString& expr);
+#ifdef TEST
+	virtual void ParseStructure(QString& res);
+#endif
 
 	virtual FormulaNode* Clone(FormulaNode* p);
 

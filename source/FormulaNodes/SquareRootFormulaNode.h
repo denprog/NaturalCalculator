@@ -37,9 +37,14 @@ public:
 	virtual void Remake();
 	virtual void UpdateBoundingRect();
 
+	virtual bool CanInsert(int pos);
+
 	virtual FormulaNode* Clone(FormulaNode* p);
 
 	virtual void Parse(ParserString& expr);
+#ifdef TEST
+	virtual void ParseStructure(QString& res);
+#endif
 	
 	virtual void RenderCaret(const int pos, const int anchor);
 	

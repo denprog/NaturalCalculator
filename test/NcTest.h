@@ -6,10 +6,17 @@
 #include "../../source/Main/MainWindow.h"
 #include "../../source/Main/FormulaWnd.h"
 
+/**
+ * The base class for NC's tests.
+ */
 class NcTest : public QObject
 {
 public:
-	NcTest(MainWindow* _mainWindow) : mainWindow(_mainWindow), wnd(_mainWindow->formulaWnd)
+	/**
+	 * Constructor.
+	 * @param [in] _mainWindow The main window.
+	 */
+	NcTest(MainWindow* _mainWindow) : mainWindow(_mainWindow), wnd(_mainWindow->formulaWnd), doc(wnd->GetDocumentNode())
 	{
 	}
 
@@ -26,6 +33,7 @@ protected:
 protected:
 	MainWindow* mainWindow;
 	FormulaWnd* wnd;
+	DocumentFormulaNode* doc;
 };
 
 #endif

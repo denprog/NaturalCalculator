@@ -84,15 +84,20 @@ void BracesFormulaNode::Remake()
 }
 
 /**
- * Updates the bounding rectangle.
+ * One cannot insert a node into this node's child nodes, only into the expression.
+ * @param pos The position.
+ * @return false.
  */
-void BracesFormulaNode::UpdateBoundingRect()
+bool BracesFormulaNode::CanInsert(int pos)
 {
-	//boundingRect = leftShape->GetBoundingRect();
-	//boundingRect.moveTo(item->pos().x(), item->pos().y());
-	CompoundFormulaNode::UpdateBoundingRect();
+	return false;
 }
 
+/**
+ * Returns an expression of the node.
+ * @param pos The position.
+ * @return null if it fails, else the expression.
+ */
 FormulaNode* BracesFormulaNode::GetExpression(int pos) const
 {
 	assert(pos == 0);
@@ -100,6 +105,11 @@ FormulaNode* BracesFormulaNode::GetExpression(int pos) const
 	return (*this)[IsShapeVisible(0) ? 1 : 0];
 }
 
+/**
+ * Shows the shape.
+ * @param pos The position.
+ * @param show true to show, false to hide.
+ */
 void BracesFormulaNode::ShowShape(int pos, bool show)
 {
 	assert(pos <= 1);
@@ -118,6 +128,11 @@ void BracesFormulaNode::ShowShape(int pos, bool show)
 	}
 }
 
+/**
+ * Query if a shape is visible at the pos.
+ * @param pos The position.
+ * @return true if shape visible, false if not.
+ */
 bool BracesFormulaNode::IsShapeVisible(int pos) const
 {
 	assert(pos <= 1);
@@ -138,6 +153,17 @@ FormulaNode* BracesFormulaNode::Clone(FormulaNode* p)
 	res->InsertChild(GetExpression(0)->Clone(res), IsShapeVisible(0) ? 1 : 0);
 	
 	return res;
+}
+
+/**
+ * Returns the last position of the caret.
+ * @return The last position.
+ */
+SharedCaretState BracesFormulaNode::GetLastPosition()
+{
+	if (rightShape)
+		return SharedCaretState(new CaretState(rightShape));
+	return GetExpression(0)->GetLastPosition();
 }
 
 /**
@@ -169,35 +195,6 @@ void BracesFormulaNode::ParseStructure(QString& res)
 #endif
 	
 /**
- * Renders the caret.
- * @param pos	The position.
- * @param anchor The anchor.
- */
-//void BracesFormulaNode::RenderCaret(const int pos, const int anchor)
-//{
-//	if (pos == 0)
-//	{
-//		//draw the caret on the shape
-//		QRectF r = GetDocumentPosBounds(pos);
-//		int cx = (*this)[1]->GetBoundingRect().height() * 5 / 11;
-//		
-//		QGraphicsItemGroup* g = wnd->GetCaret()->caretShape;
-//		
-//		qDeleteAll(g->childItems());
-//		g->childItems().clear();
-//		
-//		QGraphicsLineItem* i = new QGraphicsLineItem(r.left(), r.top(), r.left(), r.bottom(), g);
-//		i->setPen(QPen("red"));
-//		g->addToGroup(i);
-//		i = new QGraphicsLineItem(r.left(), r.bottom(), r.left() + cx, r.bottom(), g);
-//		i->setPen(QPen("red"));
-//		g->addToGroup(i);
-//	}
-//	else
-//		CompoundFormulaNode::RenderCaret(pos, anchor);
-//}
-	
-/**
  * Executes the remove item operation.
  * @param [in,out] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
@@ -206,33 +203,3 @@ bool BracesFormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
 {
 	return false;
 }
-
-//void BracesFormulaNode::SetLeftShape(bool setShape)
-//{
-//	assert(GetLeftShape() != setShape);
-//	
-//	if (setShape)
-//	{
-//		leftShape = InsertShapeNode(0);
-//	}
-//	else
-//	{
-//		RemoveChild(0);
-//		leftShape = NULL;
-//	}
-//}
-//
-//void BracesFormulaNode::SetRightShape(bool setShape)
-//{
-//	assert(GetRightShape() != setShape);
-//	
-//	if (setShape)
-//	{
-//		rightShape = InsertShapeNode(GetLeftShape() ? 2 : 1);
-//	}
-//	else
-//	{
-//		RemoveChild(GetLeftShape() ? 2 : 1);
-//		rightShape = NULL;
-//	}
-//}
