@@ -24,6 +24,15 @@ CaretState::CaretState(FormulaNode* node, int pos)
 }
 
 /**
+ * Constructor.
+ * @param [in] node The node being set the caret to.
+ */
+CaretState::CaretState(FormulaNode* node)
+{
+	currentNode = new CurrentNode(node->GetParent(), node->GetParent()->GetChildPos(node));
+}
+
+/**
  * Copy constructor.
  * @param source Source for the caret state.
  */
@@ -56,10 +65,10 @@ void CaretState::SetState(CaretState& state)
  */
 void CaretState::SetToNode(FormulaNode* node, int pos)
 {
-	//if (!dynamic_cast<TextFormulaNode*>(node) && node->GetChildNodes()->Count() > pos && dynamic_cast<TextFormulaNode*>((*node)[pos]))
-	//	currentNode->SetNodePos((*node)[pos], 0);
-	//else
-	currentNode->SetNodePos(node, pos);
+	if (!dynamic_cast<TextFormulaNode*>(node) && node->GetChildNodes()->Count() > pos && dynamic_cast<TextFormulaNode*>((*node)[pos]))
+		currentNode->SetNodePos((*node)[pos], 0);
+	else
+		currentNode->SetNodePos(node, pos);
 }
 	
 void CaretState::SetToNodeBegin(FormulaNode* node)
@@ -90,6 +99,25 @@ int CaretState::GetPos()
 	if (!currentNode)
 		return -1;
 	return currentNode->GetPos();
+}
+
+/**
+ * Gets the current node.
+ * @return null if it fails, else the current node.
+ */
+FormulaNode* CaretState::GetCurrentNode()
+{
+	if (!currentNode)
+		return NULL;
+	FormulaNode* node = currentNode->GetNode();
+	int pos = currentNode->GetPos();
+	if (!dynamic_cast<TextFormulaNode*>(node))
+	{
+		if (pos < node->GetChildNodes()->Count())
+			return (*node)[pos];
+		return (*node)[pos - 1];
+	}
+	return node;
 }
 
 /**
@@ -162,7 +190,7 @@ CaretState* CaretState::Dublicate()
 /**
  * Default constructor.
  */
-CaretPosition::CaretPosition()
+CaretPosition::CaretPosition() : wnd(NULL)
 {
 }
 
@@ -180,6 +208,8 @@ CaretPosition::~CaretPosition()
  */
 void CaretPosition::SetNodePos(FormulaNode* node, int pos)
 {
+	if (!node)
+		return;
 	wnd = node->wnd;
 	positions.clear();
 	positions.push_back(pos);
@@ -209,6 +239,8 @@ FormulaNode* CaretPosition::GetNode()
  */
 int CaretPosition::GetPos()
 {
+	if (positions.size() == 0)
+		return -1;
 	return positions[0];
 }
 

@@ -668,8 +668,7 @@ bool TextFormulaNode::DoCreateLeftBraceFormulaNode(NodeEvent& nodeEvent)
 		for (int i = pos - 1; i >= 0; --i)
 			p->MoveChild((*node)[i], 0);
 
-		command->SetParam(this, "pos", CaretState(node->GetParent(), pos));
-		nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreateLeftBraceFormulaNode);
+		nodeEvent["undoAction"] = CommandAction(this, 0, node->GetParent(), &FormulaNode::UndoCreateLeftBraceFormulaNode);
 		c->SetToNode(p, pos);
 	
 		return true;
@@ -684,8 +683,7 @@ bool TextFormulaNode::DoCreateLeftBraceFormulaNode(NodeEvent& nodeEvent)
 		expr->AddChild(new EmptyFormulaNode(expr));
 	node->InsertChild(d, pos);
 
-	command->SetParam(this, "pos", CaretState(d, pos));
-	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreateLeftBraceFormulaNode);
+	nodeEvent["undoAction"] = CommandAction(this, 0, d, &FormulaNode::UndoCreateLeftBraceFormulaNode);
 	c->SetToNode(expr, 0);
 	
 	return true;
@@ -701,11 +699,11 @@ bool TextFormulaNode::UndoCreateLeftBraceFormulaNode(NodeEvent& nodeEvent)
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	command = any_cast<Command*>(nodeEvent["command"]);
 	FormulaNode* n = c->GetNode();
-	CaretState bracesPos = any_cast<CaretState>(command->GetParam(this, "pos"));
+	SharedCaretState bracesPos = any_cast<SharedCaretState>(nodeEvent["actionNode"]);
+	BracesFormulaNode* node = (BracesFormulaNode*)bracesPos->GetCurrentNode();
 	
-	if (command->ContainsParam(bracesPos.GetNode()->GetParent(), "setLeft"))
+	if (command->ContainsParam(node->GetParent(), "setLeft"))
 	{
-		BracesFormulaNode* node = (BracesFormulaNode*)bracesPos.GetNode();
 		FormulaNode* p = node->GetParent();
 		//clear the left brace
 		int pos = any_cast<int>(command->GetParam(p, "setLeft"));
@@ -719,11 +717,10 @@ bool TextFormulaNode::UndoCreateLeftBraceFormulaNode(NodeEvent& nodeEvent)
 		
 		return true;
 	}
-	
-	BracesFormulaNode* node = (BracesFormulaNode*)c->GetNode()->GetParent();
+
+	FormulaNode* expr = node->GetExpression(0);
 	FormulaNode* p = node->GetParent();
 	int pos = p->GetFirstLevelChildPos(node);
-	FormulaNode* expr = node->GetExpression(0);
 
 	if (!expr->IsEmptySymbol() || p->ChildrenCount() == 1)
 	{

@@ -14,44 +14,15 @@ typedef boost::function<bool (FormulaNode*, NodeEvent&)> CommandFunc;
  */
 struct CommandAction
 {
-	/**
-	 * Default constructor.
-	 */
-	CommandAction()
-	{
-	}
+	CommandAction();
+	CommandAction(FormulaNode* node, int pos, boost::function<bool (FormulaNode*, NodeEvent&)> _action);
+	CommandAction(SharedCaretState _caretState, boost::function<bool (FormulaNode*, NodeEvent&)> _action);
+	CommandAction(FormulaNode* node, int pos, FormulaNode* _actionNode, boost::function<bool (FormulaNode*, NodeEvent&)> _action);
 	
-	/**
-	 * Constructor.
-	 * @param [in] node	The parent node.
-	 * @param pos	The caret position.
-	 * @param [in] _action The action's method.
-	 */
-	CommandAction(FormulaNode* node, int pos, boost::function<bool (FormulaNode*, NodeEvent&)> _action) : 
-		caretState(new CaretState(node, pos)), action(_action)
-	{
-	}
-
-	/**
-	 * Constructor.
-	 * @param _caretState	State of the caret.
-	 * @param [in] _action The action's method.
-	 */
-	CommandAction(SharedCaretState _caretState, boost::function<bool (FormulaNode*, NodeEvent&)> _action) : 
-		caretState(_caretState->Dublicate()), action(_action)
-	{
-	}
-	
-	/**
-	 * The functor for executing an action.
-	 * @param nodeEvent The node event
-	 */
-	bool operator()(NodeEvent& nodeEvent)
-	{
-		return action(caretState->GetNode(), nodeEvent);
-	}
+	bool operator()(NodeEvent& nodeEvent);
 	
 	SharedCaretState caretState;	///< State of the caret
+	SharedCaretState actionNode;	///< The action node
 	boost::function<bool (FormulaNode*, NodeEvent&)> action; ///< The action's method
 };
 

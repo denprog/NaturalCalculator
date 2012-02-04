@@ -23,6 +23,7 @@ class CaretState
 public:
 	CaretState();
 	CaretState(FormulaNode* node, int pos);
+	CaretState(FormulaNode* node);
 	CaretState(const CaretState& source);
 	~CaretState();
 	
@@ -34,6 +35,7 @@ public:
 
 	FormulaNode* GetNode();
 	int GetPos();
+	FormulaNode* GetCurrentNode();
 
 	//bool Empty();
 	
