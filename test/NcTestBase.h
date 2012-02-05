@@ -9,14 +9,14 @@
 /**
  * The base class for NC's tests.
  */
-class NcTest : public QObject
+class NcTestBase : public QObject
 {
 public:
 	/**
 	 * Constructor.
 	 * @param [in] _mainWindow The main window.
 	 */
-	NcTest(MainWindow* _mainWindow) : mainWindow(_mainWindow), wnd(_mainWindow->formulaWnd), doc(wnd->GetDocumentNode())
+	NcTestBase(MainWindow* _mainWindow) : mainWindow(_mainWindow), wnd(_mainWindow->formulaWnd), doc(wnd->GetDocumentNode())
 	{
 	}
 

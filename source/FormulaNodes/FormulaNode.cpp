@@ -56,7 +56,10 @@ FormulaNode::~FormulaNode()
 	if (command)
 	{
 		if (command->ContainsParam(this, "node"))
+		{
 			delete any_cast<FormulaNode*>(command->GetParam(this, "node"));
+			command->RemoveParam(this, "node");
+		}
 	}
 	
 	childNodes->Clear();

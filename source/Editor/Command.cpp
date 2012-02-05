@@ -72,6 +72,11 @@ Command::Command(SharedCaretState _caretState, CommandAction _doAction, NodeEven
  */
 Command::~Command()
 {
+	for (QMap<vector<int>, QMap<QString, boost::any> >::iterator iter = params.begin(); iter != params.end(); ++iter)
+	{
+		if (iter.value().contains("node"))
+			delete any_cast<FormulaNode*>(iter.value()["node"]);
+	}
 }
 
 /**

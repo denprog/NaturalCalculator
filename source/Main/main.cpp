@@ -8,7 +8,9 @@
 #ifdef TEST
 
 #include <QtTest/QtTest>
-#include "../../test/BracesTest.h"
+//#include "../../test/TextTest.h"
+//#include "../../test/BracesTest.h"
+#include "../../test/NcTests.h"
 
 int main(int argc, char *argv[])
 {
@@ -24,8 +26,12 @@ int main(int argc, char *argv[])
 	app.AddFormulaWnd(mainWindow.formulaWnd);
 	mainWindow.show();
 
-	BracesTest bracesTest(&mainWindow);
-	QTest::qExec(&bracesTest, argc, argv);
+	//TextTest textTest(&mainWindow);
+	//QTest::qExec(&textTest, argc, argv);
+	//BracesTest bracesTest(&mainWindow);
+	//QTest::qExec(&bracesTest);
+	NcTests ncTest(&mainWindow);
+	QTest::qExec(&ncTest, argc, argv);
 	
 	return 0;
 }

@@ -325,13 +325,21 @@ bool TextFormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
 			text = text.left(pos) + text.right(text.length() - pos - 1);
 			if (text == "")
 			{
-				int p = parent->GetFirstLevelChildPos(this);
-				command->SetParam(parent, "node", Clone(NULL));
-				if (parent->ChildrenCount() == 1)
-					parent->InsertChild(new EmptyFormulaNode(this), p);
-				nodeEvent["undoAction"] = CommandAction(parent, p, &FormulaNode::UndoRemoveItem);
-				c->SetToNode(parent, p);
-				parent->RemoveChild(parent->GetFirstLevelChildPos(this));
+				int i = parent->GetFirstLevelChildPos(this);
+				FormulaNode* p = parent;
+				command->SetParam(p, "node", Clone(NULL));
+				nodeEvent["undoAction"] = CommandAction(p, i, &FormulaNode::UndoRemoveItem);
+				if (p->ChildrenCount() == 1)
+				{
+					p->InsertChild(new EmptyFormulaNode(this), i++);
+					p->RemoveChild(i);
+					c->SetToNode(p, 0);
+				}
+				else
+				{
+					p->RemoveChild(i);
+					c->SetToNode(p, i);
+				}
 			}
 			else
 			{
@@ -352,13 +360,21 @@ bool TextFormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
 			text = text.left(pos - 1) + text.right(text.length() - pos);
 			if (text == "")
 			{
-				int p = parent->GetFirstLevelChildPos(this);
+				int i = parent->GetFirstLevelChildPos(this);
+				FormulaNode* p = parent;
 				command->SetParam(parent, "node", Clone(NULL));
-				nodeEvent["undoAction"] = CommandAction(parent, p, &FormulaNode::UndoRemoveItem);
-				c->SetToNode(parent, p);
-				if (parent->ChildrenCount() == 1)
-					parent->InsertChild(new EmptyFormulaNode(this), p++);
-				parent->RemoveChild(p);
+				nodeEvent["undoAction"] = CommandAction(p, i, &FormulaNode::UndoRemoveItem);
+				if (p->ChildrenCount() == 1)
+				{
+					p->InsertChild(new EmptyFormulaNode(this), i++);
+					p->RemoveChild(i);
+					c->SetToNode(p, 0);
+				}
+				else
+				{
+					p->RemoveChild(i);
+					c->SetToNode(p, i);
+				}
 			}
 			else
 			{
