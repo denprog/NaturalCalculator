@@ -494,6 +494,26 @@ SharedCaretState FormulaNode::GetPreviousPosition(SharedCaretState& relativeStat
 }
 
 /**
+ * Returns the first caret position of the line.
+ * @param [in,out] relativeState Relative caret state.
+ * @return Result caret state.
+ */
+SharedCaretState FormulaNode::GetLineBegin(SharedCaretState& relativeState)
+{
+	return GetFirstPosition();
+}
+
+/**
+ * Returns the end caret position of the line.
+ * @param [in,out] relativeState Relative caret state.
+ * @return Result caret state.
+ */
+SharedCaretState FormulaNode::GetLineEnd(SharedCaretState& relativeState)
+{
+	return GetLastPosition();
+}
+
+/**
  * Queries if we can set caret on the node.
  * @return true if it succeeds, false if it fails.
  */

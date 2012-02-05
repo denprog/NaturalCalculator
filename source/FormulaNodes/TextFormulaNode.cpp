@@ -166,6 +166,26 @@ SharedCaretState TextFormulaNode::GetPreviousPosition(SharedCaretState& relative
 }
 
 /**
+ * Returns the first caret position of the line.
+ * @param [in,out] relativeState Relative caret state.
+ * @return Result caret state.
+ */
+SharedCaretState TextFormulaNode::GetLineBegin(SharedCaretState& relativeState)
+{
+	return parent->GetLineBegin(relativeState);
+}
+
+/**
+ * Returns the end caret position of the line.
+ * @param [in,out] relativeState Relative caret state.
+ * @return Result caret state.
+ */
+SharedCaretState TextFormulaNode::GetLineEnd(SharedCaretState& relativeState)
+{
+	return parent->GetLineEnd(relativeState);
+}
+
+/**
  * Gets a position bounds relatively to the document.
  * @param pos The position.
  * @return The position bounds.

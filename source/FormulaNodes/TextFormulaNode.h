@@ -4,6 +4,9 @@
 #include <QGraphicsTextItem>
 #include "FormulaNode.h"
 
+/**
+ * Text formula node.
+ */
 class TextFormulaNode : public FormulaNode
 {
 public:
@@ -48,6 +51,8 @@ public:
 	virtual SharedCaretState GetLastPosition();
 	virtual SharedCaretState GetNextPosition(SharedCaretState& relativeState = SharedCaretState());
 	virtual SharedCaretState GetPreviousPosition(SharedCaretState& relativeState = SharedCaretState());
+	virtual SharedCaretState GetLineBegin(SharedCaretState& relativeState);
+	virtual SharedCaretState GetLineEnd(SharedCaretState& relativeState);
 
 	virtual QRectF GetDocumentPosBounds(int pos);
 

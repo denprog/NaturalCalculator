@@ -286,3 +286,27 @@ SharedCaretState GroupFormulaNode::GetPreviousPosition(SharedCaretState& relativ
 	
 	return res;
 }
+
+/**
+ * Returns the first caret position of the line.
+ * @param [in,out] relativeState Relative caret state.
+ * @return Result caret state.
+ */
+SharedCaretState GroupFormulaNode::GetLineBegin(SharedCaretState& relativeState)
+{
+	if (*GetFirstPosition() == *relativeState && parent)
+		return parent->GetLineBegin(relativeState);
+	return GetFirstPosition();
+}
+
+/**
+ * Returns the end caret position of the line.
+ * @param [in,out] relativeState Relative caret state.
+ * @return Result caret state.
+ */
+SharedCaretState GroupFormulaNode::GetLineEnd(SharedCaretState& relativeState)
+{
+	if (*GetLastPosition() == *relativeState && parent)
+		return parent->GetLineEnd(relativeState);
+	return GetLastPosition();
+}

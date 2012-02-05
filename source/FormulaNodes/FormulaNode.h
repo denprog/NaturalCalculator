@@ -127,6 +127,8 @@ public:
 	virtual SharedCaretState GetLastPosition();
 	virtual SharedCaretState GetNextPosition(SharedCaretState& relativeState = SharedCaretState());
 	virtual SharedCaretState GetPreviousPosition(SharedCaretState& relativeState = SharedCaretState());
+	virtual SharedCaretState GetLineBegin(SharedCaretState& relativeState);
+	virtual SharedCaretState GetLineEnd(SharedCaretState& relativeState);
 
 	virtual bool CanSetCaret();
 	

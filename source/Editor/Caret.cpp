@@ -117,10 +117,30 @@ void Caret::MoveDown()
 
 void Caret::MoveHome()
 {
+	FormulaNode* n = currentState->GetNode();
+	if (!n)
+		return;
+	
+	SharedCaretState c = n->GetLineBegin(currentState);
+	if (!c)
+		return;
+	
+	SetState(c);
+	Render();
 }
 
 void Caret::MoveEnd()
 {
+	FormulaNode* n = currentState->GetNode();
+	if (!n)
+		return;
+	
+	SharedCaretState c = n->GetLineEnd(currentState);
+	if (!c)
+		return;
+	
+	SetState(c);
+	Render();
 }
 
 void Caret::TimerUpdate()

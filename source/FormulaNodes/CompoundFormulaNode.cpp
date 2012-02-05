@@ -143,3 +143,35 @@ SharedCaretState CompoundFormulaNode::GetPreviousPosition(SharedCaretState& rela
 	
 	return res;
 }
+
+/**
+ * Returns the first caret position of the line.
+ * @param [in,out] relativeState Relative caret state.
+ * @return Result caret state.
+ */
+SharedCaretState CompoundFormulaNode::GetLineBegin(SharedCaretState& relativeState)
+{
+	for (int i = 0; i < childNodes->Count(); ++i)
+	{
+		SharedCaretState p = (*this)[i]->GetFirstPosition();
+		if (p && *p == *relativeState)
+			return parent->GetLineBegin(relativeState);
+	}
+	return GroupFormulaNode::GetLineBegin(relativeState);
+}
+
+/**
+ * Returns the end caret position of the line.
+ * @param [in,out] relativeState Relative caret state.
+ * @return Result caret state.
+ */
+SharedCaretState CompoundFormulaNode::GetLineEnd(SharedCaretState& relativeState)
+{
+	for (int i = 0; i < childNodes->Count(); ++i)
+	{
+		SharedCaretState p = (*this)[i]->GetLastPosition();
+		if (p && *p == *relativeState)
+			return parent->GetLineEnd(relativeState);
+	}
+	return GroupFormulaNode::GetLineBegin(relativeState);
+}

@@ -102,6 +102,14 @@ void FormulaWnd::keyPressEvent(QKeyEvent* event)
 		caret->MoveRight();
 		EnsureVisible();
 		break;
+	case Qt::Key_Home:
+		caret->MoveHome();
+		EnsureVisible();
+		break;
+	case Qt::Key_End:
+		caret->MoveEnd();
+		EnsureVisible();
+		break;
 	case Qt::Key_Return:
 	case Qt::Key_Enter:
 		if (commandManager.InsertLine())
