@@ -88,9 +88,9 @@ void ShapeFormulaNode::AddFillRect(qreal x, qreal y, qreal width, qreal height, 
  * @param [in] points The points.
  * @param [in] color The color.
  */
-void ShapeFormulaNode::AddPolygon(QVector<QPointF>& points, QColor& color)
+void ShapeFormulaNode::AddPolygon(QVector<QPointF>& points, QColor& color, bool smooth)
 {
-	QGraphicsPolygonItem* i = new QGraphicsPolygonItem(points, item);
+	QGraphicsPolygonItem* i = smooth ? new SmoothGraphicsPolygonItem(points, item) : new QGraphicsPolygonItem(points, item);
 	i->setBrush(QBrush(color));
 	((QGraphicsItemGroup*)item)->addToGroup(i);
 	item->update();
@@ -103,9 +103,9 @@ void ShapeFormulaNode::AddPolygon(QVector<QPointF>& points, QColor& color)
  * @param radius The radius.
  * @param [in,out] color The color.
  */
-void ShapeFormulaNode::AddFillCircle(qreal x, qreal y, qreal radius, QColor& color)
+void ShapeFormulaNode::AddFillCircle(qreal x, qreal y, qreal radius, QColor& color, bool smooth)
 {
-	QGraphicsEllipseItem* i = new QGraphicsEllipseItem(x, y, radius, radius, item);
+	QGraphicsEllipseItem* i = smooth ? new SmoothGraphicsEllipseItem(x, y, radius, radius, item) : new QGraphicsEllipseItem(x, y, radius, radius, item);
 	i->setBrush(QBrush(color));
 	((QGraphicsItemGroup*)item)->addToGroup(i);
 }
@@ -115,9 +115,9 @@ void ShapeFormulaNode::AddFillCircle(qreal x, qreal y, qreal radius, QColor& col
  * @param [in] path The painter's path.
  * @param [in] color The color.
  */
-void ShapeFormulaNode::AddPath(QPainterPath& path, QColor& color)
+void ShapeFormulaNode::AddPath(QPainterPath& path, QColor& color, bool smooth)
 {
-	QGraphicsPathItem* i = new QGraphicsPathItem(path, item);
+	QGraphicsPathItem* i = smooth ? new SmoothGraphicsPathItem(path, item) : new QGraphicsPathItem(path, item);
 	i->setBrush(QBrush(color));
 	((QGraphicsItemGroup*)item)->addToGroup(i);
 }

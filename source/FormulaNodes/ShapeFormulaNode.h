@@ -2,6 +2,7 @@
 #define SHAPEFORMULANODE_H
 
 #include "GroupFormulaNode.h"
+#include <QPainter>
 
 /**
  * Shape formula node.
@@ -39,9 +40,9 @@ public:
 	void AddLine(qreal x1, qreal y1, qreal x2, qreal y2, QColor& color);
 	void AddRect(qreal x, qreal y, qreal width, qreal height, QColor& color);
 	void AddFillRect(qreal x, qreal y, qreal width, qreal height, QColor& color, qreal opacity = 1.0);
-	void AddPolygon(QVector<QPointF>& points, QColor& color);
-	void AddFillCircle(qreal x, qreal y, qreal radius, QColor& color);
-	void AddPath(QPainterPath& path, QColor& color);
+	void AddPolygon(QVector<QPointF>& points, QColor& color, bool smooth = true);
+	void AddFillCircle(qreal x, qreal y, qreal radius, QColor& color, bool smooth = true);
+	void AddPath(QPainterPath& path, QColor& color, bool smooth = true);
 	void ClearShapes();
 
 	virtual SharedCaretState GetNextPosition(SharedCaretState& relativeState = SharedCaretState());
@@ -68,5 +69,95 @@ namespace boost
 		}
 	}
 }
+
+/**
+ * Smooth polygon item.
+ */
+class SmoothGraphicsPolygonItem : public QGraphicsPolygonItem
+{
+public:
+	/**
+	 * Constructor.
+	 * @param polygon The polygon.
+	 * @param parent (optional) [in,out] The parent item.
+	 */
+	SmoothGraphicsPolygonItem(const QPolygonF& polygon, QGraphicsItem* parent = 0) : QGraphicsPolygonItem(polygon, parent)
+	{
+	}
+	
+public:
+	/**
+	 * Paint handler that adds the anti-aliasing.
+	 * @param [in,out] painter The painter.
+	 * @param option The option.
+	 * @param [in,out] widget The widget.
+	 */
+	virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+	{
+		painter->setRenderHints(painter->renderHints() | QPainter::Antialiasing);
+		QGraphicsPolygonItem::paint(painter, option, widget);
+	}
+};
+
+/**
+ * Smooth ellipse item.
+ */
+class SmoothGraphicsEllipseItem : public QGraphicsEllipseItem
+{
+public:
+	/**
+	 * Constructor.
+	 * @param x	The x coordinate.
+	 * @param y	The y coordinate.
+	 * @param width The width.
+	 * @param height The height.
+	 * @param parent (optional) [in,out] The parent item.
+	 */
+	SmoothGraphicsEllipseItem(qreal x, qreal y, qreal width, qreal height, QGraphicsItem* parent = 0) : QGraphicsEllipseItem(x, y, width, height, parent)
+	{
+	}
+	
+public:
+	/**
+	 * Paint handler that adds the anti-aliasing.
+	 * @param [in,out] painter The painter.
+	 * @param option The option.
+	 * @param [in,out] widget The widget.
+	 */
+	virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+	{
+		painter->setRenderHints(painter->renderHints() | QPainter::Antialiasing);
+		QGraphicsEllipseItem::paint(painter, option, widget);
+	}
+};
+
+/**
+ * Smooth path item.
+ */
+class SmoothGraphicsPathItem : public QGraphicsPathItem
+{
+public:
+	/**
+	 * Constructor.
+	 * @param path The path.
+	 * @param parent (optional) [in,out] The parent item.
+	 */
+	SmoothGraphicsPathItem(const QPainterPath& path, QGraphicsItem* parent = 0) : QGraphicsPathItem(path, parent)
+	{
+	}
+	
+public:
+	/**
+	 * Paint handler that adds the anti-aliasing.
+	 * @param [in,out] painter The painter.
+	 * @param option The option.
+	 * @param [in,out] widget The widget.
+	 */
+	virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+	{
+		painter->setRenderHints(painter->renderHints() | QPainter::Antialiasing);
+		QGraphicsPathItem::paint(painter, option, widget);
+	}
+};
 
 #endif
