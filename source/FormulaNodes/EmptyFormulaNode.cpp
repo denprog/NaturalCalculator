@@ -30,7 +30,7 @@ void EmptyFormulaNode::Remake()
 	
 	qreal h = r.height();
 	qreal p = h / 10;
-	baseline = font.pointSize() / 2;
+	baseline = font.pointSize();
 
 	ClearShapes();
 	
