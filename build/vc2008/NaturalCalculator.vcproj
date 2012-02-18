@@ -1607,6 +1607,10 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\test\SquareRootTest.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\test\TextTest.h"
 					>
 				</File>
@@ -1624,6 +1628,10 @@
 				</File>
 				<File
 					RelativePath="..\..\test\NcTests.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\test\SquareRootTest.cpp"
 					>
 				</File>
 				<File

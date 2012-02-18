@@ -29,6 +29,7 @@ private slots:
 
 	void TextTests();
 	void BracesTests();
+	void SquareRootTests();
 
 private:
 	MainWindow* mainWindow;

@@ -2,6 +2,7 @@
 #include "NcTests.h"
 #include "TextTest.h"
 #include "BracesTest.h"
+#include "SquareRootTest.h"
 
 /**
  * Text tests.
@@ -24,6 +25,15 @@ void NcTests::BracesTests()
 	bracesTest.Test3();
 	bracesTest.Test4();
 	bracesTest.Test5();
+}
+
+/**
+ * Square root tests.
+ */
+void NcTests::SquareRootTests()
+{
+	SquareRootTest squareRootTest(mainWindow);
+	squareRootTest.Test1();
 }
 
 #endif

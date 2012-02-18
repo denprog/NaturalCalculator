@@ -9,6 +9,7 @@
 SquareRootFormulaNode::SquareRootFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : CompoundFormulaNode(_parent, wnd)
 {
 	shape = AddShapeNode();
+	InsertChild(new GroupFormulaNode(parent, wnd), 1);
 
 #ifdef _DEBUG
 	name = "SquareRootFormulaNode";
@@ -33,10 +34,10 @@ void SquareRootFormulaNode::Remake()
 	
 	if (childNodes->Count() > 0)
 	{
-		FormulaNode* radicand = (*this)[1];
-		int cx = radicand->GetBoundingRect().height() * 5 / 11;
-		int offset = radicand->GetBoundingRect().height() / 5;
-		int cy = radicand->GetBoundingRect().height() + offset * 2;
+		FormulaNode* radicand = GetExpression(0);
+		qreal cx = radicand->GetBoundingRect().height() * 5 / 11;
+		qreal offset = radicand->GetBoundingRect().height() / 5;
+		qreal cy = radicand->GetBoundingRect().height() + offset * 2;
 		
 		QVector<QPointF> p;
 		p.push_back(QPointF(cx, cy * 0.01));
@@ -47,9 +48,9 @@ void SquareRootFormulaNode::Remake()
 		p.push_back(QPointF(cx * 0.343, cy * 0.429));
 		p.push_back(QPointF(cx * 0.703, cy * 0.869));
 		p.push_back(QPointF(cx * 0.934, 0));
-		p.push_back(QPointF((cx * 1.32 + radicand->GetBoundingRect().width()), 0));
-		p.push_back(QPointF((cx * 1.32 + radicand->GetBoundingRect().width()), cy * 0.01));
-		p.push_back(QPointF(cx * 1.32, cy * 0.01));
+		p.push_back(QPointF(cx * 1.3 + radicand->GetBoundingRect().width() + 1, 0));
+		p.push_back(QPointF(cx * 1.3 + radicand->GetBoundingRect().width() + 1, cy * 0.01));
+		p.push_back(QPointF(cx * 1.3, cy * 0.01));
 		
 		shape->AddPolygon(p, QColor("black"));
 		
@@ -58,6 +59,7 @@ void SquareRootFormulaNode::Remake()
 		baseline = radicand->GetBaseline() + offset;
 		shape->UpdateBoundingRect();
 		boundingRect = shape->GetBoundingRect();
+		boundingRect.setRight(boundingRect.right() + cx * 0.075);
 	}
 }
 
@@ -72,13 +74,44 @@ bool SquareRootFormulaNode::CanInsert(int pos)
 }
 
 /**
+ * Returns an expression of the node.
+ * @param pos The position.
+ * @return null if it fails, else the expression.
+ */
+FormulaNode* SquareRootFormulaNode::GetExpression(int pos) const
+{
+	assert(pos == 0);
+	return (*this)[1];
+}
+
+/**
+ * The shape of the node is always visible.
+ * @param pos Fake parameter.
+ * @param show Fake parameter.
+ */
+void SquareRootFormulaNode::ShowShape(int pos, bool show)
+{
+}
+
+/**
+ * The shape of the node is always visible.
+ * @param pos The position.
+ * @return true.
+ */
+bool SquareRootFormulaNode::IsShapeVisible(int pos) const
+{
+	assert(pos == 0);
+	return true;
+}
+
+/**
  * Parses child node and adds the function call.
  * @param [in,out] expr The expression.
  */
 void SquareRootFormulaNode::Parse(ParserString& expr)
 {
 	expr.Add("sqrt(", this);
-	(*this)[1]->Parse(expr);
+	GetExpression(0)->Parse(expr);
 	expr.Add(")", this);
 }
 
@@ -97,6 +130,8 @@ void SquareRootFormulaNode::ParseStructure(QString& res)
 void SquareRootFormulaNode::UpdateBoundingRect()
 {
 	boundingRect = shape->GetBoundingRect();
+	qreal cx = GetExpression(0)->GetBoundingRect().height() * 5 / 11;
+	boundingRect.setRight(boundingRect.right() + cx * 0.075);
 	boundingRect.moveTo(item->pos().x(), item->pos().y());
 }
 
@@ -108,7 +143,7 @@ void SquareRootFormulaNode::UpdateBoundingRect()
 FormulaNode* SquareRootFormulaNode::Clone(FormulaNode* p)
 {
 	SquareRootFormulaNode* res = new SquareRootFormulaNode(p, wnd);
-	res->InsertChild((*this)[1]->Clone(res), 1);
+	res->InsertChild(GetExpression(0)->Clone(res), 1);
 	
 	return res;
 }
@@ -124,7 +159,7 @@ void SquareRootFormulaNode::RenderCaret(const int pos, const int anchor)
 	{
 		//draw the caret on the shape
 		QRectF r = GetDocumentPosBounds(pos);
-		int cx = (*this)[1]->GetBoundingRect().height() * 5 / 11;
+		int cx = GetExpression(0)->GetBoundingRect().height() * 5 / 11;
 		
 		QGraphicsItemGroup* g = wnd->GetCaret()->caretShape;
 		
@@ -159,7 +194,7 @@ bool SquareRootFormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
 		if (!right)
 			return false;
 		
-		FormulaNode* radicand = (*this)[1];
+		FormulaNode* radicand = GetExpression(0);
 		command = any_cast<Command*>(nodeEvent["command"]);
 		command->SetParam(parent, "node", Clone(NULL));
 		//count parameter needed to remove the child nodes in the undo

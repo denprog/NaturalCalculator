@@ -861,15 +861,14 @@ bool FormulaNode::DoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
 	int pos = c->GetPos();
 	//create a square root node, insert current node into it and insert the result into the parent
 	FormulaNode* d = new SquareRootFormulaNode(this, wnd);
-	FormulaNode* g = new GroupFormulaNode(d, wnd);
+	FormulaNode* expr = d->GetExpression(0);
 	if (ChildrenCount() <= pos)
 		InsertChild(new EmptyFormulaNode(this), pos);
-	g->MoveChild((*this)[pos], 0);
-	d->InsertChild(g, 1);
+	expr->MoveChild((*this)[pos], 0);
 	InsertChild(d, pos);
 
 	nodeEvent["undoAction"] = CommandAction(this, pos, &FormulaNode::UndoCreateSquareRootFormulaNode);
-	c->SetToNode(g, 0);
+	c->SetToNode(expr, 0);
 	
 	return true;
 }
@@ -886,11 +885,17 @@ bool FormulaNode::UndoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
 	int pos = GetFirstLevelChildPos(node);
 	if (!node->IsEmptySymbol())
 	{
-		MoveChild((*node)[0], pos);
+		FormulaNode* expr = node->GetExpression(0);
+		for (int i = 0; i < expr->ChildrenCount();)
+			MoveChild((*expr)[i], pos++);
 		RemoveChild(pos + 1);
 	}
 	else
+	{
 		RemoveChild(pos);
+		if (ChildrenCount() == 0)
+			InsertChild(new EmptyFormulaNode(this), 0);
+	}
 	
 	return true;
 }

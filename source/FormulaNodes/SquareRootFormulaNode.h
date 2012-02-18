@@ -39,6 +39,10 @@ public:
 
 	virtual bool CanInsert(int pos);
 
+	virtual FormulaNode* GetExpression(int pos) const;
+	virtual void ShowShape(int pos, bool show);
+	virtual bool IsShapeVisible(int pos) const;
+
 	virtual FormulaNode* Clone(FormulaNode* p);
 
 	virtual void Parse(ParserString& expr);

@@ -653,9 +653,8 @@ bool TextFormulaNode::DoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
 	int pos = parent->GetChildPos(this);
 	//create a power node, insert current node into it and insert the result into the parent
 	FormulaNode* d = new SquareRootFormulaNode(parent, wnd);
-	FormulaNode* g = new GroupFormulaNode(d, wnd);
-	g->MoveChild(this, 0);
-	d->InsertChild(g, 1);
+	FormulaNode* expr = d->GetExpression(0);
+	expr->MoveChild(this, 0);
 	p->InsertChild(d, pos);
 
 	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreateSquareRootFormulaNode);
