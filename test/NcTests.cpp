@@ -34,6 +34,8 @@ void NcTests::SquareRootTests()
 {
 	SquareRootTest squareRootTest(mainWindow);
 	squareRootTest.Test1();
+	squareRootTest.Test2();
+	squareRootTest.Test3();
 }
 
 #endif

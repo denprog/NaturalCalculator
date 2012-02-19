@@ -53,15 +53,6 @@ FormulaNode::FormulaNode(FormulaNode* _parent, FormulaWnd* _wnd)
  */
 FormulaNode::~FormulaNode()
 {
-	if (command)
-	{
-		if (command->ContainsParam(this, "node"))
-		{
-			delete any_cast<FormulaNode*>(command->GetParam(this, "node"));
-			command->RemoveParam(this, "node");
-		}
-	}
-	
 	childNodes->Clear();
 
 	if (item)
@@ -654,7 +645,8 @@ bool FormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
 				return false;
 			
 			//store the node
-			command->SetParam(this, "node", (*this)[pos]->Clone(NULL));
+			if (!command->ContainsParam(this, "node"))
+				command->SetParam(this, "node", (*this)[pos]->Clone(NULL));
 			//remove the node
 			RemoveChild(pos);
 			if (childNodes->Count() == 0)
@@ -708,8 +700,7 @@ bool FormulaNode::UndoRemoveItem(NodeEvent& nodeEvent)
 
 	if (pos < ChildrenCount() && (*this)[pos]->IsEmptySymbol())
 		RemoveChild(pos);	
-	InsertChild(any_cast<FormulaNode*>(command->GetParam(this, "node")), pos);
-	command->RemoveParam(this, "node");
+	InsertChild((any_cast<FormulaNode*>(command->GetParam(this, "node")))->Clone(NULL), pos);
 	
 	return true;
 }

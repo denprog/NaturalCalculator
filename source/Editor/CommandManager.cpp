@@ -89,6 +89,13 @@ bool CommandManager::DoAction(CommandAction doAction, NodeEvent nodeEvent, bool 
 	if (command->DoAction())
 	{
 		undoCommands.push_front(command);
+		
+		for (CommandsIter iter = redoCommands.begin(); iter != redoCommands.end(); ++iter)
+		{
+			if (*iter)
+				delete *iter;
+		}
+		redoCommands.clear();
 	}
 	else
 	{
