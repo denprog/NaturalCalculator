@@ -183,6 +183,8 @@ void SolvingThread::operator()(RealParserExpression const& expr) const
 	{
 		((RealParserExpression&)expr).exception = e;
 	}
+	
+	((RealParserExpression&)expr).solved = true;
 }
 
 /**
@@ -199,6 +201,8 @@ void SolvingThread::operator()(IntegerParserExpression const& expr) const
 	{
 		((IntegerParserExpression&)expr).exception = e;
 	}
+	
+	((IntegerParserExpression&)expr).solved = true;
 }
 
 /**
@@ -215,6 +219,8 @@ void SolvingThread::operator()(RationalParserExpression const& expr) const
 	{
 		((RationalParserExpression&)expr).exception = e;
 	}
+	
+	((RationalParserExpression&)expr).solved = true;
 }
 
 /**
@@ -273,6 +279,8 @@ void SolvingThread::operator()(AutoParserExpression const& expr) const
 
 	if (j == (int)parsers.size())
 		expression.exception = firstException;
+	
+	expression.solved = true;
 }
 
 /**

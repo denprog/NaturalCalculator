@@ -3,12 +3,15 @@
 
 #include "GroupFormulaNode.h"
 #include "../ParserThread/ParserExpression.h"
+#include <QtCore/QTimer>
 
 /**
  * Result formula node.
  */
 class ResultFormulaNode : public GroupFormulaNode
 {
+	Q_OBJECT
+	
 public:
 	ResultFormulaNode(FormulaNode* _parent, FormulaWnd* wnd);
 	virtual ~ResultFormulaNode();
@@ -26,6 +29,9 @@ public:
 	void AddRationalResultNode(FractionType type);
 	void RemoveResultNode();
 
+public slots:
+	void OnDelayTimer();
+	
 private:
 	struct ResultNodeMaker : boost::static_visitor<void>
 	{
@@ -38,6 +44,10 @@ private:
 		
 		FormulaNode* parent;
 	};
+	
+	QTimer delayTimer;
+	ParserExpressionVariant* expressionToSolve;
+	ParserString lastExpression;
 };
 
 #endif

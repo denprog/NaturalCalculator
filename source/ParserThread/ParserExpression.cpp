@@ -53,6 +53,11 @@ void ParserString::operator=(const ParserString& source)
 	annotation = source.annotation;
 }
 
+bool ParserString::operator==(const ParserString& expr)
+{
+	return expression == expr.expression && annotation == expr.annotation;
+}
+
 //ParserExpression
 
 /**

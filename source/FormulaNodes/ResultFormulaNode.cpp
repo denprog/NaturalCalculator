@@ -12,8 +12,10 @@
  * @param [in,out] _parent The parent node.
  * @param [in,out] wnd The formula window.
  */
-ResultFormulaNode::ResultFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : GroupFormulaNode(_parent, wnd)
+ResultFormulaNode::ResultFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : GroupFormulaNode(_parent, wnd), expressionToSolve(0)
 {
+	delayTimer.setInterval(2000);
+	connect(&delayTimer, SIGNAL(timeout()), this, SLOT(OnDelayTimer()));
 }
 
 /**
@@ -45,8 +47,8 @@ void ResultFormulaNode::Remake()
 		if (*p.GetSolved())
 			continue;
 		
-		if (wnd->GetParserThread()->GetSolvedExpression(p))
-			boost::apply_visitor(ResultNodeMaker(n), p.var);
+		wnd->GetParserThread()->GetSolvedExpression(p);
+		boost::apply_visitor(ResultNodeMaker(n), p.var);
 	}
 	
 	childNodes->Remake();
@@ -78,22 +80,29 @@ void ResultFormulaNode::Remake()
  */
 void ResultFormulaNode::SetExpression(ParserString& expr)
 {
+	if (lastExpression == expr)
+	{
+		Remake();
+		return;
+	}
+	
+	lastExpression = expr;
+	
 	for (int i = 0; i < childNodes->Count(); ++i)
 	{
 		ResultItemFormulaNode* node = (ResultItemFormulaNode*)(*childNodes)[i];
-		ParserExpressionVariant& p = node->GetExpression();
+		expressionToSolve = &node->GetExpression();
 
-		if (expr.expression != p.GetExpression()->expression)
+		if (expr.expression != expressionToSolve->GetExpression()->expression)
 		{
-			*p.GetExpression() = expr;
-			*p.GetSolved() = false;
-			
-			//solve the expression
-			wnd->GetParserThread()->AddExpression(p);
-		}
+			*(expressionToSolve->GetExpression()) = expr;
+			*(expressionToSolve->GetSolved()) = false;
 
-		Remake();
+			delayTimer.start();
+		}
 	}
+
+	Remake();
 }
 
 /**
@@ -142,6 +151,15 @@ void ResultFormulaNode::RemoveResultNode()
 {
 }
 
+void ResultFormulaNode::OnDelayTimer()
+{
+	//solve the expression
+	wnd->GetParserThread()->AddExpression(*expressionToSolve);
+	delayTimer.stop();
+}
+
+//ResultFormulaNode::ResultNodeMaker
+
 /**
  * Constructor of the visitor.
  * @param [in,out] _parent If non-null, the parent.
@@ -163,6 +181,14 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RealParserExpression const& 
 		TextFormulaNode* t = new TextFormulaNode(parent);
 		parent->AddChild(t);
 		t->SetText("Error!");
+		return;
+	}
+	
+	if (!expr.solved)
+	{
+		TextFormulaNode* t = new TextFormulaNode(parent);
+		parent->AddChild(t);
+		t->SetText("~");
 		return;
 	}
 	
@@ -215,6 +241,14 @@ void ResultFormulaNode::ResultNodeMaker::operator()(IntegerParserExpression cons
 		t->SetText("Error!");
 		return;
 	}
+
+	if (!expr.solved)
+	{
+		TextFormulaNode* t = new TextFormulaNode(parent);
+		parent->AddChild(t);
+		t->SetText("~");
+		return;
+	}
 	
 	Integer res = expr.result;
 
@@ -241,6 +275,14 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RationalParserExpression con
 		TextFormulaNode* t = new TextFormulaNode(parent);
 		parent->AddChild(t);
 		t->SetText("Error!");
+		return;
+	}
+
+	if (!expr.solved)
+	{
+		TextFormulaNode* t = new TextFormulaNode(parent);
+		parent->AddChild(t);
+		t->SetText("~");
 		return;
 	}
 	

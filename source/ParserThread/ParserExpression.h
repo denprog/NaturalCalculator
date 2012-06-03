@@ -58,11 +58,18 @@ struct ParserString
 	void Add(string& expr, FormulaNode* node);
 
 	void operator=(const ParserString& source);
-		
+	
+	bool operator==(const ParserString& expr);
+	
 	struct AnnotationPos
 	{
 		AnnotationPos(int _pos, int _length, HierarchyPos _hierarchyPos) : pos(_pos), length(_length), hierarchyPos(_hierarchyPos)
 		{
+		}
+		
+		bool operator==(const AnnotationPos& ann) const
+		{
+			return pos == ann.pos && length == ann.length && hierarchyPos == ann.hierarchyPos;
 		}
 		
 		int pos;
