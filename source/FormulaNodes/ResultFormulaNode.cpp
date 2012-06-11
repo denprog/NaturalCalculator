@@ -175,20 +175,20 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RealParserExpression const& 
 {
 	parent->GetChildNodes()->Clear();
 
+	if (!expr.solved)
+	{
+		TextFormulaNode* t = new TextFormulaNode(parent);
+		parent->AddChild(t);
+		t->SetText("~");
+		return;
+	}
+	
 	//make an exception node
 	if (expr.exception.id != None)
 	{
 		TextFormulaNode* t = new TextFormulaNode(parent);
 		parent->AddChild(t);
 		t->SetText("Error!");
-		return;
-	}
-	
-	if (!expr.solved)
-	{
-		TextFormulaNode* t = new TextFormulaNode(parent);
-		parent->AddChild(t);
-		t->SetText("~");
 		return;
 	}
 	
@@ -233,20 +233,20 @@ void ResultFormulaNode::ResultNodeMaker::operator()(IntegerParserExpression cons
 {
 	parent->GetChildNodes()->Clear();
 
+	if (!expr.solved)
+	{
+		TextFormulaNode* t = new TextFormulaNode(parent);
+		parent->AddChild(t);
+		t->SetText("~");
+		return;
+	}
+
 	//make an exception node
 	if (expr.exception.id != None)
 	{
 		TextFormulaNode* t = new TextFormulaNode(parent);
 		parent->AddChild(t);
 		t->SetText("Error!");
-		return;
-	}
-
-	if (!expr.solved)
-	{
-		TextFormulaNode* t = new TextFormulaNode(parent);
-		parent->AddChild(t);
-		t->SetText("~");
 		return;
 	}
 	
@@ -269,20 +269,20 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RationalParserExpression con
 {
 	parent->GetChildNodes()->Clear();
 
+	if (!expr.solved)
+	{
+		TextFormulaNode* t = new TextFormulaNode(parent);
+		parent->AddChild(t);
+		t->SetText("~");
+		return;
+	}
+
 	//make an exception node
 	if (expr.exception.id != None)
 	{
 		TextFormulaNode* t = new TextFormulaNode(parent);
 		parent->AddChild(t);
 		t->SetText("Error!");
-		return;
-	}
-
-	if (!expr.solved)
-	{
-		TextFormulaNode* t = new TextFormulaNode(parent);
-		parent->AddChild(t);
-		t->SetText("~");
 		return;
 	}
 	
