@@ -87,6 +87,7 @@ void ResultFormulaNode::SetExpression(ParserString& expr)
 	}
 	
 	lastExpression = expr;
+	expr.expression += ";";
 	
 	for (int i = 0; i < childNodes->Count(); ++i)
 	{
