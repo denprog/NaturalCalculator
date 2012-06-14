@@ -89,15 +89,6 @@ void FormulaNodesCollection::Remake()
 }
 
 /**
- * Renders all the nodes.
- */
-void FormulaNodesCollection::Render()
-{
-	for (NodesIter iter = nodes.begin(); iter < nodes.end(); ++iter)
-		(*iter)->Render();
-}
-
-/**
  * Updates the bounding rectangle of the nodes.
  */
 void FormulaNodesCollection::UpdateBoundingRect()

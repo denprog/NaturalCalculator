@@ -60,7 +60,6 @@ public:
 	
 	void Remake();
 	void UpdateBoundingRect();
-	void Render();
 
 	FormulaNode* operator[](int pos) const;
 	

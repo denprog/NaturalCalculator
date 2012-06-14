@@ -103,7 +103,6 @@ public:
 	virtual void Move(int x, int y);
 
 	virtual void GetHierarchyPos(HierarchyPos& positions) const;
-	virtual void Render();
 	
 	virtual void Parse(ParserString& expr);
 #ifdef TEST

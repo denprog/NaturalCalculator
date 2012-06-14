@@ -300,14 +300,6 @@ void FormulaNode::GetHierarchyPos(HierarchyPos& positions) const
 }
 
 /**
- * Renders this node.
- */
-void FormulaNode::Render()
-{
-	childNodes->Render();
-}
-
-/**
  * Parses the child nodes.
  * @param [in,out] expr The expression.
  */
