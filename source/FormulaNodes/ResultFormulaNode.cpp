@@ -6,6 +6,16 @@
 #include "FormulaNodesCollection.h"
 #include "ResultItemFormulaNode.h"
 #include "../Main/FormulaWnd.h"
+#include <boost/assign/list_of.hpp>
+
+map<ParserExceptionCode, QString> ResultFormulaNode::errorMessages = boost::assign::map_list_of
+	(BigNumbersParser::SyntaxError, tr("Syntax error"))
+	(BigNumbersParser::WrongArgumentsCount, tr("Wrong arguments count"))
+	(BigNumbersParser::UnknownIdentifier, tr("Unknown identifier"))
+	(BigNumbersParser::DivisionByZero, tr("Division by zero"))
+	(BigNumbersParser::Overflow, tr("Overflow"))
+	(BigNumbersParser::ArgumentIsOver, tr("Argument is over"))
+	(BigNumbersParser::ConversionDoesNotFit, tr("Conversion does not fit"));
 
 /**
  * Constructor.
@@ -189,7 +199,7 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RealParserExpression const& 
 	{
 		TextFormulaNode* t = new TextFormulaNode(parent);
 		parent->AddChild(t);
-		t->SetText("Error!");
+		t->SetText(errorMessages[expr.exception.id]);
 		return;
 	}
 	
@@ -247,7 +257,7 @@ void ResultFormulaNode::ResultNodeMaker::operator()(IntegerParserExpression cons
 	{
 		TextFormulaNode* t = new TextFormulaNode(parent);
 		parent->AddChild(t);
-		t->SetText("Error!");
+		t->SetText(errorMessages[expr.exception.id]);
 		return;
 	}
 	
@@ -283,7 +293,7 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RationalParserExpression con
 	{
 		TextFormulaNode* t = new TextFormulaNode(parent);
 		parent->AddChild(t);
-		t->SetText("Error!");
+		t->SetText(errorMessages[expr.exception.id]);
 		return;
 	}
 	

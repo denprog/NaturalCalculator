@@ -48,6 +48,7 @@ private:
 	QTimer delayTimer;
 	ParserExpressionVariant* expressionToSolve;
 	ParserString lastExpression;
+	static map<ParserExceptionCode, QString> errorMessages;
 };
 
 #endif
