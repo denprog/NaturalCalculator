@@ -3,9 +3,8 @@
 
 #include <QApplication>
 #include <vector>
-#include "FormulaWnd.h"
 
-using namespace std;
+class FormulaWnd;
 
 /**
  * Natural calculator application.
@@ -19,10 +18,10 @@ public:
 public:
 	void AddFormulaWnd(FormulaWnd* wnd);
 	FormulaWnd* GetFormulaWnd(int pos);
-	int GetFormulaWndPos(FormulaWnd* wnd);
+	int GetFormulaWndPos(const FormulaWnd* wnd);
 	
 private:
-	vector<FormulaWnd*> formulaWnds; ///< The formula windows
+	std::vector<FormulaWnd*> formulaWnds; ///< The formula windows
 };
 
 #endif

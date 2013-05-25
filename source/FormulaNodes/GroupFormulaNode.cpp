@@ -3,6 +3,7 @@
 #include "CompoundFormulaNode.h"
 #include "EmptyFormulaNode.h"
 #include "FormulaNodesCollection.h"
+#include "../Main/Settings.h"
 #include <QGraphicsItemGroup>
 
 /**
@@ -180,7 +181,7 @@ SharedCaretState GroupFormulaNode::GetLastPosition()
  * @param [in] relativeState Relative caret state.
  * @return The next position.
  */
-SharedCaretState GroupFormulaNode::GetNextPosition(SharedCaretState& relativeState)
+SharedCaretState GroupFormulaNode::GetNextPosition(SharedCaretState relativeState)
 {
 	SharedCaretState res;
 	
@@ -243,7 +244,7 @@ SharedCaretState GroupFormulaNode::GetNextPosition(SharedCaretState& relativeSta
  * @param [in,out] relativeState Relative caret state.
  * @return The previous position.
  */
-SharedCaretState GroupFormulaNode::GetPreviousPosition(SharedCaretState& relativeState)
+SharedCaretState GroupFormulaNode::GetPreviousPosition(SharedCaretState relativeState)
 {
 	SharedCaretState res;
 	

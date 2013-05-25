@@ -207,30 +207,30 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RealParserExpression const& 
 	
 	bool mantissaSign, exponentSign;
 	string mantissa, exponent;
-	res.ToString(expr.exp == 0 ? parent->GetWnd()->settings->value("real/exp", 3).toInt() : expr.exp, expr.precision, 
+	res.ToString(expr.exp == 0 ? parent->wnd->settings->value("real/exp", 3).toInt() : expr.exp, expr.precision, 
 		mantissaSign, mantissa, exponentSign, exponent);
 	
 	//make a result node
 	if (mantissaSign)
-		parent->AddChild(new MinusFormulaNode(parent, parent->GetWnd()));
+		parent->AddChild(new MinusFormulaNode(parent, parent->wnd));
 	TextFormulaNode* t = new TextFormulaNode(parent);
 	parent->AddChild(t);
 	t->SetText(mantissa.c_str());
 	
 	if (!exponent.empty())
 	{
-		parent->AddChild(new MultiplyFormulaNode(parent, parent->GetWnd()));
+		parent->AddChild(new MultiplyFormulaNode(parent, parent->wnd));
 		
-		PowerFormulaNode* p = new PowerFormulaNode(parent, parent->GetWnd());
+		PowerFormulaNode* p = new PowerFormulaNode(parent, parent->wnd);
 		parent->AddChild(p);
 		TextFormulaNode* t = new TextFormulaNode(parent);
 		p->InsertChild(t, 0);
 		t->SetText("10");
 		
-		GroupFormulaNode* g = new GroupFormulaNode(p, p->GetWnd());
+		GroupFormulaNode* g = new GroupFormulaNode(p, p->wnd);
 		p->InsertChild(g, 2);
 		if (exponentSign)
-			g->InsertChild(new MinusFormulaNode(p, parent->GetWnd()), 0);
+			g->InsertChild(new MinusFormulaNode(p, parent->wnd), 0);
 		t = new TextFormulaNode(g);
 		g->AddChild(t);
 		t->SetText(exponent.c_str());
@@ -267,7 +267,7 @@ void ResultFormulaNode::ResultNodeMaker::operator()(IntegerParserExpression cons
 
 	//make a result node
 	if (res < 0)
-		parent->AddChild(new MinusFormulaNode(parent, parent->GetWnd()));
+		parent->AddChild(new MinusFormulaNode(parent, parent->wnd));
 	TextFormulaNode* t = new TextFormulaNode(parent);
 	parent->AddChild(t);
 	t->SetText(num.c_str());
@@ -302,7 +302,7 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RationalParserExpression con
 
 	//make a result node
 	if (res < 0)
-		parent->AddChild(new MinusFormulaNode(parent, parent->GetWnd()));
+		parent->AddChild(new MinusFormulaNode(parent, parent->wnd));
 	
 	if (expr.fractionType == IMPROPER_FRACTION || n < d)
 	{
@@ -314,7 +314,7 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RationalParserExpression con
 		}
 		else
 		{
-			DivisionFormulaNode* div = new DivisionFormulaNode(parent, parent->GetWnd());
+			DivisionFormulaNode* div = new DivisionFormulaNode(parent, parent->wnd);
 			TextFormulaNode* t = new TextFormulaNode(parent);
 			div->InsertChild(t, 0);
 			t->SetText(n.ToString().c_str());
@@ -335,7 +335,7 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RationalParserExpression con
 		
 		if (n != 0)
 		{
-			DivisionFormulaNode* div = new DivisionFormulaNode(parent, parent->GetWnd());
+			DivisionFormulaNode* div = new DivisionFormulaNode(parent, parent->wnd);
 			TextFormulaNode* t = new TextFormulaNode(parent);
 			div->InsertChild(t, 0);
 			t->SetText(n.ToString().c_str());

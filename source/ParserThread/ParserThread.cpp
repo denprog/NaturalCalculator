@@ -85,7 +85,7 @@ SolvingThread::SolvingThread(ParserThread* _parserThread, Settings* _settings) :
  * Copying constructor.
  * @param source Source for the object.
  */
-SolvingThread::SolvingThread(const SolvingThread& source)
+SolvingThread::SolvingThread(const SolvingThread& source) : QObject()
 {
 	parserThread = source.parserThread;
 	expressions = source.expressions;

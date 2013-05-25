@@ -116,11 +116,11 @@ bool DivisionFormulaNode::CanInsert(int pos)
  */
 void DivisionFormulaNode::Parse(ParserString& expr)
 {
-	expr.Add("(", this);
+	expr.Add(std::string("("), this);
 	(*this)[0]->Parse(expr);
-	expr.Add(")/(", this);
+	expr.Add(std::string(")/("), this);
 	(*this)[2]->Parse(expr);
-	expr.Add(")", this);
+	expr.Add(std::string(")"), this);
 }
 
 #ifdef TEST
@@ -154,7 +154,7 @@ FormulaNode* DivisionFormulaNode::Clone(FormulaNode* p)
  * @param [in,out] relativeState Relative caret state.
  * @return The next position.
  */
-SharedCaretState DivisionFormulaNode::GetNextPosition(SharedCaretState& relativeState)
+SharedCaretState DivisionFormulaNode::GetNextPosition(SharedCaretState relativeState)
 {
 	if (!relativeState)
 		return CompoundFormulaNode::GetNextPosition(relativeState);
@@ -167,7 +167,7 @@ SharedCaretState DivisionFormulaNode::GetNextPosition(SharedCaretState& relative
  * @param [in,out] relativeState Relative caret state.
  * @return The previous position.
  */
-SharedCaretState DivisionFormulaNode::GetPreviousPosition(SharedCaretState& relativeState)
+SharedCaretState DivisionFormulaNode::GetPreviousPosition(SharedCaretState relativeState)
 {
 	if (!relativeState)
 		return CompoundFormulaNode::GetPreviousPosition(relativeState);

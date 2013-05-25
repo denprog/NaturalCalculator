@@ -36,7 +36,7 @@ public:
 	virtual void ParseStructure(QString& res);
 #endif
 
-	virtual SharedCaretState GetNextPosition(SharedCaretState& relativeState = SharedCaretState());
+	virtual SharedCaretState GetNextPosition(SharedCaretState relativeState = SharedCaretState());
 	
 	virtual bool IsEmptySymbol();
 };

@@ -51,7 +51,7 @@ private:
 	NodeEvent nodeEvent; //action parameters
 	CommandAction doAction, undoAction; //functions to be called for do and undo actions
 	SharedCaretState beforeCaretState, afterCaretState; //caret states before and after executing the command
-	QMap<vector<int>, QMap<QString, boost::any> > params; //command parameters fills by nodes being operated
+	QMap<std::vector<int>, QMap<QString, boost::any> > params; //command parameters fills by nodes being operated
 };
 
 #endif

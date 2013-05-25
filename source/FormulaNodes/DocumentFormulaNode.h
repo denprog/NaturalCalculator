@@ -1,6 +1,7 @@
 #ifndef DOCUMENTFORMULANODE_H
 #define DOCUMENTFORMULANODE_H
 
+#include "../Main/NaturalCalculatorApp.h"
 #include "FormulaNode.h"
 #include "RootFormulaNode.h"
 #include "EmptyFormulaNode.h"
@@ -9,8 +10,6 @@
 //#ifdef new
 //#undef new
 //#endif
-
-using namespace std;
 
 /**
  * Document of formula nodes.
@@ -49,8 +48,8 @@ public:
 
 	virtual SharedCaretState GetFirstPosition();
 	virtual SharedCaretState GetLastPosition();
-	virtual SharedCaretState GetNextPosition(SharedCaretState& relativeState = SharedCaretState());
-	virtual SharedCaretState GetPreviousPosition(SharedCaretState& relativeState = SharedCaretState());
+	virtual SharedCaretState GetNextPosition(SharedCaretState relativeState = SharedCaretState());
+	virtual SharedCaretState GetPreviousPosition(SharedCaretState relativeState = SharedCaretState());
 
 	//commands
 	
@@ -68,7 +67,7 @@ namespace boost
 		template<class Archive>
 		inline void save_construct_data(Archive& ar, const DocumentFormulaNode* node, const BOOST_PFTO unsigned int file_version)
 		{
-			int pos = ((NaturalCalculatorApp*)qApp)->GetFormulaWndPos(node->GetWnd());
+			int pos = ((NaturalCalculatorApp*)qApp)->GetFormulaWndPos(node->wnd);
 			//store window position in the app's array
 			ar << pos;
 		}

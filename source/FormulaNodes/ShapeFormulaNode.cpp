@@ -44,7 +44,7 @@ void ShapeFormulaNode::ParseStructure(QString& res)
  * @param y2 The second y value.
  * @param [in] color The color.
  */
-void ShapeFormulaNode::AddLine(qreal x1, qreal y1, qreal x2, qreal y2, QColor& color)
+void ShapeFormulaNode::AddLine(qreal x1, qreal y1, qreal x2, qreal y2, QColor color)
 {
 	QGraphicsLineItem* i = new QGraphicsLineItem(x1, y1, x2, y2, item);
 	i->setPen(QPen(color));
@@ -59,7 +59,7 @@ void ShapeFormulaNode::AddLine(qreal x1, qreal y1, qreal x2, qreal y2, QColor& c
  * @param height The height.
  * @param [in] color The color.
  */
-void ShapeFormulaNode::AddRect(qreal x, qreal y, qreal width, qreal height, QColor& color)
+void ShapeFormulaNode::AddRect(qreal x, qreal y, qreal width, qreal height, QColor color)
 {
 	QGraphicsRectItem* i = new QGraphicsRectItem(x, y, width, height, item);
 	i->setPen(QPen(color));
@@ -74,7 +74,7 @@ void ShapeFormulaNode::AddRect(qreal x, qreal y, qreal width, qreal height, QCol
  * @param height The height.
  * @param [in] color The color.
  */
-void ShapeFormulaNode::AddFillRect(qreal x, qreal y, qreal width, qreal height, QColor& color, qreal opacity)
+void ShapeFormulaNode::AddFillRect(qreal x, qreal y, qreal width, qreal height, QColor color, qreal opacity)
 {
 	QGraphicsRectItem* i = new QGraphicsRectItem(x, y, width, height, item);
 	i->setBrush(QBrush(color));
@@ -88,7 +88,7 @@ void ShapeFormulaNode::AddFillRect(qreal x, qreal y, qreal width, qreal height, 
  * @param [in] points The points.
  * @param [in] color The color.
  */
-void ShapeFormulaNode::AddPolygon(QVector<QPointF>& points, QColor& color, bool smooth)
+void ShapeFormulaNode::AddPolygon(QVector<QPointF>& points, QColor color, bool smooth)
 {
 	QGraphicsPolygonItem* i = smooth ? new SmoothGraphicsPolygonItem(points, item) : new QGraphicsPolygonItem(points, item);
 	i->setBrush(QBrush(color));
@@ -103,7 +103,7 @@ void ShapeFormulaNode::AddPolygon(QVector<QPointF>& points, QColor& color, bool 
  * @param radius The radius.
  * @param [in,out] color The color.
  */
-void ShapeFormulaNode::AddFillCircle(qreal x, qreal y, qreal radius, QColor& color, bool smooth)
+void ShapeFormulaNode::AddFillCircle(qreal x, qreal y, qreal radius, QColor color, bool smooth)
 {
 	QGraphicsEllipseItem* i = smooth ? new SmoothGraphicsEllipseItem(x, y, radius, radius, item) : new QGraphicsEllipseItem(x, y, radius, radius, item);
 	i->setBrush(QBrush(color));
@@ -115,7 +115,7 @@ void ShapeFormulaNode::AddFillCircle(qreal x, qreal y, qreal radius, QColor& col
  * @param [in] path The painter's path.
  * @param [in] color The color.
  */
-void ShapeFormulaNode::AddPath(QPainterPath& path, QColor& color, bool smooth)
+void ShapeFormulaNode::AddPath(QPainterPath path, QColor color, bool smooth)
 {
 	QGraphicsPathItem* i = smooth ? new SmoothGraphicsPathItem(path, item) : new QGraphicsPathItem(path, item);
 	i->setBrush(QBrush(color));
@@ -141,7 +141,7 @@ void ShapeFormulaNode::ClearShapes()
  * @param [in] relativeState Relative caret state.
  * @return The next caret position.
  */
-SharedCaretState ShapeFormulaNode::GetNextPosition(SharedCaretState& relativeState)
+SharedCaretState ShapeFormulaNode::GetNextPosition(SharedCaretState relativeState)
 {
 	return SharedCaretState();
 }
@@ -151,7 +151,7 @@ SharedCaretState ShapeFormulaNode::GetNextPosition(SharedCaretState& relativeSta
  * @param [in] relativeState Relative caret state.
  * @return The previous caret position.
  */
-SharedCaretState ShapeFormulaNode::GetPreviousPosition(SharedCaretState& relativeState)
+SharedCaretState ShapeFormulaNode::GetPreviousPosition(SharedCaretState relativeState)
 {
 	if (relativeState && relativeState->CheckOnNode(this))
 		return SharedCaretState();

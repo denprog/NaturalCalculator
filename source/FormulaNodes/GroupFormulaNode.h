@@ -49,8 +49,8 @@ public:
 
 	virtual SharedCaretState GetFirstPosition();
 	virtual SharedCaretState GetLastPosition();
-	virtual SharedCaretState GetNextPosition(SharedCaretState& relativeState = SharedCaretState());
-	virtual SharedCaretState GetPreviousPosition(SharedCaretState& relativeState = SharedCaretState());
+	virtual SharedCaretState GetNextPosition(SharedCaretState relativeState = SharedCaretState());
+	virtual SharedCaretState GetPreviousPosition(SharedCaretState relativeState = SharedCaretState());
 	virtual SharedCaretState GetLineBegin(SharedCaretState& relativeState);
 	virtual SharedCaretState GetLineEnd(SharedCaretState& relativeState);
 };
@@ -71,7 +71,7 @@ namespace boost
 		{
 			FormulaNode* parent;
 			ar >> parent;
-			::new (node)GroupFormulaNode(parent, parent->GetWnd());
+			::new (node)GroupFormulaNode(parent, parent->wnd);
 		}
 	}
 }

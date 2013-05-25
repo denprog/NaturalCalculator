@@ -192,7 +192,7 @@ QString ColorsComboBox::Color()
  * Sets the item
  * @param [in] color The color
  */
-void ColorsComboBox::SetColor(QString& color)
+void ColorsComboBox::SetColor(QString color)
 {
 	setCurrentIndex(findData(color, int(Qt::UserRole)));
 }

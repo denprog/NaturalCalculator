@@ -3,6 +3,7 @@
 
 #include "CompoundFormulaNode.h"
 #include "ShapeFormulaNode.h"
+#include "FormulaNodesCollection.h"
 
 /**
  * Square root formula node.
@@ -75,7 +76,7 @@ namespace boost
 		{
 			FormulaNode* parent;
 			ar >> parent;
-			::new (node)SquareRootFormulaNode(parent, parent->GetWnd());
+			::new (node)SquareRootFormulaNode(parent, parent->wnd);
 		}
 	}
 }

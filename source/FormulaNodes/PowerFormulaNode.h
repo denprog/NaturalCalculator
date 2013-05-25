@@ -2,6 +2,7 @@
 #define POWERFORMULANODE_H
 
 #include "CompoundFormulaNode.h"
+#include "FormulaNodesCollection.h"
 
 class PowerFormulaNode : public CompoundFormulaNode
 {
@@ -64,7 +65,7 @@ namespace boost
 		{
 			FormulaNode* parent;
 			ar >> parent;
-			::new (node)PowerFormulaNode(parent, parent->GetWnd());
+			::new (node)PowerFormulaNode(parent, parent->wnd);
 		}
 	}
 }

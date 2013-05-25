@@ -1,4 +1,5 @@
 #include "MultiplyFormulaNode.h"
+#include "../Main/Settings.h"
 #include <QFontMetrics>
 
 /**
@@ -49,7 +50,7 @@ void MultiplyFormulaNode::Remake()
  */
 void MultiplyFormulaNode::Parse(ParserString& expr)
 {
-	expr.Add("*", this);
+	expr.Add(std::string("*"), this);
 }
 
 /**

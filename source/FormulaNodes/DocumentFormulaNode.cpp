@@ -1,5 +1,6 @@
 #include "DocumentFormulaNode.h"
 #include "FormulaNodesCollection.h"
+#include "../Main/FormulaWnd.h"
 
 /**
  * Default constructor.
@@ -97,7 +98,7 @@ SharedCaretState DocumentFormulaNode::GetLastPosition()
  * @param [in,out] relativeState Relative caret state.
  * @return The next caret position.
  */
-SharedCaretState DocumentFormulaNode::GetNextPosition(SharedCaretState& relativeState)
+SharedCaretState DocumentFormulaNode::GetNextPosition(SharedCaretState relativeState)
 {
 	SharedCaretState res;
 	
@@ -117,7 +118,7 @@ SharedCaretState DocumentFormulaNode::GetNextPosition(SharedCaretState& relative
  * @param [in,out] relativeState Relative caret state.
  * @return The previous caret position.
  */
-SharedCaretState DocumentFormulaNode::GetPreviousPosition(SharedCaretState& relativeState)
+SharedCaretState DocumentFormulaNode::GetPreviousPosition(SharedCaretState relativeState)
 {
 	SharedCaretState res;
 

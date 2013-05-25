@@ -2,6 +2,7 @@
 #define BRACESFORMULANODE_H
 
 #include "CompoundFormulaNode.h"
+#include "FormulaNodesCollection.h"
 
 /**
  * Braces formula node.
@@ -80,7 +81,7 @@ namespace boost
 			bool left, right;
 			ar >> left;
 			ar >> right;
-			::new (node)BracesFormulaNode(parent, parent->GetWnd(), left, right);
+			::new (node)BracesFormulaNode(parent, parent->wnd, left, right);
 		}
 	}
 }

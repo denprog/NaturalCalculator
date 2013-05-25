@@ -1,4 +1,4 @@
-#include "formulawnd.h"
+#include "FormulaWnd.h"
 #include <QApplication>
 #include <QKeyEvent>
 #include <QMessageBox>

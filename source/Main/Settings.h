@@ -3,8 +3,7 @@
 
 #include <QSettings>
 #include <QFont>
-
-enum FormulaNodeLevel;
+#include "../FormulaNodes/FormulaNode.h"
 
 typedef QMap<int, QFont> FontMap;
 

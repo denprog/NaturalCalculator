@@ -32,7 +32,7 @@ void ParserString::Add(char* expr, FormulaNode* node)
  * @param [in] expr The expression.
  * @param [in] node The node.
  */
-void ParserString::Add(string& expr, FormulaNode* node)
+void ParserString::Add(std::string expr, FormulaNode* node)
 {
 	HierarchyPos p;
 	node->GetHierarchyPos(p);

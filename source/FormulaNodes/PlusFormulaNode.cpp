@@ -1,4 +1,5 @@
 #include "PlusFormulaNode.h"
+#include "../Main/Settings.h"
 #include <QFontMetrics>
 
 /**
@@ -62,7 +63,7 @@ void PlusFormulaNode::UpdateBoundingRect()
  */
 void PlusFormulaNode::Parse(ParserString& expr)
 {
-	expr.Add("+", this);
+	expr.Add(std::string("+"), this);
 }
 
 #ifdef TEST

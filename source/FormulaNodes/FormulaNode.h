@@ -15,10 +15,8 @@
 #include "../Editor/Caret.h"
 #include "../Editor/CaretState.h"
 #include "../Editor/Command.h"
-#include "../Main/Settings.h"
 #include "../ParserThread/ParserExpression.h"
 
-using namespace std;
 using boost::any_cast;
 
 class FormulaWnd;
@@ -32,6 +30,8 @@ enum FormulaNodeLevel
 	LESS_LEVEL, 
 	STILL_LESS_LEVEL
 };
+
+class Settings;
 
 /**
  * Formula node.
@@ -124,8 +124,8 @@ public:
 	
 	virtual SharedCaretState GetFirstPosition();
 	virtual SharedCaretState GetLastPosition();
-	virtual SharedCaretState GetNextPosition(SharedCaretState& relativeState = SharedCaretState());
-	virtual SharedCaretState GetPreviousPosition(SharedCaretState& relativeState = SharedCaretState());
+	virtual SharedCaretState GetNextPosition(SharedCaretState relativeState = SharedCaretState());
+	virtual SharedCaretState GetPreviousPosition(SharedCaretState relativeState = SharedCaretState());
 	virtual SharedCaretState GetLineBegin(SharedCaretState& relativeState);
 	virtual SharedCaretState GetLineEnd(SharedCaretState& relativeState);
 
@@ -175,7 +175,7 @@ public:
 	
 public:
 	virtual void MakeContextMenu(QMenu* menu);
-	bool MenuContainsAction(QMenu* menu, QString& action);
+	bool MenuContainsAction(QMenu* menu, QString action);
 
 public slots:	
 	virtual void OnCopy();
@@ -220,15 +220,6 @@ public:
 	}
 	
 	/**
-	 * Getter of the window.
-	 * @return The parent window.
-	 */
-	FormulaWnd* GetWnd() const
-	{
-		return wnd;
-	}
-
-	/**
 	 * Getter of the baseline.
 	 * @return The baseline.
 	 */
@@ -236,8 +227,8 @@ public:
 	{
 		return baseline;
 	}
-		
-protected:
+	
+public:
 	FormulaNode* parent; ///< The parent node
 	FormulaNodesCollection* childNodes; ///< The child nodes
 	QRectF boundingRect; ///< The bounding rectangle

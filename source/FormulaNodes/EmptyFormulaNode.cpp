@@ -1,11 +1,12 @@
 #include "EmptyFormulaNode.h"
+#include "../Main/Settings.h"
 #include <QFontMetrics>
 
 /**
  * Constructor.
  * @param [in,out] _parent The parent node.
  */
-EmptyFormulaNode::EmptyFormulaNode(FormulaNode* _parent) : ShapeFormulaNode(_parent, _parent->GetWnd())
+EmptyFormulaNode::EmptyFormulaNode(FormulaNode* _parent) : ShapeFormulaNode(_parent, _parent->wnd)
 {
 #ifdef _DEBUG
 	name = "EmptyFormulaNode";
@@ -74,7 +75,7 @@ void EmptyFormulaNode::ParseStructure(QString& res)
  * @param [in,out] relativeState State of the relative.
  * @return The empty position.
  */
-SharedCaretState EmptyFormulaNode::GetNextPosition(SharedCaretState& relativeState)
+SharedCaretState EmptyFormulaNode::GetNextPosition(SharedCaretState relativeState)
 {
 	return SharedCaretState();
 }

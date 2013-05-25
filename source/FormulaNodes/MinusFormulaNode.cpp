@@ -1,4 +1,5 @@
 #include "MinusFormulaNode.h"
+#include "../Main/Settings.h"
 #include <QFontMetrics>
 
 /**
@@ -63,7 +64,7 @@ void MinusFormulaNode::UpdateBoundingRect()
  */
 void MinusFormulaNode::Parse(ParserString& expr)
 {
-	expr.Add("-", this);
+	expr.Add(std::string("-"), this);
 }
 
 /**

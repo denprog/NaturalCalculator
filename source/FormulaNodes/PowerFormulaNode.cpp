@@ -1,6 +1,7 @@
 #include "PowerFormulaNode.h"
 #include "FormulaNodesCollection.h"
 #include "ShapeFormulaNode.h"
+#include "../Main/Settings.h"
 
 /**
  * Constructor.
@@ -69,11 +70,11 @@ FormulaNode* PowerFormulaNode::Clone(FormulaNode* p)
  */
 void PowerFormulaNode::Parse(ParserString& expr)
 {
-	expr.Add("pow(", this);
+	expr.Add(std::string("pow("), this);
 	(*this)[0]->Parse(expr);
-	expr.Add(",", this);
+	expr.Add(std::string(","), this);
 	(*this)[2]->Parse(expr);
-	expr.Add(")", this);
+	expr.Add(std::string(")"), this);
 }
 
 #ifdef TEST

@@ -42,7 +42,7 @@ FormulaNode* CompoundFormulaNode::Clone(FormulaNode* p)
  * @param [in,out] relativeState Relative caret state.
  * @return The next caret position.
  */
-SharedCaretState CompoundFormulaNode::GetNextPosition(SharedCaretState& relativeState)
+SharedCaretState CompoundFormulaNode::GetNextPosition(SharedCaretState relativeState)
 {
 	SharedCaretState res;
 	
@@ -99,7 +99,7 @@ SharedCaretState CompoundFormulaNode::GetNextPosition(SharedCaretState& relative
  * @param [in,out] relativeState Relative caret state.
  * @return The previous caret position.
  */
-SharedCaretState CompoundFormulaNode::GetPreviousPosition(SharedCaretState& relativeState)
+SharedCaretState CompoundFormulaNode::GetPreviousPosition(SharedCaretState relativeState)
 {
 	SharedCaretState res;
 	

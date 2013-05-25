@@ -79,7 +79,7 @@ public:
 	
 public:
 	QString Color();
-	void SetColor(QString& color);
+	void SetColor(QString color);
 
 private:
 	void PopulateList();

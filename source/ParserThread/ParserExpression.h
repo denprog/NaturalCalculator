@@ -10,7 +10,6 @@
 #include "Rational.h"
 #include "../Editor/CaretState.h"
 
-using namespace std;
 using namespace BigNumbersParser;
 
 class FormulaNode;
@@ -55,7 +54,7 @@ struct ParserString
 	~ParserString();
 
 	void Add(char* expr, FormulaNode* node);
-	void Add(string& expr, FormulaNode* node);
+	void Add(std::string expr, FormulaNode* node);
 
 	void operator=(const ParserString& source);
 	
@@ -177,22 +176,22 @@ struct ParserExpressionVariant
 	{
 	}
 	
-	ParserExpressionVariant(AutoParserExpression& expr)
+	ParserExpressionVariant(AutoParserExpression expr)
 	{
 		var = expr;
 	}
 
-	ParserExpressionVariant(RealParserExpression& expr)
+	ParserExpressionVariant(RealParserExpression expr)
 	{
 		var = expr;
 	}
 	
-	ParserExpressionVariant(IntegerParserExpression& expr)
+	ParserExpressionVariant(IntegerParserExpression expr)
 	{
 		var = expr;
 	}
 
-	ParserExpressionVariant(RationalParserExpression& expr)
+	ParserExpressionVariant(RationalParserExpression expr)
 	{
 		var = expr;
 	}
@@ -248,30 +247,34 @@ struct ParserExpressionVariant
 		}
 	};
 	
-	struct UpdatePosVisitor : boost::static_visitor<const void>
+	struct UpdatePosVisitor : boost::static_visitor<const int>
 	{
 		UpdatePosVisitor(const FormulaNode* _node) : node(_node)
 		{
 		}
 		
-		const void operator()(RealParserExpression const& expr) const
+		int operator()(RealParserExpression const& expr) const
 		{
 			expr.UpdatePos(node);
+			return 0;
 		}
 
-		const void operator()(IntegerParserExpression const& expr) const
+		int operator()(IntegerParserExpression const& expr) const
 		{
 			expr.UpdatePos(node);
+			return 0;
 		}
 
-		const void operator()(RationalParserExpression const& expr) const
+		int operator()(RationalParserExpression const& expr) const
 		{
 			expr.UpdatePos(node);
+			return 0;
 		}
 
-		const void operator()(AutoParserExpression const& expr) const
+		int operator()(AutoParserExpression const& expr) const
 		{
 			expr.UpdatePos(node);
+			return 0;
 		}
 		
 		const FormulaNode* node;

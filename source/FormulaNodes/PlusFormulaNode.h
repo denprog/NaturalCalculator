@@ -52,7 +52,7 @@ namespace boost
 		{
 			FormulaNode* parent;
 			ar >> parent;
-			::new (node)PlusFormulaNode(parent, parent->GetWnd());
+			::new (node)PlusFormulaNode(parent, parent->wnd);
 		}
 	}
 }

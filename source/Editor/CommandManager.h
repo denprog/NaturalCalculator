@@ -5,8 +5,6 @@
 #include <QString>
 #include "Command.h"
 
-using namespace std;
-
 class FormulaWnd;
 class FormulaNode;
 
@@ -36,9 +34,9 @@ private:
 	
 private:
 	FormulaWnd* wnd;
-	deque<Command*> undoCommands;
-	deque<Command*> redoCommands;
-	typedef deque<Command*>::iterator CommandsIter;
+	std::deque<Command*> undoCommands;
+	std::deque<Command*> redoCommands;
+	typedef std::deque<Command*>::iterator CommandsIter;
 };
 
 #endif

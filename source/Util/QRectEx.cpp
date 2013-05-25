@@ -13,7 +13,7 @@ QRectEx::QRectEx()
  * Constructor.
  * @param [in] source Source for the.
  */
-QRectEx::QRectEx(QRectF& source) : QRectF(source)
+QRectEx::QRectEx(const QRectF& source) : QRectF(source)
 {
 }
 

@@ -17,7 +17,7 @@ TextFormulaNode::TextFormulaNode()
 {
 }
 
-TextFormulaNode::TextFormulaNode(FormulaNode* parent) : FormulaNode(parent, parent->GetWnd())
+TextFormulaNode::TextFormulaNode(FormulaNode* parent) : FormulaNode(parent, parent->wnd)
 {
 	item = new FormulaTextItem(settings, level, boundingRect, parent->GetItem());
 	item->setData(0, qVariantFromValue((void*)this));
@@ -134,7 +134,7 @@ SharedCaretState TextFormulaNode::GetLastPosition()
  * @param [in,out] relativeState Relative caret state.
  * @return The next caret position.
  */
-SharedCaretState TextFormulaNode::GetNextPosition(SharedCaretState& relativeState)
+SharedCaretState TextFormulaNode::GetNextPosition(SharedCaretState relativeState)
 {
 	if (relativeState && relativeState->CheckInNode(this))
 	{
@@ -152,7 +152,7 @@ SharedCaretState TextFormulaNode::GetNextPosition(SharedCaretState& relativeStat
  * @param [in,out] relativeState Relative caret state.
  * @return The previous caret position.
  */
-SharedCaretState TextFormulaNode::GetPreviousPosition(SharedCaretState& relativeState)
+SharedCaretState TextFormulaNode::GetPreviousPosition(SharedCaretState relativeState)
 {
 	if (relativeState && relativeState->CheckInNode(this))
 	{

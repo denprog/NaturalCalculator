@@ -173,10 +173,10 @@ SharedCaretState BracesFormulaNode::GetLastPosition()
 void BracesFormulaNode::Parse(ParserString& expr)
 {
 	if (leftShape)
-		expr.Add("(", this);
+		expr.Add(std::string("("), this);
 	(*this)[1]->Parse(expr);
 	if (rightShape)
-		expr.Add(")", this);
+		expr.Add(std::string(")"), this);
 }
 
 #ifdef TEST

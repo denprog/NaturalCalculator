@@ -1,6 +1,5 @@
 #include <QtGui>
 #include <QFileDialog>
-#include <vld.h>
 #include "MainWindow.h"
 #include "SettingsDialog.h"
 

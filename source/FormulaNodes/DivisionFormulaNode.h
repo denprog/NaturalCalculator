@@ -2,6 +2,7 @@
 #define DIVISIONFORMULANODE_H
 
 #include "CompoundFormulaNode.h"
+#include "FormulaNodesCollection.h"
 
 class DivisionFormulaNode : public CompoundFormulaNode
 {
@@ -49,8 +50,8 @@ public:
 
 	virtual FormulaNode* Clone(FormulaNode* p);
 
-	virtual SharedCaretState GetNextPosition(SharedCaretState& relativeState = SharedCaretState());
-	virtual SharedCaretState GetPreviousPosition(SharedCaretState& relativeState = SharedCaretState());
+	virtual SharedCaretState GetNextPosition(SharedCaretState relativeState = SharedCaretState());
+	virtual SharedCaretState GetPreviousPosition(SharedCaretState relativeState = SharedCaretState());
 
 	virtual void RenderCaret(const int pos, const int anchor);
 
@@ -77,7 +78,7 @@ namespace boost
 		{
 			FormulaNode* parent;
 			ar >> parent;
-			::new (node)DivisionFormulaNode(parent, parent->GetWnd());
+			::new (node)DivisionFormulaNode(parent, parent->wnd);
 		}
 	}
 }

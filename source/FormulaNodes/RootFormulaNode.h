@@ -41,8 +41,8 @@ public:
 	
 	virtual SharedCaretState GetFirstPosition();
 	virtual SharedCaretState GetLastPosition();
-	virtual SharedCaretState GetNextPosition(SharedCaretState& relativeState = SharedCaretState());
-	virtual SharedCaretState GetPreviousPosition(SharedCaretState& relativeState = SharedCaretState());
+	virtual SharedCaretState GetNextPosition(SharedCaretState relativeState = SharedCaretState());
+	virtual SharedCaretState GetPreviousPosition(SharedCaretState relativeState = SharedCaretState());
 
 public:
 	virtual bool DoCreateEquationFormulaNode(NodeEvent& nodeEvent);

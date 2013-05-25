@@ -10,7 +10,6 @@
 #include "ParserExpression.h"
 #include "BigNumbersParser.h"
 
-using namespace std;
 using namespace BigNumbersParser;
 
 class FormulaWnd;
@@ -37,8 +36,8 @@ private:
 	boost::thread* thread;
 	FormulaWnd* wnd;
 	
-	vector<ParserExpressionVariant> expressionsToSolve; //the thread gets expressions from here
-	vector<ParserExpressionVariant> solvedExpressions; //the thread puts solved expressions here
+	std::vector<ParserExpressionVariant> expressionsToSolve; //the thread gets expressions from here
+	std::vector<ParserExpressionVariant> solvedExpressions; //the thread puts solved expressions here
 	typedef vector<ParserExpressionVariant>::iterator ParserExpressionVariantIter;
 	
 	boost::mutex expressionsMutex; //locks these vectors for writing and reading

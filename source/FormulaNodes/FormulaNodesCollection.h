@@ -7,8 +7,6 @@
 #include <boost/serialization/split_member.hpp>
 #include "FormulaNode.h"
 
-using namespace std;
-
 /**
  * Collection of formula nodes.
  */

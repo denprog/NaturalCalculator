@@ -3,6 +3,7 @@
 #include "EmptyFormulaNode.h"
 #include "FormulaNodesCollection.h"
 #include "EquationFormulaNode.h"
+#include "../Main/FormulaWnd.h"
 
 /**
  * Default constructor.
@@ -15,7 +16,7 @@ RootFormulaNode::RootFormulaNode()
  * Constructor.
  * @param [in] parent The parent node.
  */
-RootFormulaNode::RootFormulaNode(FormulaNode* parent) : GroupFormulaNode(parent, parent->GetWnd()), scene(parent->GetWnd()->scene)
+RootFormulaNode::RootFormulaNode(FormulaNode* parent) : GroupFormulaNode(parent, parent->wnd), scene(parent->wnd->scene)
 {
 	scene->addItem(item);
 
@@ -79,7 +80,7 @@ SharedCaretState RootFormulaNode::GetLastPosition()
  * @param [in,out] relativeState Relative caret state.
  * @return The next caret position.
  */
-SharedCaretState RootFormulaNode::GetNextPosition(SharedCaretState& relativeState)
+SharedCaretState RootFormulaNode::GetNextPosition(SharedCaretState relativeState)
 {
 	SharedCaretState res;
 	
@@ -134,7 +135,7 @@ SharedCaretState RootFormulaNode::GetNextPosition(SharedCaretState& relativeStat
  * @param [in,out] relativeState Relative caret state.
  * @return The previous caret position.
  */
-SharedCaretState RootFormulaNode::GetPreviousPosition(SharedCaretState& relativeState)
+SharedCaretState RootFormulaNode::GetPreviousPosition(SharedCaretState relativeState)
 {
 	SharedCaretState res;
 	

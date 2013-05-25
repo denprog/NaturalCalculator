@@ -461,7 +461,7 @@ SharedCaretState FormulaNode::GetLastPosition()
  * @param [in,out] relativeState Relative caret state.
  * @return Empty caret state for FormulaNode object.
  */
-SharedCaretState FormulaNode::GetNextPosition(SharedCaretState& relativeState)
+SharedCaretState FormulaNode::GetNextPosition(SharedCaretState relativeState)
 {
 	return SharedCaretState();
 }
@@ -471,7 +471,7 @@ SharedCaretState FormulaNode::GetNextPosition(SharedCaretState& relativeState)
  * @param [in,out] relativeState Relative caret state.
  * @return Empty caret state for FormulaNode object.
  */
-SharedCaretState FormulaNode::GetPreviousPosition(SharedCaretState& relativeState)
+SharedCaretState FormulaNode::GetPreviousPosition(SharedCaretState relativeState)
 {
 	return SharedCaretState();
 }
@@ -1141,7 +1141,7 @@ void FormulaNode::MakeContextMenu(QMenu* menu)
 		parent->MakeContextMenu(menu);
 }
 
-bool FormulaNode::MenuContainsAction(QMenu* menu, QString& action)
+bool FormulaNode::MenuContainsAction(QMenu* menu, QString action)
 {
 	QList<QAction*> actions = menu->actions();
 	

@@ -14,7 +14,7 @@ class QRectEx : public QRectF
 {
 public:
 	QRectEx();
-	QRectEx(QRectF& source);
+	QRectEx(const QRectF& source);
 
 public:
 	int DistToPoint(qreal x, qreal y);

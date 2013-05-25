@@ -3,6 +3,7 @@
 
 #include "CompoundFormulaNode.h"
 #include "ResultFormulaNode.h"
+#include "FormulaNodesCollection.h"
 
 /**
  * Equation formula node.
@@ -78,7 +79,7 @@ namespace boost
 		{
 			FormulaNode* parent;
 			ar >> parent;
-			::new (node)EquationFormulaNode(parent, parent->GetWnd());
+			::new (node)EquationFormulaNode(parent, parent->wnd);
 		}
 	}
 }

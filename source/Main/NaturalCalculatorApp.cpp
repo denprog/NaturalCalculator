@@ -1,4 +1,5 @@
 #include "NaturalCalculatorApp.h"
+#include "FormulaWnd.h"
 
 /**
  * Constructor.
@@ -40,7 +41,7 @@ FormulaWnd* NaturalCalculatorApp::GetFormulaWnd(int pos)
  * @param [in,out] The window.
  * @return The formula window position.
  */
-int NaturalCalculatorApp::GetFormulaWndPos(FormulaWnd* wnd)
+int NaturalCalculatorApp::GetFormulaWndPos(const FormulaWnd* wnd)
 {
 	return find(formulaWnds.begin(), formulaWnds.end(), wnd) - formulaWnds.begin();
 }

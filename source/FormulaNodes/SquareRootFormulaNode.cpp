@@ -110,9 +110,9 @@ bool SquareRootFormulaNode::IsShapeVisible(int pos) const
  */
 void SquareRootFormulaNode::Parse(ParserString& expr)
 {
-	expr.Add("sqrt(", this);
+	expr.Add(std::string("sqrt("), this);
 	GetExpression(0)->Parse(expr);
-	expr.Add(")", this);
+	expr.Add(std::string(")"), this);
 }
 
 #ifdef TEST

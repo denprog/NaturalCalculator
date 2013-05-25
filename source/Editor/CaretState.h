@@ -4,8 +4,6 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 
-using namespace std;
-
 class FormulaNode;
 class FormulaWnd;
 class CurrentNode;
@@ -13,7 +11,7 @@ class CurrentNode;
 /**
  * Defines hierarchy position of a node, which is an array of node positions in their collections towards the root node.
  */
-typedef vector<int> HierarchyPos;
+typedef std::vector<int> HierarchyPos;
 
 /**
  * Caret state.
@@ -71,7 +69,7 @@ public:
 	int GetPos();
 	
 private:
-	vector<int> positions; ///< The caret positions
+	std::vector<int> positions; ///< The caret positions
 	FormulaWnd* wnd;
 };
 
