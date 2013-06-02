@@ -14,7 +14,7 @@ CommandAction::CommandAction()
  * @param pos	The caret position.
  * @param [in] _action The action's method.
  */
-CommandAction::CommandAction(FormulaNode* node, int pos, boost::function<bool (FormulaNode*, NodeEvent&)> _action) : 
+CommandAction::CommandAction(FormulaNode* node, int pos, CommandFunction _action) : 
 	caretState(new CaretState(node, pos)), action(_action)
 {
 }
@@ -24,7 +24,7 @@ CommandAction::CommandAction(FormulaNode* node, int pos, boost::function<bool (F
  * @param _caretState	State of the caret.
  * @param [in] _action The action's method.
  */
-CommandAction::CommandAction(SharedCaretState _caretState, boost::function<bool (FormulaNode*, NodeEvent&)> _action) : 
+CommandAction::CommandAction(SharedCaretState _caretState, CommandFunction _action) : 
 	caretState(_caretState->Dublicate()), action(_action)
 {
 }
@@ -36,7 +36,7 @@ CommandAction::CommandAction(SharedCaretState _caretState, boost::function<bool 
  * @param [in] _actionNode The node being used in the action.
  * @param [in] _action [in] The action funcion.
  */
-CommandAction::CommandAction(FormulaNode* node, int pos, FormulaNode* _actionNode, boost::function<bool (FormulaNode*, NodeEvent&)> _action) : 
+CommandAction::CommandAction(FormulaNode* node, int pos, FormulaNode* _actionNode, CommandFunction _action) : 
 	caretState(new CaretState(node, pos)), actionNode(new CaretState(_actionNode)), action(_action)
 {
 }
@@ -45,11 +45,11 @@ CommandAction::CommandAction(FormulaNode* node, int pos, FormulaNode* _actionNod
  * The functor for executing an action.
  * @param nodeEvent The node event
  */
-bool CommandAction::operator()(NodeEvent& nodeEvent)
+bool CommandAction::operator()(Command* command)
 {
 	if (actionNode && actionNode->GetNode())
-		nodeEvent["actionNode"] = actionNode;
-	return action(caretState->GetNode(), nodeEvent);
+		command->nodeEvent["actionNode"] = actionNode;
+	return action(caretState->GetNode(), command);
 }
 
 /**
@@ -88,7 +88,7 @@ bool Command::DoAction()
 	afterCaretState->SetState(*beforeCaretState);
 	
 	//do the action
-	if (doAction(nodeEvent))
+	if (doAction(this))
 	{
 		//command must pass these parameters in case of successfull action
 		undoAction = any_cast<CommandAction>(nodeEvent["undoAction"]);
@@ -105,7 +105,7 @@ bool Command::DoAction()
 bool Command::UndoAction()
 {
 	//undo action
-	return undoAction(nodeEvent);
+	return undoAction(this);
 }
 
 /**

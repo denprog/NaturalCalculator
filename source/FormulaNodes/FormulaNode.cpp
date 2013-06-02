@@ -528,12 +528,12 @@ void FormulaNode::RenderCaret(const int pos, const int anchor)
 	g->setZValue(1);
 }
 
-bool FormulaNode::DoInsertNode(NodeEvent& nodeEvent)
+bool FormulaNode::DoInsertNode(Command* command)
 {
 	return false;
 }
 
-bool FormulaNode::UndoInsertNode(NodeEvent& nodeEvent)
+bool FormulaNode::UndoInsertNode(Command* command)
 {
 	return false;
 }
@@ -543,9 +543,9 @@ bool FormulaNode::UndoInsertNode(NodeEvent& nodeEvent)
  * @param [in,out] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::DoInsertText(NodeEvent& nodeEvent)
+bool FormulaNode::DoInsertText(Command* command)
 {
-	Command* command = any_cast<Command*>(nodeEvent["command"]);
+	NodeEvent& nodeEvent = command->nodeEvent;
 	QString str = any_cast<QString>(nodeEvent["text"]);
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	FormulaNode* n = c->GetNode();
@@ -574,9 +574,9 @@ bool FormulaNode::DoInsertText(NodeEvent& nodeEvent)
  * @param [in,out] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::UndoInsertText(NodeEvent& nodeEvent)
+bool FormulaNode::UndoInsertText(Command* command)
 {
-	Command* command = any_cast<Command*>(nodeEvent["command"]);
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	bool empty = command->ContainsParam(this, "empty");
 	int pos = c->GetNode()->parent->GetChildPos(c->GetNode());
@@ -598,10 +598,10 @@ bool FormulaNode::UndoInsertText(NodeEvent& nodeEvent)
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::DoInsertLine(NodeEvent& nodeEvent)
+bool FormulaNode::DoInsertLine(Command* command)
 {
 	if (parent)
-		return parent->DoInsertLine(nodeEvent);
+		return parent->DoInsertLine(command);
 	return false;
 }
 
@@ -610,10 +610,10 @@ bool FormulaNode::DoInsertLine(NodeEvent& nodeEvent)
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::UndoInsertLine(NodeEvent& nodeEvent)
+bool FormulaNode::UndoInsertLine(Command* command)
 {
 	if (parent)
-		return parent->UndoInsertLine(nodeEvent);
+		return parent->UndoInsertLine(command);
 	return false;
 }
 
@@ -622,12 +622,13 @@ bool FormulaNode::UndoInsertLine(NodeEvent& nodeEvent)
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
+bool FormulaNode::DoRemoveItem(Command* command)
 {
-	command = any_cast<Command*>(nodeEvent["command"]);
+	NodeEvent& nodeEvent = command->nodeEvent;
 	bool right = any_cast<bool>(nodeEvent["right"]);
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	int pos = c->GetPos();
+	command->SetParam(this, "pos", pos);
 
 	if (right)
 	{
@@ -675,12 +676,12 @@ bool FormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::UndoRemoveItem(NodeEvent& nodeEvent)
+bool FormulaNode::UndoRemoveItem(Command* command)
 {
-	command = any_cast<Command*>(nodeEvent["command"]);
+	NodeEvent& nodeEvent = command->nodeEvent;
 	bool right = any_cast<bool>(nodeEvent["right"]);
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	int pos = c->GetPos();
+	int pos = any_cast<int>(nodeEvent["pos"]);
 	
 	if (command->ContainsParam(this, "removeCount"))
 	{
@@ -702,8 +703,9 @@ bool FormulaNode::UndoRemoveItem(NodeEvent& nodeEvent)
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::DoCreatePlusFormulaNode(NodeEvent& nodeEvent)
+bool FormulaNode::DoCreatePlusFormulaNode(Command* command)
 {
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	//create a plus node and insert it into the child nodes
 	FormulaNode* p = new PlusFormulaNode(this, wnd);
@@ -720,8 +722,9 @@ bool FormulaNode::DoCreatePlusFormulaNode(NodeEvent& nodeEvent)
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::UndoCreatePlusFormulaNode(NodeEvent& nodeEvent)
+bool FormulaNode::UndoCreatePlusFormulaNode(Command* command)
 {
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	RemoveChild(c->GetPos() - 1);
 	
@@ -733,8 +736,9 @@ bool FormulaNode::UndoCreatePlusFormulaNode(NodeEvent& nodeEvent)
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::DoCreateMinusFormulaNode(NodeEvent& nodeEvent)
+bool FormulaNode::DoCreateMinusFormulaNode(Command* command)
 {
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	//create a plus node and insert it into the child nodes
 	FormulaNode* p = new MinusFormulaNode(this, wnd);
@@ -751,8 +755,9 @@ bool FormulaNode::DoCreateMinusFormulaNode(NodeEvent& nodeEvent)
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::UndoCreateMinusFormulaNode(NodeEvent& nodeEvent)
+bool FormulaNode::UndoCreateMinusFormulaNode(Command* command)
 {
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	RemoveChild(c->GetPos() - 1);
 	
@@ -764,8 +769,9 @@ bool FormulaNode::UndoCreateMinusFormulaNode(NodeEvent& nodeEvent)
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::DoCreateMultiplyFormulaNode(NodeEvent& nodeEvent)
+bool FormulaNode::DoCreateMultiplyFormulaNode(Command* command)
 {
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	//create a plus node and insert it into the child nodes
 	FormulaNode* p = new MultiplyFormulaNode(this, wnd);
@@ -782,8 +788,9 @@ bool FormulaNode::DoCreateMultiplyFormulaNode(NodeEvent& nodeEvent)
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::UndoCreateMultiplyFormulaNode(NodeEvent& nodeEvent)
+bool FormulaNode::UndoCreateMultiplyFormulaNode(Command* command)
 {
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	RemoveChild(c->GetPos() - 1);
 	
@@ -795,8 +802,9 @@ bool FormulaNode::UndoCreateMultiplyFormulaNode(NodeEvent& nodeEvent)
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::DoCreatePowerFormulaNode(NodeEvent& nodeEvent)
+bool FormulaNode::DoCreatePowerFormulaNode(Command* command)
 {
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	int pos = c->GetPos();
 	//create a power node, insert current node into it and insert the result into the parent
@@ -823,7 +831,7 @@ bool FormulaNode::DoCreatePowerFormulaNode(NodeEvent& nodeEvent)
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::UndoCreatePowerFormulaNode(NodeEvent& nodeEvent)
+bool FormulaNode::UndoCreatePowerFormulaNode(Command* command)
 {
 	FormulaNode* p = parent->parent->parent;
 	int pos = p->GetChildPos(parent->parent);
@@ -838,8 +846,9 @@ bool FormulaNode::UndoCreatePowerFormulaNode(NodeEvent& nodeEvent)
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::DoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
+bool FormulaNode::DoCreateSquareRootFormulaNode(Command* command)
 {
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	int pos = c->GetPos();
 	//create a square root node, insert current node into it and insert the result into the parent
@@ -861,8 +870,9 @@ bool FormulaNode::DoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::UndoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
+bool FormulaNode::UndoCreateSquareRootFormulaNode(Command* command)
 {
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	FormulaNode* node = c->GetNode();
 	int pos = GetFirstLevelChildPos(node);
@@ -888,7 +898,7 @@ bool FormulaNode::UndoCreateSquareRootFormulaNode(NodeEvent& nodeEvent)
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::DoCreateDivisionFormulaNode(NodeEvent& nodeEvent)
+bool FormulaNode::DoCreateDivisionFormulaNode(Command* command)
 {
 	return false;
 }
@@ -898,7 +908,7 @@ bool FormulaNode::DoCreateDivisionFormulaNode(NodeEvent& nodeEvent)
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::UndoCreateDivisionFormulaNode(NodeEvent& nodeEvent)
+bool FormulaNode::UndoCreateDivisionFormulaNode(Command* command)
 {
 	return false;
 }
@@ -908,8 +918,9 @@ bool FormulaNode::UndoCreateDivisionFormulaNode(NodeEvent& nodeEvent)
  * @param [in,out] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::DoCreateLeftBraceFormulaNode(NodeEvent& nodeEvent)
+bool FormulaNode::DoCreateLeftBraceFormulaNode(Command* command)
 {
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	FormulaNode* node = c->GetNode();
 	command = any_cast<Command*>(nodeEvent["command"]);
@@ -950,8 +961,9 @@ bool FormulaNode::DoCreateLeftBraceFormulaNode(NodeEvent& nodeEvent)
  * @param [in,out] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::UndoCreateLeftBraceFormulaNode(NodeEvent& nodeEvent)
+bool FormulaNode::UndoCreateLeftBraceFormulaNode(Command* command)
 {
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	BracesFormulaNode* node = (BracesFormulaNode*)c->GetNode()->GetParent();
 	command = any_cast<Command*>(nodeEvent["command"]);
@@ -990,8 +1002,9 @@ bool FormulaNode::UndoCreateLeftBraceFormulaNode(NodeEvent& nodeEvent)
  * @param [in,out] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::DoCreateRightBraceFormulaNode(NodeEvent& nodeEvent)
+bool FormulaNode::DoCreateRightBraceFormulaNode(Command* command)
 {
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	command = any_cast<Command*>(nodeEvent["command"]);
 	int pos = c->GetPos();
@@ -1050,8 +1063,9 @@ bool FormulaNode::DoCreateRightBraceFormulaNode(NodeEvent& nodeEvent)
  * @param [in,out] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::UndoCreateRightBraceFormulaNode(NodeEvent& nodeEvent)
+bool FormulaNode::UndoCreateRightBraceFormulaNode(Command* command)
 {
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	command = any_cast<Command*>(nodeEvent["command"]);
 	
@@ -1089,11 +1103,11 @@ bool FormulaNode::UndoCreateRightBraceFormulaNode(NodeEvent& nodeEvent)
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::DoCreateEquationFormulaNode(NodeEvent& nodeEvent)
+bool FormulaNode::DoCreateEquationFormulaNode(Command* command)
 {
 	//pass the request to the root node
 	if (parent)
-		return parent->DoCreateEquationFormulaNode(nodeEvent);
+		return parent->DoCreateEquationFormulaNode(command);
 	return false;
 }
 
@@ -1102,10 +1116,10 @@ bool FormulaNode::DoCreateEquationFormulaNode(NodeEvent& nodeEvent)
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::UndoCreateEquationFormulaNode(NodeEvent& nodeEvent)
+bool FormulaNode::UndoCreateEquationFormulaNode(Command* command)
 {
 	if (parent)
-		return parent->UndoCreateEquationFormulaNode(nodeEvent);
+		return parent->UndoCreateEquationFormulaNode(command);
 	return false;
 }
 

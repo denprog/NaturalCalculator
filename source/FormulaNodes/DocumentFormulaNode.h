@@ -53,8 +53,8 @@ public:
 
 	//commands
 	
-	virtual bool DoInsertLine(NodeEvent& nodeEvent);
-	virtual bool UndoInsertLine(NodeEvent& nodeEvent);
+	virtual bool DoInsertLine(Command* command);
+	virtual bool UndoInsertLine(Command* command);
 	
 public:
 	QGraphicsScene* scene;

@@ -128,7 +128,7 @@ void EquationFormulaNode::Parse(ParserString& expr)
  * @param [in] nodeEvent The node event.
  * @return false because there is no possibility of inserting a text into this node
  */
-bool EquationFormulaNode::DoInsertText(NodeEvent& nodeEvent)
+bool EquationFormulaNode::DoInsertText(Command* command)
 {
 	return false;
 }

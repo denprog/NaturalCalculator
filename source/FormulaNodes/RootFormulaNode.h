@@ -45,10 +45,10 @@ public:
 	virtual SharedCaretState GetPreviousPosition(SharedCaretState relativeState = SharedCaretState());
 
 public:
-	virtual bool DoCreateEquationFormulaNode(NodeEvent& nodeEvent);
-	virtual bool UndoCreateEquationFormulaNode(NodeEvent& nodeEvent);
+	virtual bool DoCreateEquationFormulaNode(Command* command);
+	virtual bool UndoCreateEquationFormulaNode(Command* command);
 
-	virtual bool UndoCreatePowerFormulaNode(NodeEvent& nodeEvent);
+	virtual bool UndoCreatePowerFormulaNode(Command* command);
 
 private:
 	QGraphicsScene* scene;

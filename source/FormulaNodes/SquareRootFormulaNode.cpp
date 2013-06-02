@@ -182,8 +182,9 @@ void SquareRootFormulaNode::RenderCaret(const int pos, const int anchor)
  * @param [in,out] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool SquareRootFormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
+bool SquareRootFormulaNode::DoRemoveItem(Command* command)
 {
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	int pos = c->GetPos();
 	
@@ -212,5 +213,5 @@ bool SquareRootFormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
 		return true;
 	}
 
-	return FormulaNode::DoRemoveItem(nodeEvent);
+	return FormulaNode::DoRemoveItem(command);
 }

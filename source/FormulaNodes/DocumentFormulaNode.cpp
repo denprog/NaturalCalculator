@@ -138,8 +138,9 @@ SharedCaretState DocumentFormulaNode::GetPreviousPosition(SharedCaretState relat
  * @param [in,out] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool DocumentFormulaNode::DoInsertLine(NodeEvent& nodeEvent)
+bool DocumentFormulaNode::DoInsertLine(Command* command)
 {
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	FormulaNode* node = c->GetNode();
 	int pos = GetFirstLevelChildPos(node);
@@ -159,8 +160,9 @@ bool DocumentFormulaNode::DoInsertLine(NodeEvent& nodeEvent)
  * @param [in,out] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool DocumentFormulaNode::UndoInsertLine(NodeEvent& nodeEvent)
+bool DocumentFormulaNode::UndoInsertLine(Command* command)
 {
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	FormulaNode* node = c->GetNode();
 	int pos = GetFirstLevelChildPos(node);

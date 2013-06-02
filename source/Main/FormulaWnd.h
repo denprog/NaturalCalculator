@@ -53,7 +53,7 @@ public:
 	void Undo();
 	void Redo();
 	
-	void InsertNode(boost::function<bool (FormulaNode*, NodeEvent&)> action);
+	void InsertNode(CommandFunction action);
 	void UpdateView();
 	void EnsureVisible();
 	

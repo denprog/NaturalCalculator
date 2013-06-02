@@ -367,7 +367,7 @@ void FormulaWnd::Redo()
  * Inserts a node described by action.
  * @param [in,out] action [in,out] The action is a function object to be executed.
  */
-void FormulaWnd::InsertNode(boost::function<bool (FormulaNode*, NodeEvent&)> action)
+void FormulaWnd::InsertNode(CommandFunction action)
 {
 	if (commandManager.InsertNode(NULL, CommandAction(caret->currentState, action)))
 		UpdateView();

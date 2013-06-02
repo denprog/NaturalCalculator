@@ -67,37 +67,37 @@ public:
 
 	//command functions
 	
-	virtual bool DoInsertNode(NodeEvent& nodeEvent);
-	virtual bool UndoInsertNode(NodeEvent& nodeEvent);
-	virtual bool DoInsertText(NodeEvent& nodeEvent);
-	virtual bool UndoInsertText(NodeEvent& nodeEvent);
+	virtual bool DoInsertNode(Command* command);
+	virtual bool UndoInsertNode(Command* command);
+	virtual bool DoInsertText(Command* command);
+	virtual bool UndoInsertText(Command* command);
 	
-	virtual bool DoRemoveItem(NodeEvent& nodeEvent);
-	virtual bool UndoRemoveItem(NodeEvent& nodeEvent);
+	virtual bool DoRemoveItem(Command* command);
+	virtual bool UndoRemoveItem(Command* command);
 
-	virtual bool DoCreatePlusFormulaNode(NodeEvent& nodeEvent);
-	virtual bool UndoCreatePlusFormulaNode(NodeEvent& nodeEvent);
+	virtual bool DoCreatePlusFormulaNode(Command* command);
+	virtual bool UndoCreatePlusFormulaNode(Command* command);
 
-	virtual bool DoCreateMinusFormulaNode(NodeEvent& nodeEvent);
-	virtual bool UndoCreateMinusFormulaNode(NodeEvent& nodeEvent);
+	virtual bool DoCreateMinusFormulaNode(Command* command);
+	virtual bool UndoCreateMinusFormulaNode(Command* command);
 
-	virtual bool DoCreateMultiplyFormulaNode(NodeEvent& nodeEvent);
-	virtual bool UndoCreateMultiplyFormulaNode(NodeEvent& nodeEvent);
+	virtual bool DoCreateMultiplyFormulaNode(Command* command);
+	virtual bool UndoCreateMultiplyFormulaNode(Command* command);
 	
-	virtual bool DoCreateDivisionFormulaNode(NodeEvent& nodeEvent);
-	virtual bool UndoCreateDivisionFormulaNode(NodeEvent& nodeEvent);
+	virtual bool DoCreateDivisionFormulaNode(Command* command);
+	virtual bool UndoCreateDivisionFormulaNode(Command* command);
 	
-	virtual bool DoCreatePowerFormulaNode(NodeEvent& nodeEvent);
-	virtual bool UndoCreatePowerFormulaNode(NodeEvent& nodeEvent);
+	virtual bool DoCreatePowerFormulaNode(Command* command);
+	virtual bool UndoCreatePowerFormulaNode(Command* command);
 
-	virtual bool DoCreateSquareRootFormulaNode(NodeEvent& nodeEvent);
-	virtual bool UndoCreateSquareRootFormulaNode(NodeEvent& nodeEvent);
+	virtual bool DoCreateSquareRootFormulaNode(Command* command);
+	virtual bool UndoCreateSquareRootFormulaNode(Command* command);
 
-	virtual bool DoCreateLeftBraceFormulaNode(NodeEvent& nodeEvent);
-	virtual bool UndoCreateLeftBraceFormulaNode(NodeEvent& nodeEvent);
+	virtual bool DoCreateLeftBraceFormulaNode(Command* command);
+	virtual bool UndoCreateLeftBraceFormulaNode(Command* command);
 
-	virtual bool DoCreateRightBraceFormulaNode(NodeEvent& nodeEvent);
-	virtual bool UndoCreateRightBraceFormulaNode(NodeEvent& nodeEvent);
+	virtual bool DoCreateRightBraceFormulaNode(Command* command);
+	virtual bool UndoCreateRightBraceFormulaNode(Command* command);
 	
 public slots:
 	virtual void OnCopy();

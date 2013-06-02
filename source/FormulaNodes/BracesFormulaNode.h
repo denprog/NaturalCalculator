@@ -52,7 +52,7 @@ public:
 #endif
 
 	//command functions
-	virtual bool DoRemoveItem(NodeEvent& nodeEvent);
+	virtual bool DoRemoveItem(Command* command);
 	
 private:
 	ShapeFormulaNode *leftShape, *rightShape;

@@ -177,8 +177,9 @@ SharedCaretState RootFormulaNode::GetPreviousPosition(SharedCaretState relativeS
  * @param [in,out] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool RootFormulaNode::DoCreateEquationFormulaNode(NodeEvent& nodeEvent)
+bool RootFormulaNode::DoCreateEquationFormulaNode(Command* command)
 {
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	//create a equation node and move the first level nodes in its left side
 	FormulaNode* e = new EquationFormulaNode(this, wnd);
@@ -199,8 +200,9 @@ bool RootFormulaNode::DoCreateEquationFormulaNode(NodeEvent& nodeEvent)
  * @param [in,out] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool RootFormulaNode::UndoCreateEquationFormulaNode(NodeEvent& nodeEvent)
+bool RootFormulaNode::UndoCreateEquationFormulaNode(Command* command)
 {
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	FormulaNode* node = c->GetNode();
 	int pos = GetFirstLevelChildPos(node);
@@ -215,8 +217,9 @@ bool RootFormulaNode::UndoCreateEquationFormulaNode(NodeEvent& nodeEvent)
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool RootFormulaNode::UndoCreatePowerFormulaNode(NodeEvent& nodeEvent)
+bool RootFormulaNode::UndoCreatePowerFormulaNode(Command* command)
 {
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	FormulaNode* n = c->GetNode();
 	int pos = GetFirstLevelChildPos(n);

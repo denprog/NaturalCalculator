@@ -199,7 +199,7 @@ void BracesFormulaNode::ParseStructure(QString& res)
  * @param [in,out] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool BracesFormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
+bool BracesFormulaNode::DoRemoveItem(Command* command)
 {
 	return false;
 }

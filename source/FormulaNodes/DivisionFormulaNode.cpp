@@ -207,8 +207,9 @@ void DivisionFormulaNode::RenderCaret(const int pos, const int anchor)
  * @param [in,out] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
-bool DivisionFormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
+bool DivisionFormulaNode::DoRemoveItem(Command* command)
 {
+	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	int pos = c->GetPos();
 	
@@ -241,5 +242,5 @@ bool DivisionFormulaNode::DoRemoveItem(NodeEvent& nodeEvent)
 		return true;
 	}
 
-	return FormulaNode::DoRemoveItem(nodeEvent);
+	return FormulaNode::DoRemoveItem(command);
 }

@@ -46,7 +46,7 @@ public:
 	virtual void Parse(ParserString& expr);
 
 	//command functions
-	virtual bool DoInsertText(NodeEvent& nodeEvent);
+	virtual bool DoInsertText(Command* command);
 
 public:
 	virtual void MakeContextMenu(QMenu* menu);
