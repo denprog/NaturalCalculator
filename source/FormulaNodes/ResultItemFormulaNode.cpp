@@ -9,6 +9,7 @@
  */
 ResultItemFormulaNode::ResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : GroupFormulaNode(_parent, wnd)
 {
+	type = RESULT_ITEM_NODE;
 }
 
 /**

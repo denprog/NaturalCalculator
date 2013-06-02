@@ -7,6 +7,8 @@
  */
 ShapeFormulaNode::ShapeFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : GroupFormulaNode(_parent, wnd)
 {
+	type = SHAPE_NODE;
+	
 #ifdef _DEBUG
 	name = "ShapeFormulaNode";
 #endif

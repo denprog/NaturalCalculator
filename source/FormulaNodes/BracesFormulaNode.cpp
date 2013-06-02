@@ -8,6 +8,8 @@
  */
 BracesFormulaNode::BracesFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, bool left, bool right) : CompoundFormulaNode(_parent, wnd)
 {
+	type = BRACES_NODE;
+
 	if (!left && !right)
 		assert(false);
 	

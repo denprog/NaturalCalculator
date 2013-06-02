@@ -31,6 +31,27 @@ enum FormulaNodeLevel
 	STILL_LESS_LEVEL
 };
 
+enum NodeType
+{
+	EMPTY_NODE,
+	DOCUMENT_NODE, 
+	ROOT_NODE,
+	TEXT_NODE,
+	SHAPE_NODE,
+	GROUP_NODE,
+	COMPOUND_NODE,
+	PLUS_NODE,
+	MINUS_NODE,
+	MULTIPLY_NODE, 
+	DIVISION_NODE, 
+	POWER_NODE, 
+	SQUARE_ROOT_NODE, 
+	BRACES_NODE, 
+	RESULT_NODE, 
+	RESULT_ITEM_NODE, 
+	EQUATION_NODE
+};
+
 class Settings;
 
 /**
@@ -229,6 +250,7 @@ public:
 	}
 	
 public:
+	NodeType type;
 	FormulaNode* parent; ///< The parent node
 	FormulaNodesCollection* childNodes; ///< The child nodes
 	QRectF boundingRect; ///< The bounding rectangle

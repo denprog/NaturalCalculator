@@ -9,6 +9,8 @@
  */
 MinusFormulaNode::MinusFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : ShapeFormulaNode(_parent, wnd)
 {
+	type = MINUS_NODE;
+	
 #ifdef _DEBUG
 	name = "MinusFormulaNode";
 #endif

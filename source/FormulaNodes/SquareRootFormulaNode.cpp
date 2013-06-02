@@ -8,6 +8,7 @@
  */
 SquareRootFormulaNode::SquareRootFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : CompoundFormulaNode(_parent, wnd)
 {
+	type = SQUARE_ROOT_NODE;
 	shape = AddShapeNode();
 	InsertChild(new GroupFormulaNode(parent, wnd), 1);
 

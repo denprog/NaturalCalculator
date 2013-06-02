@@ -10,6 +10,7 @@
  */
 EquationFormulaNode::EquationFormulaNode()
 {
+	type = EQUATION_NODE;
 }
 
 /**
@@ -21,6 +22,7 @@ EquationFormulaNode::EquationFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) 
 {
 	shape = AddShapeNode();
 	resNode = NULL;
+	type = EQUATION_NODE;
 
 #ifdef _DEBUG
 	name = "EquationFormulaNode";

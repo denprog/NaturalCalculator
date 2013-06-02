@@ -11,6 +11,7 @@
  */
 GroupFormulaNode::GroupFormulaNode()
 {
+	type = GROUP_NODE;
 }
 
 /**
@@ -20,6 +21,7 @@ GroupFormulaNode::GroupFormulaNode()
  */
 GroupFormulaNode::GroupFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : FormulaNode(_parent, wnd)
 {
+	type = GROUP_NODE;
 	item = new QGraphicsItemGroup(_parent ? _parent->GetItem() : NULL);
 	
 	//storing this pointer for identifying the item when getting mouse movements
@@ -142,7 +144,7 @@ SharedCaretState GroupFormulaNode::GetFirstPosition()
 	if (!n)
 		return SharedCaretState();
 	
-	if (dynamic_cast<CompoundFormulaNode*>(n))
+	if (n->type == COMPOUND_NODE)
 		return SharedCaretState(new CaretState(this, 0));
 	SharedCaretState res = n->GetFirstPosition();
 	if (!res)
@@ -161,16 +163,16 @@ SharedCaretState GroupFormulaNode::GetLastPosition()
 		return SharedCaretState();
 	
 	FormulaNode* n = childNodes->GetLast();
-	if (dynamic_cast<EmptyFormulaNode*>(n))
+	if (n->type == EMPTY_NODE)
 		return SharedCaretState(new CaretState(this, childNodes->Count() - 1));
-	if (dynamic_cast<CompoundFormulaNode*>(n))
+	if (n->type == COMPOUND_NODE)
 		return SharedCaretState(new CaretState(this, childNodes->Count()));
 	
 	SharedCaretState res = n->GetLastPosition();
 	if (res)
 		return res;
 	
-	if (childNodes->Count() == 1 && dynamic_cast<EmptyFormulaNode*>(childNodes->GetFirst()))
+	if (childNodes->Count() == 1 && childNodes->GetFirst()->type == EMPTY_NODE)
 		return SharedCaretState(new CaretState(this, 0));
 	
 	return SharedCaretState(new CaretState(this, childNodes->Count()));
@@ -201,7 +203,7 @@ SharedCaretState GroupFormulaNode::GetNextPosition(SharedCaretState relativeStat
 			{
 				if (node == this)
 				{
-					if (dynamic_cast<EmptyFormulaNode*>((*this)[relativeState->GetPos()]))
+					if ((*this)[relativeState->GetPos()]->type == EMPTY_NODE)
 						return parent->GetNextPosition(relativeState);
 					
 					i = relativeState->GetPos();
@@ -209,7 +211,7 @@ SharedCaretState GroupFormulaNode::GetNextPosition(SharedCaretState relativeStat
 					res = n->GetNextPosition(relativeState);
 					if (res)
 						return res;
-					if (i == childNodes->Count() - 1 && !(dynamic_cast<EmptyFormulaNode*>(n)))
+					if (i == childNodes->Count() - 1 && n->type != EMPTY_NODE)
 						return SharedCaretState(new CaretState(this, i + 1));
 				}
 				else

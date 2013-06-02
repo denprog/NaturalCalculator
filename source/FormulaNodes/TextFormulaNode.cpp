@@ -15,10 +15,12 @@
  */
 TextFormulaNode::TextFormulaNode()
 {
+	type = TEXT_NODE;
 }
 
 TextFormulaNode::TextFormulaNode(FormulaNode* parent) : FormulaNode(parent, parent->wnd)
 {
+	type = TEXT_NODE;
 	item = new FormulaTextItem(settings, level, boundingRect, parent->GetItem());
 	item->setData(0, qVariantFromValue((void*)this));
 	
@@ -37,6 +39,7 @@ TextFormulaNode::TextFormulaNode(FormulaNode* parent) : FormulaNode(parent, pare
  */
 TextFormulaNode::TextFormulaNode(FormulaNode* parent, FormulaWnd* wnd) : FormulaNode(parent, wnd)
 {
+	type = TEXT_NODE;
 	item = new FormulaTextItem(settings, level, boundingRect, parent ? parent->GetItem() : NULL);
 	item->setData(0, qVariantFromValue((void*)this));
 	
@@ -696,7 +699,7 @@ bool TextFormulaNode::DoCreateLeftBraceFormulaNode(Command* command)
 	if (c->GetPos() == GetText().length())
 		++pos;
 	
-	if (dynamic_cast<BracesFormulaNode*>(node->GetParent()) && node->GetParent()->IsShapeVisible(1))
+	if (node->GetParent()->type == BRACES_NODE && node->GetParent()->IsShapeVisible(1))
 	{
 		FormulaNode* p = node->GetParent()->GetParent();
 		//this is a braces node with a right brace, set a left brace
@@ -786,7 +789,7 @@ bool TextFormulaNode::DoCreateRightBraceFormulaNode(Command* command)
 	if (c->GetPos() == GetText().length())
 		++pos;
 	
-	if (dynamic_cast<BracesFormulaNode*>(node->GetParent()) && node->GetParent()->IsShapeVisible(0))
+	if (node->GetParent()->type == BRACES_NODE && node->GetParent()->IsShapeVisible(0))
 	{
 		FormulaNode* b = node->GetParent();
 		FormulaNode* p = b->GetParent();
@@ -809,7 +812,7 @@ bool TextFormulaNode::DoCreateRightBraceFormulaNode(Command* command)
 	if (pos == node->ChildrenCount())
 	{
 		//search for an open brace
-		BracesFormulaNode* n = dynamic_cast<BracesFormulaNode*>((*node)[pos - 1]);
+		BracesFormulaNode* n = (BracesFormulaNode*)((*node)[pos - 1]);
 		if (n && !n->IsShapeVisible(1))
 		{
 			command->SetParam(this, "setRight", pos - 1);

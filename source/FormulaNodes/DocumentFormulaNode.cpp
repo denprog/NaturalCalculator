@@ -7,6 +7,7 @@
  */
 DocumentFormulaNode::DocumentFormulaNode()
 {
+	type = DOCUMENT_NODE;
 }
 
 /**
@@ -15,6 +16,7 @@ DocumentFormulaNode::DocumentFormulaNode()
  */
 DocumentFormulaNode::DocumentFormulaNode(FormulaWnd* wnd) : FormulaNode(NULL, wnd), scene(wnd->scene)
 {
+	type = DOCUMENT_NODE;
 }
 
 /**

@@ -7,6 +7,7 @@
  */
 DivisionFormulaNode::DivisionFormulaNode()
 {
+	type = DIVISION_NODE;
 }
 
 /**
@@ -16,6 +17,7 @@ DivisionFormulaNode::DivisionFormulaNode()
  */
 DivisionFormulaNode::DivisionFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : CompoundFormulaNode(_parent, wnd)
 {
+	type = DIVISION_NODE;
 	shape = AddShapeNode();
 
 #ifdef _DEBUG

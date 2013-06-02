@@ -24,6 +24,7 @@ map<ParserExceptionCode, QString> ResultFormulaNode::errorMessages = boost::assi
  */
 ResultFormulaNode::ResultFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : GroupFormulaNode(_parent, wnd), expressionToSolve(0)
 {
+	type = RESULT_NODE;
 	delayTimer.setInterval(2000);
 	connect(&delayTimer, SIGNAL(timeout()), this, SLOT(OnDelayTimer()));
 }

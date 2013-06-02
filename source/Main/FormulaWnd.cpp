@@ -229,7 +229,7 @@ void FormulaWnd::mousePressEvent(QMouseEvent* event)
 			FormulaNode* n = mouseOverNodes[j];
 			
 			//set caret on the node
-			if (dynamic_cast<TextFormulaNode*>(n))
+			if (n->type == TEXT_NODE)
 				caret->SetToNode(n, n->GetNearestPos(event->x(), event->y()));
 			else
 			{
@@ -249,7 +249,7 @@ void FormulaWnd::mousePressEvent(QMouseEvent* event)
 			{
 				contextMenu->clear();
 				
-				if (dynamic_cast<TextFormulaNode*>(n))
+				if (n->type == TEXT_NODE)
 					n->MakeContextMenu(contextMenu);
 				else
 				{

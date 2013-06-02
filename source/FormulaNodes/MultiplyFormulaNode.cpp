@@ -9,6 +9,8 @@
  */
 MultiplyFormulaNode::MultiplyFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : ShapeFormulaNode(_parent, wnd)
 {
+	type = MULTIPLY_NODE;
+	
 #ifdef _DEBUG
 	name = "MultiplyFormulaNode";
 #endif

@@ -10,6 +10,7 @@
  */
 PowerFormulaNode::PowerFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : CompoundFormulaNode(_parent, wnd)
 {
+	type = POWER_NODE;
 	shape = AddShapeNode();
 
 #ifdef _DEBUG

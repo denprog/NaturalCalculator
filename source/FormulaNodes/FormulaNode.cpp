@@ -431,7 +431,7 @@ int FormulaNode::GetNearestPos(qreal x, qreal y)
  */
 bool FormulaNode::IsEmptySymbol()
 {
-	return childNodes->Count() == 1 && dynamic_cast<EmptyFormulaNode*>((*this)[0]);
+	return childNodes->Count() == 1 && (*this)[0]->type == EMPTY_NODE;
 }
 
 /**
@@ -551,7 +551,7 @@ bool FormulaNode::DoInsertText(Command* command)
 	FormulaNode* n = c->GetNode();
 	int pos = c->GetPos();
 	
-	if (pos < n->childNodes->Count() && dynamic_cast<EmptyFormulaNode*>((*n)[pos]))
+	if (pos < n->childNodes->Count() && (*n)[pos]->type == EMPTY_NODE)
 	{
 		//remove the empty node and store its being
 		RemoveChild(pos);
@@ -926,7 +926,7 @@ bool FormulaNode::DoCreateLeftBraceFormulaNode(Command* command)
 	command = any_cast<Command*>(nodeEvent["command"]);
 	int pos = c->GetPos();
 	
-	if (dynamic_cast<BracesFormulaNode*>(node->GetParent()) && node->GetParent()->IsShapeVisible(1))
+	if (node->GetParent()->type == BRACES_NODE && node->GetParent()->IsShapeVisible(1))
 	{
 		FormulaNode* p = node->GetParent()->GetParent();
 		//this is a braces node with a right brace, set a left brace
@@ -1010,7 +1010,7 @@ bool FormulaNode::DoCreateRightBraceFormulaNode(Command* command)
 	int pos = c->GetPos();
 	FormulaNode* node = c->GetNode();
 	
-	if (dynamic_cast<BracesFormulaNode*>(node->GetParent()) && node->GetParent()->IsShapeVisible(0))
+	if (node->GetParent()->type == BRACES_NODE && node->GetParent()->IsShapeVisible(0))
 	{
 		FormulaNode* b = node->GetParent();
 		FormulaNode* p = b->GetParent();

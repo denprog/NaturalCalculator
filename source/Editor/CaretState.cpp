@@ -65,7 +65,7 @@ void CaretState::SetState(CaretState& state)
  */
 void CaretState::SetToNode(FormulaNode* node, int pos)
 {
-	if (!dynamic_cast<TextFormulaNode*>(node) && node->GetChildNodes()->Count() > pos && dynamic_cast<TextFormulaNode*>((*node)[pos]))
+	if (!node->type == TEXT_NODE && node->GetChildNodes()->Count() > pos && (*node)[pos]->type == TEXT_NODE)
 		currentNode->SetNodePos((*node)[pos], 0);
 	else
 		currentNode->SetNodePos(node, pos);
@@ -111,7 +111,7 @@ FormulaNode* CaretState::GetCurrentNode()
 		return NULL;
 	FormulaNode* node = currentNode->GetNode();
 	int pos = currentNode->GetPos();
-	if (!dynamic_cast<TextFormulaNode*>(node))
+	if (!node->type == TEXT_NODE)
 	{
 		if (pos < node->GetChildNodes()->Count())
 			return (*node)[pos];

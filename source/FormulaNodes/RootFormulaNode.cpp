@@ -10,6 +10,7 @@
  */
 RootFormulaNode::RootFormulaNode()
 {
+	type = ROOT_NODE;
 }
 
 /**
@@ -18,6 +19,7 @@ RootFormulaNode::RootFormulaNode()
  */
 RootFormulaNode::RootFormulaNode(FormulaNode* parent) : GroupFormulaNode(parent, parent->wnd), scene(parent->wnd->scene)
 {
+	type = ROOT_NODE;
 	scene->addItem(item);
 
 #ifdef _DEBUG
@@ -51,7 +53,7 @@ FormulaNode* RootFormulaNode::Clone(FormulaNode* p)
  */
 SharedCaretState RootFormulaNode::GetFirstPosition()
 {
-	if (dynamic_cast<CompoundFormulaNode*>(childNodes->GetFirst()))
+	if (childNodes->GetFirst()->type == COMPOUND_NODE)
 		return SharedCaretState(new CaretState(this, 0));
 	SharedCaretState res = childNodes->GetFirst()->GetFirstPosition();
 	if (res)
@@ -65,9 +67,9 @@ SharedCaretState RootFormulaNode::GetFirstPosition()
  */
 SharedCaretState RootFormulaNode::GetLastPosition()
 {
-	if (dynamic_cast<EmptyFormulaNode*>(childNodes->GetLast()))
+	if (childNodes->GetLast()->type == EMPTY_NODE)
 		return SharedCaretState(new CaretState(this, childNodes->Count() - 1));
-	if (dynamic_cast<CompoundFormulaNode*>(childNodes->GetLast()))
+	if (childNodes->GetLast()->type == COMPOUND_NODE)
 		return SharedCaretState(new CaretState(this, childNodes->Count()));
 	SharedCaretState res = childNodes->GetLast()->GetLastPosition();
 	if (res)
@@ -99,7 +101,7 @@ SharedCaretState RootFormulaNode::GetNextPosition(SharedCaretState relativeState
 				res = n->GetNextPosition(relativeState);
 				if (res)
 					return res;
-				if (i == childNodes->Count() - 1 && !dynamic_cast<EmptyFormulaNode*>(n))
+				if (i == childNodes->Count() - 1 && n->type != EMPTY_NODE)
 					return SharedCaretState(new CaretState(this, i + 1));
 			}
 			else
