@@ -64,6 +64,11 @@ void FormulaNodesCollection::Clear()
 	nodes.clear();
 }
 
+FormulaNode* FormulaNodesCollection::Get(int pos) const
+{
+	return operator [](pos);
+}
+
 /**
  * Makes a deep copy of this object.
  * @param [in] parent The parent node.

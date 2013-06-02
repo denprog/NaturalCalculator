@@ -53,6 +53,7 @@ public:
 	void CopyFrom(FormulaNodesCollection& source, FormulaNode* parent);
 	void Remove(int pos);
 	void Clear();
+	FormulaNode* Get(int pos) const;
 
 	FormulaNodesCollection* Clone(FormulaNode* parent);
 	

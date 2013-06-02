@@ -208,8 +208,11 @@ bool RootFormulaNode::UndoCreateEquationFormulaNode(Command* command)
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	FormulaNode* node = c->GetNode();
 	int pos = GetFirstLevelChildPos(node);
-	MoveChild((*(*node)[0])[0], pos);
-	RemoveChild(pos + 1);
+	EquationFormulaNode* eq = (EquationFormulaNode*)node;
+	int i;
+	for (i = 0; (*eq)[0]->childNodes->Count() > 0; ++i)
+		MoveChild((*eq)[0]->childNodes->Get(0), pos + i);
+	RemoveChild(pos + i);
 	
 	return true;
 }
