@@ -9,10 +9,6 @@
 EmptyFormulaNode::EmptyFormulaNode(FormulaNode* _parent) : ShapeFormulaNode(_parent, _parent->wnd)
 {
 	type = EMPTY_NODE;
-	
-#ifdef _DEBUG
-	name = "EmptyFormulaNode";
-#endif
 }
 
 /**

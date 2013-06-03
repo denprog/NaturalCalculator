@@ -10,10 +10,6 @@
 PlusFormulaNode::PlusFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : ShapeFormulaNode(_parent, wnd)
 {
 	type = PLUS_NODE;
-	
-#ifdef _DEBUG
-	name = "PlusFormulaNode";
-#endif
 }
 
 /**

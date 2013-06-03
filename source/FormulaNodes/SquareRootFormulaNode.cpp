@@ -11,10 +11,6 @@ SquareRootFormulaNode::SquareRootFormulaNode(FormulaNode* _parent, FormulaWnd* w
 	type = SQUARE_ROOT_NODE;
 	shape = AddShapeNode();
 	InsertChild(new GroupFormulaNode(parent, wnd), 1);
-
-#ifdef _DEBUG
-	name = "SquareRootFormulaNode";
-#endif
 }
 
 /**

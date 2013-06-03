@@ -21,10 +21,6 @@ RootFormulaNode::RootFormulaNode(FormulaNode* parent) : GroupFormulaNode(parent,
 {
 	type = ROOT_NODE;
 	scene->addItem(item);
-
-#ifdef _DEBUG
-	name = "RootFormulaNode";
-#endif
 }
 
 /**

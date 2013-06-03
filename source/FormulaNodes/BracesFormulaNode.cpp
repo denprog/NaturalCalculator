@@ -16,10 +16,6 @@ BracesFormulaNode::BracesFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, bool
 	leftShape = left ? AddShapeNode() : NULL;
 	rightShape = right ? AddShapeNode() : NULL;
 	InsertChild(new GroupFormulaNode(parent, wnd), left ? 1 : 0);
-
-#ifdef _DEBUG
-	name = "BracesFormulaNode";
-#endif
 }
 
 /**

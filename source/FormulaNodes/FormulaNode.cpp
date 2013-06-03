@@ -42,10 +42,6 @@ FormulaNode::FormulaNode(FormulaNode* _parent, FormulaWnd* _wnd)
 	settings = _wnd->settings;
 	childNodes = new FormulaNodesCollection();
 	level = NORMAL_LEVEL;
-	
-#ifdef _DEBUG
-	name = "FormulaNode";
-#endif
 }
 
 /**

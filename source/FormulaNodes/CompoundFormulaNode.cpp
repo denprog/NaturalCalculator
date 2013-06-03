@@ -17,10 +17,6 @@ CompoundFormulaNode::CompoundFormulaNode()
 CompoundFormulaNode::CompoundFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : GroupFormulaNode(_parent, wnd)
 {
 	type = COMPOUND_NODE;
-	
-#ifdef _DEBUG
-	name = "CompoundFormulaNode";
-#endif
 }
 
 /**

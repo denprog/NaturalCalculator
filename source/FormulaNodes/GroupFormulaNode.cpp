@@ -26,10 +26,6 @@ GroupFormulaNode::GroupFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : Form
 	
 	//storing this pointer for identifying the item when getting mouse movements
 	item->setData(0, qVariantFromValue((void*)this));
-
-#ifdef _DEBUG
-	name = "GroupFormulaNode";
-#endif
 }
 
 /**

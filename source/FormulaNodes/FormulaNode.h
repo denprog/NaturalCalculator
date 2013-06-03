@@ -260,10 +260,6 @@ public:
 	FormulaNodeLevel level; ///< The node level
 	Command* command;	
 	Settings* settings;
-	
-#ifdef _DEBUG
-	QString name;
-#endif
 };
 
 #endif

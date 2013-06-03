@@ -12,10 +12,6 @@ PowerFormulaNode::PowerFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : Comp
 {
 	type = POWER_NODE;
 	shape = AddShapeNode();
-
-#ifdef _DEBUG
-	name = "PowerFormulaNode";
-#endif
 }
 
 /**

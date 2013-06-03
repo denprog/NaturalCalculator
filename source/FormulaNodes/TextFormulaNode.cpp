@@ -26,10 +26,6 @@ TextFormulaNode::TextFormulaNode(FormulaNode* parent) : FormulaNode(parent, pare
 	
 	QFont font = settings->GetTextFormulaNodeFont(level);
 	((QGraphicsTextItem*)item)->setFont(font);
-
-#ifdef _DEBUG
-	name = "TextFormulaNode";
-#endif
 }
 
 /**
@@ -45,10 +41,6 @@ TextFormulaNode::TextFormulaNode(FormulaNode* parent, FormulaWnd* wnd) : Formula
 	
 	QFont font = settings->GetTextFormulaNodeFont(level);
 	((QGraphicsTextItem*)item)->setFont(font);
-
-#ifdef _DEBUG
-	name = "TextFormulaNode";
-#endif
 }
 
 /**
