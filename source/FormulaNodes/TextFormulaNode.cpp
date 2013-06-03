@@ -70,7 +70,7 @@ void TextFormulaNode::UpdateBoundingRect()
 	QFontMetrics m(font);
 	QRectF b = m.boundingRect(((QGraphicsTextItem*)item)->toPlainText());
 	
-	boundingRect.setCoords(0, 0, b.width(), b.height());
+	boundingRect.setCoords(0, 0, m.width(((QGraphicsTextItem*)item)->toPlainText()), b.height());
 	((FormulaTextItem*)item)->boundingRect = boundingRect;
 	boundingRect.moveTo(item->pos().x(), item->pos().y());
 }
@@ -189,15 +189,11 @@ QRectF TextFormulaNode::GetDocumentPosBounds(int pos)
 {
 	QRectF r = parent->GetDocumentPosBounds(parent->GetChildPos(this));
 
-	//if (pos > 0)
-	//{
-		QFont font = settings->GetTextFormulaNodeFont(level);
-		QFontMetrics m(font);
-		QString text = ((QGraphicsTextItem*)item)->toPlainText();
-		QRectF b = m.boundingRect(text.right(text.length() - pos));
-		r.setLeft(r.left() + r.width() - b.width());
-		r.setRight(r.left());
-	//}
+	QFont font = settings->GetTextFormulaNodeFont(level);
+	QFontMetrics m(font);
+	QString text = ((QGraphicsTextItem*)item)->toPlainText();
+	r.setLeft(r.left() + m.width(text.left(pos)));
+	r.setRight(r.left());
 	
 	return r;
 }
