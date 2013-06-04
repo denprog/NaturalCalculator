@@ -68,7 +68,7 @@ void ResultFormulaNode::Remake()
 	if (childNodes->Count() == 1)
 	{
 		GroupFormulaNode::Remake();
-		baseline = (*this)[0]->GetBaseline();
+		baseline = (*this)[0]->baseline;
 	}
 	else
 	{
@@ -77,7 +77,7 @@ void ResultFormulaNode::Remake()
 		{
 			FormulaNode* n = (*this)[i];
 			n->Move(0, cy);
-			cy += n->GetBoundingRect().height();
+			cy += n->boundingRect.height();
 		}
 		baseline = cy / 2;
 	}
@@ -185,7 +185,7 @@ ResultFormulaNode::ResultNodeMaker::ResultNodeMaker(FormulaNode* _parent) : pare
  */
 void ResultFormulaNode::ResultNodeMaker::operator()(RealParserExpression const& expr) const
 {
-	parent->GetChildNodes()->Clear();
+	parent->childNodes->Clear();
 
 	if (!expr.solved)
 	{
@@ -243,7 +243,7 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RealParserExpression const& 
  */
 void ResultFormulaNode::ResultNodeMaker::operator()(IntegerParserExpression const& expr) const
 {
-	parent->GetChildNodes()->Clear();
+	parent->childNodes->Clear();
 
 	if (!expr.solved)
 	{
@@ -279,7 +279,7 @@ void ResultFormulaNode::ResultNodeMaker::operator()(IntegerParserExpression cons
  */
 void ResultFormulaNode::ResultNodeMaker::operator()(RationalParserExpression const& expr) const
 {
-	parent->GetChildNodes()->Clear();
+	parent->childNodes->Clear();
 
 	if (!expr.solved)
 	{

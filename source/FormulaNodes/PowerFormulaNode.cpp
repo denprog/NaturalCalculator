@@ -37,7 +37,7 @@ void PowerFormulaNode::Remake()
 		shape->ClearShapes();
 
 		//the shape
-		shape->AddFillRect(0, 0, left->GetBoundingRect().height() / 10, right->boundingRect.height() + left->boundingRect.height() / 2, QColor("white"));
+		shape->AddFillRect(0, 0, left->boundingRect.height() / 10, right->boundingRect.height() + left->boundingRect.height() / 2, QColor("white"));
 		shape->UpdateBoundingRect();
 		
 		int cy = right->boundingRect.height() - left->boundingRect.height() / 2;
@@ -47,7 +47,7 @@ void PowerFormulaNode::Remake()
 
 		UpdateBoundingRect();
 		
-		baseline = left->GetBaseline() + cy;
+		baseline = left->baseline + cy;
 	}
 }
 

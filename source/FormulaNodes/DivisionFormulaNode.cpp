@@ -77,7 +77,7 @@ void DivisionFormulaNode::Remake()
 	{
 		FormulaNode* dividend = (*this)[0];
 		FormulaNode* divisor = (*this)[2];
-		qreal w = max(dividend->GetBoundingRect().width(), divisor->GetBoundingRect().width());
+		qreal w = max(dividend->boundingRect.width(), divisor->boundingRect.width());
 		
 		//the shape
 		if (w < 200)
@@ -90,13 +90,13 @@ void DivisionFormulaNode::Remake()
 		qreal s = shape->boundingRect.height() + 1;
 		
 		//place the elements
-		dividend->Move((w - dividend->GetBoundingRect().width()) / 2, 0);
-		shape->Move(0, dividend->GetBoundingRect().height() + s);
-		divisor->Move((w - divisor->GetBoundingRect().width()) / 2, dividend->GetBoundingRect().height() + shape->GetBoundingRect().height() + s * 2);
+		dividend->Move((w - dividend->boundingRect.width()) / 2, 0);
+		shape->Move(0, dividend->boundingRect.height() + s);
+		divisor->Move((w - divisor->boundingRect.width()) / 2, dividend->boundingRect.height() + shape->boundingRect.height() + s * 2);
 
 		UpdateBoundingRect();
 		
-		baseline = dividend->GetBoundingRect().height() + 1;
+		baseline = dividend->boundingRect.height() + 1;
 	}
 }
 
@@ -107,7 +107,7 @@ void DivisionFormulaNode::UpdateBoundingRect()
 {
 	FormulaNode::UpdateBoundingRect();
 	if (shape->boundingRect.height() == 0)
-		shape->GetBoundingRect().setHeight(1);
+		shape->boundingRect.setHeight(1);
 }
 
 /**
@@ -236,12 +236,12 @@ bool DivisionFormulaNode::DoRemoveItem(Command* command)
 		command = any_cast<Command*>(nodeEvent["command"]);
 		command->SetParam(parent, "node", Clone(NULL));
 		//count parameter needed to remove the child nodes in the undo
-		command->SetParam(parent, "removeCount", dividend->GetChildNodes()->Count() + divisor->GetChildNodes()->Count());
+		command->SetParam(parent, "removeCount", dividend->childNodes->Count() + divisor->childNodes->Count());
 		int j = parent->GetFirstLevelChildPos(this);
 		int i = 0;
-		while (dividend->GetChildNodes()->Count() > 0)
+		while (dividend->childNodes->Count() > 0)
 			parent->MoveChild((*dividend)[0], j + i++);
-		while (divisor->GetChildNodes()->Count() > 0)
+		while (divisor->childNodes->Count() > 0)
 			parent->MoveChild((*divisor)[0], j + i++);
 		c->SetToNode(parent, j);
 

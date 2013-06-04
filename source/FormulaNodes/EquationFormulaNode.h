@@ -70,7 +70,7 @@ namespace boost
 		template<class Archive>
 		inline void save_construct_data(Archive& ar, const EquationFormulaNode* node, const BOOST_PFTO unsigned int file_version)
 		{
-			FormulaNode* parent = node->GetParent();
+			FormulaNode* parent = node->parent;
 			ar << parent;
 		}
 

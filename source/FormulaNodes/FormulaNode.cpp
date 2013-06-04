@@ -222,10 +222,10 @@ void FormulaNode::UpdateBoundingRect()
 	for (int i = 0; i < childNodes->Count(); ++i)
 	{
 		FormulaNode* n = (*this)[i];
-		if (n->GetBoundingRect().right() > w)
-			w = n->GetBoundingRect().right();
-		if (n->GetBoundingRect().bottom() > h)
-			h = n->GetBoundingRect().bottom();
+		if (n->boundingRect.right() > w)
+			w = n->boundingRect.right();
+		if (n->boundingRect.bottom() > h)
+			h = n->boundingRect.bottom();
 	}
 
 	if (w == 0 && h == 0 && item)
@@ -383,17 +383,17 @@ QRectF FormulaNode::GetDocumentPosBounds(int pos)
 {
 	FormulaNode* n = (*this)[pos == childNodes->Count() ? pos - 1 : pos];
 	FormulaNode* p = n;
-	qreal cx = (pos == childNodes->Count() ? n->GetBoundingRect().width() : 0);
+	qreal cx = (pos == childNodes->Count() ? n->boundingRect.width() : 0);
 	qreal cy = 0;
 	
 	while (p)
 	{
-		cx += p->GetBoundingRect().left();
-		cy += p->GetBoundingRect().top();
+		cx += p->boundingRect.left();
+		cy += p->boundingRect.top();
 		p = p->parent;
 	}
 	
-	return QRectF(cx, cy, pos == childNodes->Count() ? 0 : n->GetBoundingRect().width(), n->GetBoundingRect().height());
+	return QRectF(cx, cy, pos == childNodes->Count() ? 0 : n->boundingRect.width(), n->boundingRect.height());
 }
 
 /**
@@ -922,12 +922,12 @@ bool FormulaNode::DoCreateLeftBraceFormulaNode(Command* command)
 	command = any_cast<Command*>(nodeEvent["command"]);
 	int pos = c->GetPos();
 	
-	if (node->GetParent()->type == BRACES_NODE && node->GetParent()->IsShapeVisible(1))
+	if (node->parent->type == BRACES_NODE && node->parent->IsShapeVisible(1))
 	{
-		FormulaNode* p = node->GetParent()->GetParent();
+		FormulaNode* p = node->parent->parent;
 		//this is a braces node with a right brace, set a left brace
 		command->SetParam(p, "setLeft", pos);
-		node->GetParent()->ShowShape(0, true);
+		node->parent->ShowShape(0, true);
 		
 		//move the remain child nodes after the caret to the parent node
 		for (int i = pos - 1; i >= 0; --i)
@@ -961,7 +961,7 @@ bool FormulaNode::UndoCreateLeftBraceFormulaNode(Command* command)
 {
 	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	BracesFormulaNode* node = (BracesFormulaNode*)c->GetNode()->GetParent();
+	BracesFormulaNode* node = (BracesFormulaNode*)c->GetNode()->parent;
 	command = any_cast<Command*>(nodeEvent["command"]);
 	
 	if (command->ContainsParam(this, "setLeft"))
@@ -1006,10 +1006,10 @@ bool FormulaNode::DoCreateRightBraceFormulaNode(Command* command)
 	int pos = c->GetPos();
 	FormulaNode* node = c->GetNode();
 	
-	if (node->GetParent()->type == BRACES_NODE && node->GetParent()->IsShapeVisible(0))
+	if (node->parent->type == BRACES_NODE && node->parent->IsShapeVisible(0))
 	{
-		FormulaNode* b = node->GetParent();
-		FormulaNode* p = b->GetParent();
+		FormulaNode* b = node->parent;
+		FormulaNode* p = b->parent;
 		int j = p->GetFirstLevelChildPos(b);
 		//this is a braces node with a left brace, set a right brace
 		command->SetParam(p, "setRight", j);

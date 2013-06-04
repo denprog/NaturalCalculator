@@ -22,7 +22,7 @@ GroupFormulaNode::GroupFormulaNode()
 GroupFormulaNode::GroupFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : FormulaNode(_parent, wnd)
 {
 	type = GROUP_NODE;
-	item = new QGraphicsItemGroup(_parent ? _parent->GetItem() : NULL);
+	item = new QGraphicsItemGroup(_parent ? _parent->item : NULL);
 	
 	//storing this pointer for identifying the item when getting mouse movements
 	item->setData(0, qVariantFromValue((void*)this));
@@ -49,8 +49,8 @@ void GroupFormulaNode::Remake()
 	for (int i = 0; i < childNodes->Count(); ++i)
 	{
 		FormulaNode* n = (*this)[i];
-		n->Move(x, baseline - n->GetBaseline());
-		x += n->GetBoundingRect().width() + settings->GetValue("InterNodeSpace", level);
+		n->Move(x, baseline - n->baseline);
+		x += n->boundingRect.width() + settings->GetValue("InterNodeSpace", level);
 	}
 
 	UpdateBoundingRect();
@@ -66,8 +66,8 @@ void GroupFormulaNode::Update()
 	for (int i = 0; i < childNodes->Count(); ++i)
 	{
 		FormulaNode* n = (*this)[i];
-		if (n->GetBaseline() > baseline)
-			baseline = n->GetBaseline();
+		if (n->baseline > baseline)
+			baseline = n->baseline;
 	}
 }
 

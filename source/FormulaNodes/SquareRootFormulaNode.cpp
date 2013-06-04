@@ -32,9 +32,9 @@ void SquareRootFormulaNode::Remake()
 	if (childNodes->Count() > 0)
 	{
 		FormulaNode* radicand = GetExpression(0);
-		qreal cx = radicand->GetBoundingRect().height() * 5 / 11;
-		qreal offset = radicand->GetBoundingRect().height() / 5;
-		qreal cy = radicand->GetBoundingRect().height() + offset * 2;
+		qreal cx = radicand->boundingRect.height() * 5 / 11;
+		qreal offset = radicand->boundingRect.height() / 5;
+		qreal cy = radicand->boundingRect.height() + offset * 2;
 		
 		QVector<QPointF> p;
 		p.push_back(QPointF(cx, cy * 0.01));
@@ -45,17 +45,17 @@ void SquareRootFormulaNode::Remake()
 		p.push_back(QPointF(cx * 0.343, cy * 0.429));
 		p.push_back(QPointF(cx * 0.703, cy * 0.869));
 		p.push_back(QPointF(cx * 0.934, 0));
-		p.push_back(QPointF(cx * 1.3 + radicand->GetBoundingRect().width() + 1, 0));
-		p.push_back(QPointF(cx * 1.3 + radicand->GetBoundingRect().width() + 1, cy * 0.01));
+		p.push_back(QPointF(cx * 1.3 + radicand->boundingRect.width() + 1, 0));
+		p.push_back(QPointF(cx * 1.3 + radicand->boundingRect.width() + 1, cy * 0.01));
 		p.push_back(QPointF(cx * 1.3, cy * 0.01));
 		
 		shape->AddPolygon(p, QColor("black"));
 		
 		radicand->Move(cx * 1.3, offset);
 
-		baseline = radicand->GetBaseline() + offset;
+		baseline = radicand->baseline + offset;
 		shape->UpdateBoundingRect();
-		boundingRect = shape->GetBoundingRect();
+		boundingRect = shape->boundingRect;
 		boundingRect.setRight(boundingRect.right() + cx * 0.075);
 	}
 }
@@ -126,8 +126,8 @@ void SquareRootFormulaNode::ParseStructure(QString& res)
  */
 void SquareRootFormulaNode::UpdateBoundingRect()
 {
-	boundingRect = shape->GetBoundingRect();
-	qreal cx = GetExpression(0)->GetBoundingRect().height() * 5 / 11;
+	boundingRect = shape->boundingRect;
+	qreal cx = GetExpression(0)->boundingRect.height() * 5 / 11;
 	boundingRect.setRight(boundingRect.right() + cx * 0.075);
 	boundingRect.moveTo(item->pos().x(), item->pos().y());
 }
@@ -156,7 +156,7 @@ void SquareRootFormulaNode::RenderCaret(const int pos, const int anchor)
 	{
 		//draw the caret on the shape
 		QRectF r = GetDocumentPosBounds(pos);
-		int cx = GetExpression(0)->GetBoundingRect().height() * 5 / 11;
+		int cx = GetExpression(0)->boundingRect.height() * 5 / 11;
 		
 		QGraphicsItemGroup* g = wnd->GetCaret()->caretShape;
 		
@@ -196,10 +196,10 @@ bool SquareRootFormulaNode::DoRemoveItem(Command* command)
 		command = any_cast<Command*>(nodeEvent["command"]);
 		command->SetParam(parent, "node", Clone(NULL));
 		//count parameter needed to remove the child nodes in the undo
-		command->SetParam(parent, "removeCount", radicand->GetChildNodes()->Count());
+		command->SetParam(parent, "removeCount", radicand->childNodes->Count());
 		int j = parent->GetFirstLevelChildPos(this);
 		int i = 0;
-		while (radicand->GetChildNodes()->Count() > 0)
+		while (radicand->childNodes->Count() > 0)
 			parent->MoveChild((*radicand)[0], j + i++);
 		c->SetToNode(parent, j);
 

@@ -40,8 +40,8 @@ void BracesFormulaNode::Remake()
 	if (childNodes->Count() > 1)
 	{
 		FormulaNode* expr = GetExpression(0);
-		int cx = 1 + expr->GetBoundingRect().height() / 5;
-		int cy = 1.2 * expr->GetBoundingRect().height();
+		int cx = 1 + expr->boundingRect.height() / 5;
+		int cy = 1.2 * expr->boundingRect.height();
 		
 		if (leftShape)
 		{
@@ -58,7 +58,7 @@ void BracesFormulaNode::Remake()
 			leftShape->UpdateBoundingRect();
 		}
 		
-		expr->Move(leftShape ? cx : 0, expr->GetBoundingRect().height() * 0.1);
+		expr->Move(leftShape ? cx : 0, expr->boundingRect.height() * 0.1);
 		
 		if (rightShape)
 		{
@@ -73,10 +73,10 @@ void BracesFormulaNode::Remake()
 
 			rightShape->AddPath(p, QColor("black"));
 			rightShape->UpdateBoundingRect();
-			rightShape->Move(cx + expr->GetBoundingRect().width(), 0);
+			rightShape->Move(cx + expr->boundingRect.width(), 0);
 		}
 		
-		baseline = expr->GetBaseline() + expr->GetBoundingRect().height() * 0.1;
+		baseline = expr->baseline + expr->boundingRect.height() * 0.1;
 		UpdateBoundingRect();
 	}
 }

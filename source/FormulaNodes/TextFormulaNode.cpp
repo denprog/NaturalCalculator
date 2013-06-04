@@ -21,7 +21,7 @@ TextFormulaNode::TextFormulaNode()
 TextFormulaNode::TextFormulaNode(FormulaNode* parent) : FormulaNode(parent, parent->wnd)
 {
 	type = TEXT_NODE;
-	item = new FormulaTextItem(settings, level, boundingRect, parent->GetItem());
+	item = new FormulaTextItem(settings, level, boundingRect, parent->item);
 	item->setData(0, qVariantFromValue((void*)this));
 	
 	QFont font = settings->GetTextFormulaNodeFont(level);
@@ -36,7 +36,7 @@ TextFormulaNode::TextFormulaNode(FormulaNode* parent) : FormulaNode(parent, pare
 TextFormulaNode::TextFormulaNode(FormulaNode* parent, FormulaWnd* wnd) : FormulaNode(parent, wnd)
 {
 	type = TEXT_NODE;
-	item = new FormulaTextItem(settings, level, boundingRect, parent ? parent->GetItem() : NULL);
+	item = new FormulaTextItem(settings, level, boundingRect, parent ? parent->item : NULL);
 	item->setData(0, qVariantFromValue((void*)this));
 	
 	QFont font = settings->GetTextFormulaNodeFont(level);
@@ -584,8 +584,8 @@ bool TextFormulaNode::DoCreateDivisionFormulaNode(Command* command)
  */
 bool TextFormulaNode::UndoCreateDivisionFormulaNode(Command* command)
 {
-	FormulaNode* p = parent->GetParent()->GetParent();
-	int pos = p->GetChildPos(parent->GetParent());
+	FormulaNode* p = parent->parent->parent;
+	int pos = p->GetChildPos(parent->parent);
 	p->MoveChild(this, pos);
 	p->RemoveChild(pos + 1);
 	
@@ -627,8 +627,8 @@ bool TextFormulaNode::DoCreatePowerFormulaNode(Command* command)
  */
 bool TextFormulaNode::UndoCreatePowerFormulaNode(Command* command)
 {
-	FormulaNode* p = parent->GetParent()->GetParent();
-	int pos = p->GetChildPos(parent->GetParent());
+	FormulaNode* p = parent->parent->parent;
+	int pos = p->GetChildPos(parent->parent);
 	p->MoveChild(this, pos);
 	p->RemoveChild(pos + 1);
 	
@@ -665,8 +665,8 @@ bool TextFormulaNode::DoCreateSquareRootFormulaNode(Command* command)
  */
 bool TextFormulaNode::UndoCreateSquareRootFormulaNode(Command* command)
 {
-	FormulaNode* p = parent->GetParent()->GetParent();
-	int pos = p->GetChildPos(parent->GetParent());
+	FormulaNode* p = parent->parent->parent;
+	int pos = p->GetChildPos(parent->parent);
 	p->MoveChild(this, pos);
 	p->RemoveChild(pos + 1);
 	
@@ -682,30 +682,30 @@ bool TextFormulaNode::DoCreateLeftBraceFormulaNode(Command* command)
 {
 	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	FormulaNode* node = c->GetNode()->GetParent();
+	FormulaNode* node = c->GetNode()->parent;
 	int pos = node->GetFirstLevelChildPos(this);
 	if (c->GetPos() == GetText().length())
 		++pos;
 	
-	if (node->GetParent()->type == BRACES_NODE && node->GetParent()->IsShapeVisible(1))
+	if (node->parent->type == BRACES_NODE && node->parent->IsShapeVisible(1))
 	{
-		FormulaNode* p = node->GetParent()->GetParent();
+		FormulaNode* p = node->parent->parent;
 		//this is a braces node with a right brace, set a left brace
 		command->SetParam(p, "setLeft", pos);
-		node->GetParent()->ShowShape(0, true);
+		node->parent->ShowShape(0, true);
 		
 		//move the remain child nodes after the caret to the parent node
 		for (int i = pos - 1; i >= 0; --i)
 			p->MoveChild((*node)[i], 0);
 
-		nodeEvent["undoAction"] = CommandAction(this, 0, node->GetParent(), &FormulaNode::UndoCreateLeftBraceFormulaNode);
+		nodeEvent["undoAction"] = CommandAction(this, 0, node->parent, &FormulaNode::UndoCreateLeftBraceFormulaNode);
 		c->SetToNode(p, pos);
 	
 		return true;
 	}
 
 	//create a braces node, insert the nodes being located to the right in the collection, into it and insert the result into the parent
-	FormulaNode* d = new BracesFormulaNode(node->GetParent(), wnd, true, false);
+	FormulaNode* d = new BracesFormulaNode(node->parent, wnd, true, false);
 	FormulaNode* expr = d->GetExpression(0);
 	for (int i = pos; i < node->ChildrenCount();)
 		expr->MoveChild((*node)[pos], expr->ChildrenCount());
@@ -732,9 +732,9 @@ bool TextFormulaNode::UndoCreateLeftBraceFormulaNode(Command* command)
 	SharedCaretState bracesPos = any_cast<SharedCaretState>(nodeEvent["actionNode"]);
 	BracesFormulaNode* node = (BracesFormulaNode*)bracesPos->GetCurrentNode();
 	
-	if (command->ContainsParam(node->GetParent(), "setLeft"))
+	if (command->ContainsParam(node->parent, "setLeft"))
 	{
-		FormulaNode* p = node->GetParent();
+		FormulaNode* p = node->parent;
 		//clear the left brace
 		int pos = any_cast<int>(command->GetParam(p, "setLeft"));
 		FormulaNode* n = (*p)[pos];
@@ -749,7 +749,7 @@ bool TextFormulaNode::UndoCreateLeftBraceFormulaNode(Command* command)
 	}
 
 	FormulaNode* expr = node->GetExpression(0);
-	FormulaNode* p = node->GetParent();
+	FormulaNode* p = node->parent;
 	int pos = p->GetFirstLevelChildPos(node);
 
 	if (!expr->IsEmptySymbol() || p->ChildrenCount() == 1)
@@ -772,15 +772,15 @@ bool TextFormulaNode::DoCreateRightBraceFormulaNode(Command* command)
 {
 	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	FormulaNode* node = c->GetNode()->GetParent();
+	FormulaNode* node = c->GetNode()->parent;
 	int pos = node->GetFirstLevelChildPos(this);
 	if (c->GetPos() == GetText().length())
 		++pos;
 	
-	if (node->GetParent()->type == BRACES_NODE && node->GetParent()->IsShapeVisible(0))
+	if (node->parent->type == BRACES_NODE && node->parent->IsShapeVisible(0))
 	{
-		FormulaNode* b = node->GetParent();
-		FormulaNode* p = b->GetParent();
+		FormulaNode* b = node->parent;
+		FormulaNode* p = b->parent;
 		int j = p->GetFirstLevelChildPos(b);
 		//this is a braces node with a left brace, set a right brace
 		command->SetParam(p, "setRight", j);
@@ -790,7 +790,7 @@ bool TextFormulaNode::DoCreateRightBraceFormulaNode(Command* command)
 		for (int i = pos; i < node->ChildrenCount();)
 			p->MoveChild((*node)[i], p->ChildrenCount());
 
-		command->SetParam(this, "pos", CaretState(node->GetParent(), pos));
+		command->SetParam(this, "pos", CaretState(node->parent, pos));
 		nodeEvent["undoAction"] = CommandAction(this, 0, b, &FormulaNode::UndoCreateRightBraceFormulaNode);
 		c->SetToNode(p, j + 1);
 	
@@ -841,9 +841,9 @@ bool TextFormulaNode::UndoCreateRightBraceFormulaNode(Command* command)
 	SharedCaretState bracesPos = any_cast<SharedCaretState>(nodeEvent["actionNode"]);
 	BracesFormulaNode* node = (BracesFormulaNode*)bracesPos->GetCurrentNode();
 	
-	if (command->ContainsParam(node->GetParent(), "setRight"))
+	if (command->ContainsParam(node->parent, "setRight"))
 	{
-		FormulaNode* p = node->GetParent();
+		FormulaNode* p = node->parent;
 		//clear the right brace
 		int pos = any_cast<int>(command->GetParam(p, "setRight"));
 		node->ShowShape(1, false);
@@ -857,7 +857,7 @@ bool TextFormulaNode::UndoCreateRightBraceFormulaNode(Command* command)
 	}
 
 	//move the braces' child nodes back in the parent
-	FormulaNode* p = node->GetParent();
+	FormulaNode* p = node->parent;
 	FormulaNode* expr = node->GetExpression(0);
 	if (!expr->IsEmptySymbol() || p->ChildrenCount() == 1)
 	{

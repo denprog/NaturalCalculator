@@ -63,8 +63,8 @@ void EquationFormulaNode::Remake()
 		resNode->SetExpression(expr);
 
 		//place the child nodes
-		int cx = left->GetBoundingRect().width();
-		int cy = max(left->GetBaseline(), resNode->GetBaseline());
+		int cx = left->boundingRect.width();
+		int cy = max(left->baseline, resNode->baseline);
 		baseline = cy;
 		
 		QFont font = settings->GetTextFormulaNodeFont(level);
@@ -74,18 +74,18 @@ void EquationFormulaNode::Remake()
 		int w = r.width();
 		int h = r.height();
 
-		left->Move(0, baseline - left->GetBaseline());
+		left->Move(0, baseline - left->baseline);
 		//draw the shape
 		shape->AddFillRect(0, h * 0.4, w * 0.8, h < 20 ? 1 : h * 0.05, QColor("black"));
 		shape->AddFillRect(0, h >= 20 ? h * 0.55 : h * 0.5 + 2, w * 0.8, h < 20 ? 1 : h * 0.05, QColor("black"));
 		shape->Move(cx + w * 0.1 + settings->GetValue("InterNodeSpace", level), cy - font.pointSize());
-		resNode->Move(cx + w * 1.1 + settings->GetValue("InterNodeSpace", level) * 2, baseline - resNode->GetBaseline());
+		resNode->Move(cx + w * 1.1 + settings->GetValue("InterNodeSpace", level) * 2, baseline - resNode->baseline);
 
 		//the shape, that wides the node's bounds for getting mouse events
 		r = m.boundingRect("T");
 		shape->AddFillRect(0, 0, r.width(), r.height(), QColor("white"), 0);
 
-		shape->GetBoundingRect().setCoords(0, 0, w, h);
+		shape->boundingRect.setCoords(0, 0, w, h);
 
 		UpdateBoundingRect();
 	}
@@ -101,8 +101,8 @@ void EquationFormulaNode::UpdateBoundingRect()
 	QFont font = settings->GetTextFormulaNodeFont(level);
 	QFontMetrics m(font);
 	QRect r = m.boundingRect("=");
-	shape->GetBoundingRect().setWidth(r.width());
-	shape->GetBoundingRect().setHeight(r.height());
+	shape->boundingRect.setWidth(r.width());
+	shape->boundingRect.setHeight(r.height());
 }
 
 /**

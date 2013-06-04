@@ -204,52 +204,6 @@ public slots:
 	virtual void OnCut();
 		
 public:
-	/**
-	 * Getter of the parent of this node.
-	 * @return null The parent.
-	 */
-	FormulaNode* GetParent() const
-	{
-		return parent;
-	}
-
-	/**
-	 * Getter of the child nodes.
-	 * @return The child nodes.
-	 */
-	FormulaNodesCollection* GetChildNodes()
-	{
-		return childNodes;
-	}
-
-	/**
-	 * Getter of the item.
-	 * @return null if it fails, else the item.
-	 */
-	QGraphicsItem* GetItem()
-	{
-		return item;
-	}
-	
-	/**
-	 * Getter of the bounding rectangle.
-	 * @return The bounding rectangle.
-	 */
-	QRectF& GetBoundingRect()
-	{
-		return boundingRect;
-	}
-	
-	/**
-	 * Getter of the baseline.
-	 * @return The baseline.
-	 */
-	qreal GetBaseline()
-	{
-		return baseline;
-	}
-	
-public:
 	NodeType type;
 	FormulaNode* parent; ///< The parent node
 	FormulaNodesCollection* childNodes; ///< The child nodes
