@@ -140,7 +140,7 @@ SharedCaretState GroupFormulaNode::GetFirstPosition()
 	if (!n)
 		return SharedCaretState();
 	
-	if (n->type == COMPOUND_NODE)
+	if (dynamic_cast<CompoundFormulaNode*>(n))
 		return SharedCaretState(new CaretState(this, 0));
 	SharedCaretState res = n->GetFirstPosition();
 	if (!res)
@@ -161,7 +161,7 @@ SharedCaretState GroupFormulaNode::GetLastPosition()
 	FormulaNode* n = childNodes->GetLast();
 	if (n->type == EMPTY_NODE)
 		return SharedCaretState(new CaretState(this, childNodes->Count() - 1));
-	if (n->type == COMPOUND_NODE)
+	if (dynamic_cast<CompoundFormulaNode*>(n))
 		return SharedCaretState(new CaretState(this, childNodes->Count()));
 	
 	SharedCaretState res = n->GetLastPosition();
@@ -272,6 +272,8 @@ SharedCaretState GroupFormulaNode::GetPreviousPosition(SharedCaretState relative
 			{
 				n = (*this)[pos];
 				res = n->GetPreviousPosition();
+				if (!res && n->CanSetCaret())
+					res = SharedCaretState(new CaretState(this, i - 1));
 				if (res)
 					break;
 			}

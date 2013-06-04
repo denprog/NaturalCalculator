@@ -73,6 +73,8 @@ SharedCaretState CompoundFormulaNode::GetNextPosition(SharedCaretState relativeS
 				res = n->GetNextPosition();
 				while (!res && !n->CanSetCaret())
 				{
+					if (i + 1 >= childNodes->Count())
+						break;
 					++i;
 					n = (*this)[i + 1];
 					res = n->GetNextPosition();
@@ -127,12 +129,20 @@ SharedCaretState CompoundFormulaNode::GetPreviousPosition(SharedCaretState relat
 			else
 				i = childNodes->Count();
 			
-			for (int pos = i - 1; pos >= 0; --pos)
+			if (i - 1 >= 0)
 			{
-				n = (*this)[pos];
+				n = (*this)[i - 1];
 				res = n->GetPreviousPosition();
-				if (res)
-					break;
+				while (!res && !n->CanSetCaret())
+				{
+					if (i - 1 < 0)
+						break;
+					--i;
+					n = (*this)[i - 1];
+					res = n->GetPreviousPosition();
+				}
+				if (!res && n->CanSetCaret())
+					res = SharedCaretState(new CaretState(this, i - 1));
 			}
 			
 			if (!res)

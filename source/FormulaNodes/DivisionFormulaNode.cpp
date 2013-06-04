@@ -77,13 +77,13 @@ void DivisionFormulaNode::Remake()
 	{
 		FormulaNode* dividend = (*this)[0];
 		FormulaNode* divisor = (*this)[2];
-		qreal w = max(dividend->boundingRect.width(), divisor->boundingRect.width());
+		qreal w = max(dividend->boundingRect.width() + 2, divisor->boundingRect.width() + 2);
 		
 		//the shape
 		if (w < 200)
 			shape->AddLine(0, 0, w, 0, QColor("black"));
 		else
-			shape->AddFillRect(0, 0, w, w / 200 > 3 ? 3 : w / 200, QColor("black"));
+			shape->AddFillRect(0, 0, w, w / 200 > 2 ? 2 : w / 200, QColor("black"));
 		
 		UpdateBoundingRect();
 		

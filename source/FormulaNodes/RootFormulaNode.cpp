@@ -49,7 +49,7 @@ FormulaNode* RootFormulaNode::Clone(FormulaNode* p)
  */
 SharedCaretState RootFormulaNode::GetFirstPosition()
 {
-	if (childNodes->GetFirst()->type == COMPOUND_NODE)
+	if (dynamic_cast<CompoundFormulaNode*>(childNodes->GetFirst()))
 		return SharedCaretState(new CaretState(this, 0));
 	SharedCaretState res = childNodes->GetFirst()->GetFirstPosition();
 	if (res)
@@ -65,7 +65,7 @@ SharedCaretState RootFormulaNode::GetLastPosition()
 {
 	if (childNodes->GetLast()->type == EMPTY_NODE)
 		return SharedCaretState(new CaretState(this, childNodes->Count() - 1));
-	if (childNodes->GetLast()->type == COMPOUND_NODE)
+	if (dynamic_cast<CompoundFormulaNode*>(childNodes->GetLast()))
 		return SharedCaretState(new CaretState(this, childNodes->Count()));
 	SharedCaretState res = childNodes->GetLast()->GetLastPosition();
 	if (res)
