@@ -4,5 +4,19 @@
         <activeConfTypeElem>4</activeConfTypeElem>
         <activeConfIndexElem>0</activeConfIndexElem>
     </data>
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="2">
+        <file>
+            <url>source/FormulaNodes/TextFormulaNode.cpp</url>
+            <bookmark id="1">
+                <name/>
+                <line>72</line>
+                <key/>
+            </bookmark>
+            <bookmark id="2">
+                <name/>
+                <line>195</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
 </project-private>

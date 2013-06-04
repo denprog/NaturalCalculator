@@ -80,12 +80,19 @@ void DivisionFormulaNode::Remake()
 		qreal w = max(dividend->GetBoundingRect().width(), divisor->GetBoundingRect().width());
 		
 		//the shape
-		shape->AddLine(0, 0, w, 0, QColor("black"));
+		if (w < 200)
+			shape->AddLine(0, 0, w, 0, QColor("black"));
+		else
+			shape->AddFillRect(0, 0, w, w / 200 > 3 ? 3 : w / 200, QColor("black"));
+		
+		UpdateBoundingRect();
+		
+		qreal s = shape->boundingRect.height() + 1;
 		
 		//place the elements
 		dividend->Move((w - dividend->GetBoundingRect().width()) / 2, 0);
-		shape->Move(0, dividend->GetBoundingRect().height());
-		divisor->Move((w - divisor->GetBoundingRect().width()) / 2, dividend->GetBoundingRect().height() + shape->GetBoundingRect().height());
+		shape->Move(0, dividend->GetBoundingRect().height() + s);
+		divisor->Move((w - divisor->GetBoundingRect().width()) / 2, dividend->GetBoundingRect().height() + shape->GetBoundingRect().height() + s * 2);
 
 		UpdateBoundingRect();
 		
@@ -99,7 +106,8 @@ void DivisionFormulaNode::Remake()
 void DivisionFormulaNode::UpdateBoundingRect()
 {
 	FormulaNode::UpdateBoundingRect();
-	shape->GetBoundingRect().setHeight(1);
+	if (shape->boundingRect.height() == 0)
+		shape->GetBoundingRect().setHeight(1);
 }
 
 /**
