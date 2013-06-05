@@ -56,6 +56,7 @@ public:
 	
 private:
 	ShapeFormulaNode *leftShape, *rightShape;
+	GroupFormulaNode* inside;
 };
 
 namespace boost

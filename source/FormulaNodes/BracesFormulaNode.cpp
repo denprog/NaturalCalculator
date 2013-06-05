@@ -15,7 +15,8 @@ BracesFormulaNode::BracesFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, bool
 	
 	leftShape = left ? AddShapeNode() : NULL;
 	rightShape = right ? AddShapeNode() : NULL;
-	InsertChild(new GroupFormulaNode(parent, wnd), left ? 1 : 0);
+	inside = new GroupFormulaNode(parent, wnd);
+	InsertChild(inside, left ? 1 : 0);
 }
 
 /**
@@ -30,6 +31,9 @@ BracesFormulaNode::~BracesFormulaNode()
  */
 void BracesFormulaNode::Remake()
 {
+	if (IsShapeVisible(0) && IsShapeVisible(1) && inside->ChildrenCount() == 0)
+		inside->AddChild(new EmptyFormulaNode(this));
+	
 	childNodes->Remake();
 	
 	if (leftShape)

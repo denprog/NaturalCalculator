@@ -107,6 +107,14 @@ void FormulaNode::RemoveChild(int pos)
 	childNodes->Remove(pos);
 }
 
+void FormulaNode::RemoveChild(FormulaNode* node)
+{
+	int pos = GetChildPos(node);
+	assert(pos >= 0);
+	
+	return RemoveChild(pos);
+}
+
 void FormulaNode::ReplaceChild(FormulaNode* node, int pos)
 {
 	RemoveChild(pos);
@@ -427,6 +435,8 @@ int FormulaNode::GetNearestPos(qreal x, qreal y)
  */
 bool FormulaNode::IsEmptySymbol()
 {
+	if (childNodes->Count() == 1 && (*childNodes)[0]->type == GROUP_NODE)
+		return (*childNodes)[0]->IsEmptySymbol();
 	return childNodes->Count() == 1 && (*this)[0]->type == EMPTY_NODE;
 }
 
@@ -919,7 +929,6 @@ bool FormulaNode::DoCreateLeftBraceFormulaNode(Command* command)
 	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	FormulaNode* node = c->GetNode();
-	command = any_cast<Command*>(nodeEvent["command"]);
 	int pos = c->GetPos();
 	
 	if (node->parent->type == BRACES_NODE && node->parent->IsShapeVisible(1))
@@ -962,7 +971,6 @@ bool FormulaNode::UndoCreateLeftBraceFormulaNode(Command* command)
 	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
 	BracesFormulaNode* node = (BracesFormulaNode*)c->GetNode()->parent;
-	command = any_cast<Command*>(nodeEvent["command"]);
 	
 	if (command->ContainsParam(this, "setLeft"))
 	{
@@ -1002,7 +1010,6 @@ bool FormulaNode::DoCreateRightBraceFormulaNode(Command* command)
 {
 	NodeEvent& nodeEvent = command->nodeEvent;
 	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	command = any_cast<Command*>(nodeEvent["command"]);
 	int pos = c->GetPos();
 	FormulaNode* node = c->GetNode();
 	
@@ -1062,8 +1069,6 @@ bool FormulaNode::DoCreateRightBraceFormulaNode(Command* command)
 bool FormulaNode::UndoCreateRightBraceFormulaNode(Command* command)
 {
 	NodeEvent& nodeEvent = command->nodeEvent;
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	command = any_cast<Command*>(nodeEvent["command"]);
 	
 	if (command->ContainsParam(this, "setRight"))
 	{
@@ -1072,6 +1077,9 @@ bool FormulaNode::UndoCreateRightBraceFormulaNode(Command* command)
 		FormulaNode* n = (*this)[pos];
 		n->ShowShape(1, false);
 		FormulaNode* expr = n->GetExpression(0);
+		
+		if (expr->IsEmptySymbol())
+			expr->childNodes->Clear();
 		
 		//move the child nodes from the parent node back to the braces
 		for (int i = pos + 1; i < ChildrenCount();)
