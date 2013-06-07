@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="84">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="source" displayName="source" projectFiles="true">
+      <logicalFolder name="Editor" displayName="Editor" projectFiles="true">
+        <itemPath>../source/Editor/Caret.cpp</itemPath>
+        <itemPath>../source/Editor/Caret.h</itemPath>
+        <itemPath>../source/Editor/CaretState.cpp</itemPath>
+        <itemPath>../source/Editor/CaretState.h</itemPath>
+        <itemPath>../source/Editor/Command.cpp</itemPath>
+        <itemPath>../source/Editor/Command.h</itemPath>
+        <itemPath>../source/Editor/CommandManager.cpp</itemPath>
+        <itemPath>../source/Editor/CommandManager.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Forms" displayName="Forms" projectFiles="true">
+        <itemPath>../source/Forms/OptionsDialog.ui</itemPath>
+        <itemPath>../source/Forms/SettingsDialog.ui</itemPath>
+      </logicalFolder>
+      <logicalFolder name="FormulaNodes"
+                     displayName="FormulaNodes"
+                     projectFiles="true">
+        <itemPath>../source/FormulaNodes/BracesFormulaNode.cpp</itemPath>
+        <itemPath>../source/FormulaNodes/BracesFormulaNode.h</itemPath>
+        <itemPath>../source/FormulaNodes/CompoundFormulaNode.cpp</itemPath>
+        <itemPath>../source/FormulaNodes/CompoundFormulaNode.h</itemPath>
+        <itemPath>../source/FormulaNodes/DivisionFormulaNode.cpp</itemPath>
+        <itemPath>../source/FormulaNodes/DivisionFormulaNode.h</itemPath>
+        <itemPath>../source/FormulaNodes/DocumentFormulaNode.cpp</itemPath>
+        <itemPath>../source/FormulaNodes/DocumentFormulaNode.h</itemPath>
+        <itemPath>../source/FormulaNodes/EmptyFormulaNode.cpp</itemPath>
+        <itemPath>../source/FormulaNodes/EmptyFormulaNode.h</itemPath>
+        <itemPath>../source/FormulaNodes/EquationFormulaNode.cpp</itemPath>
+        <itemPath>../source/FormulaNodes/EquationFormulaNode.h</itemPath>
+        <itemPath>../source/FormulaNodes/FormulaNode.cpp</itemPath>
+        <itemPath>../source/FormulaNodes/FormulaNode.h</itemPath>
+        <itemPath>../source/FormulaNodes/FormulaNodesCollection.cpp</itemPath>
+        <itemPath>../source/FormulaNodes/FormulaNodesCollection.h</itemPath>
+        <itemPath>../source/FormulaNodes/GroupFormulaNode.cpp</itemPath>
+        <itemPath>../source/FormulaNodes/GroupFormulaNode.h</itemPath>
+        <itemPath>../source/FormulaNodes/MinusFormulaNode.cpp</itemPath>
+        <itemPath>../source/FormulaNodes/MinusFormulaNode.h</itemPath>
+        <itemPath>../source/FormulaNodes/MultiplyFormulaNode.cpp</itemPath>
+        <itemPath>../source/FormulaNodes/MultiplyFormulaNode.h</itemPath>
+        <itemPath>../source/FormulaNodes/PlusFormulaNode.cpp</itemPath>
+        <itemPath>../source/FormulaNodes/PlusFormulaNode.h</itemPath>
+        <itemPath>../source/FormulaNodes/PowerFormulaNode.cpp</itemPath>
+        <itemPath>../source/FormulaNodes/PowerFormulaNode.h</itemPath>
+        <itemPath>../source/FormulaNodes/ResultFormulaNode.cpp</itemPath>
+        <itemPath>../source/FormulaNodes/ResultFormulaNode.h</itemPath>
+        <itemPath>../source/FormulaNodes/ResultItemFormulaNode.cpp</itemPath>
+        <itemPath>../source/FormulaNodes/ResultItemFormulaNode.h</itemPath>
+        <itemPath>../source/FormulaNodes/RootFormulaNode.cpp</itemPath>
+        <itemPath>../source/FormulaNodes/RootFormulaNode.h</itemPath>
+        <itemPath>../source/FormulaNodes/ShapeFormulaNode.cpp</itemPath>
+        <itemPath>../source/FormulaNodes/ShapeFormulaNode.h</itemPath>
+        <itemPath>../source/FormulaNodes/SquareRootFormulaNode.cpp</itemPath>
+        <itemPath>../source/FormulaNodes/SquareRootFormulaNode.h</itemPath>
+        <itemPath>../source/FormulaNodes/TextFormulaNode.cpp</itemPath>
+        <itemPath>../source/FormulaNodes/TextFormulaNode.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Main" displayName="Main" projectFiles="true">
+        <itemPath>../source/Main/FormulaWnd.cpp</itemPath>
+        <itemPath>../source/Main/FormulaWnd.h</itemPath>
+        <itemPath>../source/Main/MainWindow.cpp</itemPath>
+        <itemPath>../source/Main/MainWindow.h</itemPath>
+        <itemPath>../source/Main/NaturalCalculatorApp.cpp</itemPath>
+        <itemPath>../source/Main/NaturalCalculatorApp.h</itemPath>
+        <itemPath>../source/Main/Settings.cpp</itemPath>
+        <itemPath>../source/Main/Settings.h</itemPath>
+        <itemPath>../source/Main/SettingsDialog.cpp</itemPath>
+        <itemPath>../source/Main/SettingsDialog.h</itemPath>
+        <itemPath>../source/Main/SettingsDialogPages.cpp</itemPath>
+        <itemPath>../source/Main/SettingsDialogPages.h</itemPath>
+        <itemPath>../source/Main/main.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="ParserThread"
+                     displayName="ParserThread"
+                     projectFiles="true">
+        <itemPath>../source/ParserThread/ParserExpression.cpp</itemPath>
+        <itemPath>../source/ParserThread/ParserExpression.h</itemPath>
+        <itemPath>../source/ParserThread/ParserThread.cpp</itemPath>
+        <itemPath>../source/ParserThread/ParserThread.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Resources" displayName="Resources" projectFiles="true">
+        <logicalFolder name="images" displayName="images" projectFiles="true">
+          <logicalFolder name="dialogs" displayName="dialogs" projectFiles="true">
+            <itemPath>../source/Resources/images/dialogs/downarrow.png</itemPath>
+            <itemPath>../source/Resources/images/dialogs/uparrow.png</itemPath>
+          </logicalFolder>
+          <logicalFolder name="math" displayName="math" projectFiles="true">
+            <itemPath>../source/Resources/images/math/division.png</itemPath>
+            <itemPath>../source/Resources/images/math/equality.png</itemPath>
+            <itemPath>../source/Resources/images/math/minus.png</itemPath>
+            <itemPath>../source/Resources/images/math/multiply.png</itemPath>
+            <itemPath>../source/Resources/images/math/nthroot.png</itemPath>
+            <itemPath>../source/Resources/images/math/plus.png</itemPath>
+            <itemPath>../source/Resources/images/math/power.png</itemPath>
+            <itemPath>../source/Resources/images/math/sin.png</itemPath>
+            <itemPath>../source/Resources/images/math/sqrt.png</itemPath>
+          </logicalFolder>
+          <itemPath>../source/Resources/images/new.png</itemPath>
+          <itemPath>../source/Resources/images/open.png</itemPath>
+          <itemPath>../source/Resources/images/redo.png</itemPath>
+          <itemPath>../source/Resources/images/save.png</itemPath>
+          <itemPath>../source/Resources/images/settings.png</itemPath>
+          <itemPath>../source/Resources/images/undo.png</itemPath>
+        </logicalFolder>
+        <itemPath>../source/Resources/naturalcalculator.qrc</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Translation" displayName="Translation" projectFiles="true">
+        <itemPath>../source/Translation/naturalcalculator_ru.qm</itemPath>
+        <itemPath>../source/Translation/naturalcalculator_ru.ts</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Util" displayName="Util" projectFiles="true">
+        <itemPath>../source/Util/QRectEx.cpp</itemPath>
+        <itemPath>../source/Util/QRectEx.h</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="test" displayName="test" projectFiles="true">
+      <itemPath>../test/1.ncl</itemPath>
+      <itemPath>../test/BracesTest.cpp</itemPath>
+      <itemPath>../test/BracesTest.h</itemPath>
+      <itemPath>../test/NcTestBase.cpp</itemPath>
+      <itemPath>../test/NcTestBase.h</itemPath>
+      <itemPath>../test/NcTests.cpp</itemPath>
+      <itemPath>../test/NcTests.h</itemPath>
+      <itemPath>../test/SquareRootTest.cpp</itemPath>
+      <itemPath>../test/SquareRootTest.h</itemPath>
+      <itemPath>../test/TextTest.cpp</itemPath>
+      <itemPath>../test/TextTest.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>../source</Elem>
+    <Elem>../test</Elem>
+  </sourceRootList>
+  <projectmakefile>nbproject/Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="4">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+      </toolsSet>
+      <qt>
+        <modules>core gui</modules>
+        <mocDir>./nbproject/moc</mocDir>
+        <rccDir>./nbproject/rcc</rccDir>
+        <uiDir>./nbproject/ui</uiDir>
+        <defs>
+          <Elem>QMAKE_CXXFLAGS+=-Wno-unused-parameter</Elem>
+          <Elem>QMAKE_CXXFLAGS+=-std=c++0x</Elem>
+          <Elem>QMAKE_FLAGS+=-sj4</Elem>
+        </defs>
+      </qt>
+      <compileType>
+        <ccTool>
+          <incDir>
+            <pElem>../../BigNumbersParser/source</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>TEST</Elem>
+          </preprocessorList>
+        </ccTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibFileItem>../../BigNumbersParser/build/nbproject/build/Debug_shared/libBigNumbersParser.so</linkerLibFileItem>
+            <linkerLibLibItem>boost_thread</linkerLibLibItem>
+            <linkerLibLibItem>boost_serialization</linkerLibLibItem>
+            <linkerLibLibItem>QtTest</linkerLibLibItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+    </conf>
+    <conf name="Release" type="4">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+      </toolsSet>
+      <qt>
+        <buildMode>1</buildMode>
+        <modules>core gui</modules>
+      </qt>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+    </conf>
+  </confs>
+</configurationDescriptor>
