@@ -19,6 +19,7 @@ void BracesTest::Test1()
 	Check(s, "g(1+2+3+4[sg(e))", 0);
 	s = "";
 	
+	QTest::qWait(1000);
 	UndoKeys();
 	doc->ParseStructure(s);
 	Check(s, "g(1+2+3+4)", 1);
@@ -40,7 +41,7 @@ void BracesTest::Test1()
 	Check(s, "g(1+2+3+[sg(4))", 0);
 	s = "";
 
-	UndoKeys();
+	mainWindow->OnUndo();
 	doc->ParseStructure(s);
 	Check(s, "g(1+2+3+4)", 0);
 	s = "";
@@ -80,6 +81,7 @@ void BracesTest::Test2()
 	Check(s, "g(g(1+2+3+4)s])", 1);
 	s = "";
 	
+	mainWindow->OnUndo();
 	UndoKeys();
 	doc->ParseStructure(s);
 	Check(s, "g(1+2+3+4)", 1);

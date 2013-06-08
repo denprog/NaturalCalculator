@@ -3,7 +3,7 @@
 #define NCTESTS_H
 
 #include <QtTest/QtTest>
-#include "../../source/Main/MainWindow.h"
+#include "../source/Main/MainWindow.h"
 
 /**
  * Tests for NC.

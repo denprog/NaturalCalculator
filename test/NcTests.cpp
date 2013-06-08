@@ -21,10 +21,10 @@ void NcTests::BracesTests()
 {
 	BracesTest bracesTest(mainWindow);
 	bracesTest.Test1();
-	bracesTest.Test2();
-	bracesTest.Test3();
-	bracesTest.Test4();
-	bracesTest.Test5();
+//	bracesTest.Test2();
+//	bracesTest.Test3();
+//	bracesTest.Test4();
+//	bracesTest.Test5();
 }
 
 /**

@@ -3,8 +3,8 @@
 #define NCTEST_H
 
 #include <QtTest/QtTest>
-#include "../../source/Main/MainWindow.h"
-#include "../../source/Main/FormulaWnd.h"
+#include "../source/Main/MainWindow.h"
+#include "../source/Main/FormulaWnd.h"
 
 /**
  * The base class for NC's tests.

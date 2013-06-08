@@ -28,7 +28,11 @@ public:
 public:
 	void SetupUi();
 	
+#ifdef TEST
+public slots:
+#else
 private slots:
+#endif
 	void OnNew();
 	void OnOpen();
 	void OnSave();
