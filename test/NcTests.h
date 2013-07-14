@@ -30,6 +30,7 @@ private slots:
 	void TextTests();
 	void BracesTests();
 	void SquareRootTests();
+	void ParseTests();
 
 private:
 	MainWindow* mainWindow;

@@ -23,6 +23,10 @@ RootFormulaNode::RootFormulaNode(FormulaNode* parent) : GroupFormulaNode(parent,
 	scene->addItem(item);
 }
 
+RootFormulaNode::RootFormulaNode(FormulaWnd* wnd) : GroupFormulaNode(NULL, wnd), scene(wnd->scene)
+{
+}
+
 /**
  * Destructor.
  */
@@ -227,4 +231,22 @@ bool RootFormulaNode::UndoCreatePowerFormulaNode(Command* command)
 	RemoveChild(pos);
 
 	return true;
+}
+
+RootFormulaNode* RootFormulaNode::FromString(std::string str, FormulaWnd* wnd)
+{
+	RootFormulaNode* res = new RootFormulaNode(wnd);
+	
+	std::string::iterator begin = str.begin();
+	std::string::iterator end = str.end();
+	
+	while (begin != str.end())
+	{
+		if (!FormulaNode::FromString(begin, end, res))
+			++begin;
+	}
+	
+	res->Normalize();
+	
+	return res;
 }

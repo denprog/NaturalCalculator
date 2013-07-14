@@ -7,6 +7,11 @@ void NcTestBase::Check(QString actual, QString expected, int caretPos)
 	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), caretPos);
 }
 
+void NcTestBase::Check(std::string actual, std::string& expected, int caretPos)
+{
+	Check(QString(actual.c_str()), QString(expected.c_str()), caretPos);
+}
+
 void NcTestBase::MoveLeft(int count)
 {
 	for (int i = 0; i < count; ++i)

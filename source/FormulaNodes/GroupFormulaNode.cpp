@@ -35,6 +35,22 @@ GroupFormulaNode::~GroupFormulaNode()
 {
 }
 
+void GroupFormulaNode::Normalize()
+{
+	FormulaNode::Normalize();
+	
+	if (ChildrenCount() == 1)
+	{
+		FormulaNode* n = (*this)[0];
+		if (n->type == GROUP_NODE)
+		{
+			for (int j = 0, k = 1; j < n->ChildrenCount();)
+				MoveChild((*n)[j], k++);
+			RemoveChild(0);
+		}
+	}
+}
+
 /**
  * Remakes this node.
  */
@@ -96,6 +112,36 @@ void GroupFormulaNode::ParseStructure(QString& res)
 	res += ")";
 }
 #endif
+
+bool GroupFormulaNode::FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent)
+{
+	if (*begin == '(')
+	{
+		GroupFormulaNode* g = new GroupFormulaNode(parent, parent->wnd);
+		++begin;
+		
+		while (begin != end)
+		{
+			if (*begin == ')')
+			{
+				++begin;
+				break;
+			}
+			if (!FormulaNode::FromString(begin, end, g))
+				break;
+		}
+		
+		parent->AddChild(g);
+		return true;
+	}
+
+	return false;
+}
+
+std::string GroupFormulaNode::ToString()
+{
+	return "(" + FormulaNode::ToString() + ")";
+}
 
 /**
  * Adds a shape node.

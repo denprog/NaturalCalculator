@@ -8,6 +8,7 @@ class PowerFormulaNode : public CompoundFormulaNode
 {
 public:
 	PowerFormulaNode(FormulaNode* _parent, FormulaWnd* wnd);
+	PowerFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, FormulaNode* _base, FormulaNode* _exponent);
 	~PowerFormulaNode();
 
 private:
@@ -45,8 +46,12 @@ public:
 	void ParseStructure(QString& res);
 #endif
 
+	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent);
+	virtual std::string ToString();
+	
 private:
 	ShapeFormulaNode* shape;
+	GroupFormulaNode *base, *exponent;
 };
 
 namespace boost

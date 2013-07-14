@@ -34,6 +34,7 @@ private:
 	BOOST_SERIALIZATION_SPLIT_MEMBER()
 
 public:
+	virtual void AddChild(FormulaNode* node);
 	virtual void Remake();
 
 	virtual bool CanInsert(int pos);
@@ -50,6 +51,9 @@ public:
 #ifdef TEST
 	virtual void ParseStructure(QString& res);
 #endif
+
+	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent);
+	virtual std::string ToString();
 
 	//command functions
 	virtual bool DoRemoveItem(Command* command);

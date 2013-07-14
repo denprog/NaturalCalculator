@@ -51,6 +51,30 @@ void MultiplyFormulaNode::Parse(ParserString& expr)
 	expr.Add(std::string("*"), this);
 }
 
+#ifdef TEST
+void MultiplyFormulaNode::ParseStructure(QString& res)
+{
+	res += "*";
+}
+#endif
+
+bool MultiplyFormulaNode::FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent)
+{
+	if (*begin == '*')
+	{
+		parent->AddChild(new MultiplyFormulaNode(parent, parent->wnd));
+		++begin;
+		return true;
+	}
+	
+	return false;
+}
+
+std::string MultiplyFormulaNode::ToString()
+{
+	return "*";
+}
+
 /**
  * Updates the bounding rectangle.
  */

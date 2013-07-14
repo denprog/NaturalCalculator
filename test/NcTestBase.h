@@ -22,6 +22,7 @@ public:
 
 protected:
 	void Check(QString actual, QString expected, int caretPos);
+	void Check(std::string actual, std::string& expected, int caretPos);
 	
 protected:
 	void MoveLeft(int count = 1);

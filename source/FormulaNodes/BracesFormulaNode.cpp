@@ -6,7 +6,7 @@
  * @param [in] _parent The parent node.
  * @param [in] wnd The parent window.
  */
-BracesFormulaNode::BracesFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, bool left, bool right) : CompoundFormulaNode(_parent, wnd)
+BracesFormulaNode::BracesFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, bool left, bool right) : CompoundFormulaNode(_parent, wnd), inside(NULL)
 {
 	type = BRACES_NODE;
 
@@ -24,6 +24,14 @@ BracesFormulaNode::BracesFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, bool
  */
 BracesFormulaNode::~BracesFormulaNode()
 {
+}
+
+void BracesFormulaNode::AddChild(FormulaNode* node)
+{
+	if (inside)
+		inside->AddChild(node);
+	else
+		FormulaNode::AddChild(node);
 }
 
 /**
@@ -186,16 +194,63 @@ void BracesFormulaNode::ParseStructure(QString& res)
 {
 	if (leftShape)
 		res += "[";
-	for (int i = 0; i < childNodes->Count(); ++i)
-	{
-		FormulaNode* n = (*this)[i];
-		n->ParseStructure(res);
-	}
+	inside->ParseStructure(res);
 	if (rightShape)
 		res += "]";
 }
 #endif
-	
+
+bool BracesFormulaNode::FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent)
+{
+	if (*begin == '[')
+	{
+		BracesFormulaNode* b = new BracesFormulaNode(parent, parent->wnd, true, false);
+		parent->AddChild(b);
+		++begin;
+		
+		while (begin != end)
+		{
+			if (!FormulaNode::FromString(begin, end, b->inside))
+				break;
+		}
+		
+		return true;
+	}
+	else if (*begin == ']')
+	{
+		if (parent->parent != NULL && parent->parent->type == BRACES_NODE)
+		{
+			parent->parent->ShowShape(1, true);
+			++begin;
+			return false;
+		}
+		else
+		{
+			BracesFormulaNode* b = new BracesFormulaNode(parent, parent->wnd, false, true);
+			int i = 0;
+			while (parent->ChildrenCount() > 0)
+				b->inside->MoveChild((*parent)[0], i++);
+			parent->AddChild(b);
+		}
+
+		++begin;
+		return true;
+	}
+
+	return false;
+}
+
+std::string BracesFormulaNode::ToString()
+{
+	std::string res;
+	if (leftShape)
+		res += "[";
+	res += inside->ToString();
+	if (rightShape)
+		res += "]";
+	return res;
+}
+
 /**
  * Executes the remove item operation.
  * @param [in,out] nodeEvent The node event.

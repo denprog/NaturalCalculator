@@ -18,7 +18,12 @@ DivisionFormulaNode::DivisionFormulaNode()
 DivisionFormulaNode::DivisionFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : CompoundFormulaNode(_parent, wnd)
 {
 	type = DIVISION_NODE;
+	
+	dividend = new GroupFormulaNode(parent, wnd);
+	AddChild(dividend);
 	shape = AddShapeNode();
+	divisor = new GroupFormulaNode(parent, wnd);
+	AddChild(divisor);
 
 #ifdef _DEBUG
 	name = "DivisionFormulaNode";
@@ -38,10 +43,7 @@ DivisionFormulaNode::~DivisionFormulaNode()
  */
 void DivisionFormulaNode::AddChild(FormulaNode* node)
 {
-	if (childNodes->Count() == 1)
-		InsertChild(node, 0);
-	else
-		CompoundFormulaNode::AddChild(node);
+	FormulaNode::AddChild(node);
 }
 
 /**
@@ -51,17 +53,7 @@ void DivisionFormulaNode::AddChild(FormulaNode* node)
  */
 void DivisionFormulaNode::InsertChild(FormulaNode* node, int pos)
 {
-	switch (pos)
-	{
-	case 0:
-		CompoundFormulaNode::InsertChild(node, 0);
-		break;
-	case 1: //the shape node
-	case 2:
-		if (childNodes->Count() == 2)
-			CompoundFormulaNode::InsertChild(node, 2);
-		break;
-	}
+	FormulaNode::InsertChild(node, pos);
 }
 
 /**
@@ -75,8 +67,6 @@ void DivisionFormulaNode::Remake()
 	
 	if (childNodes->Count() == 3)
 	{
-		FormulaNode* dividend = (*this)[0];
-		FormulaNode* divisor = (*this)[2];
 		qreal w = max(dividend->boundingRect.width() + 2, divisor->boundingRect.width() + 2);
 		
 		//the shape
@@ -136,7 +126,7 @@ void DivisionFormulaNode::Parse(ParserString& expr)
 #ifdef TEST
 void DivisionFormulaNode::ParseStructure(QString& res)
 {
-	res += "g(";
+	res += "(";
 	(*this)[0]->ParseStructure(res);
 	(*this)[1]->ParseStructure(res);
 	res += "/";
@@ -144,6 +134,32 @@ void DivisionFormulaNode::ParseStructure(QString& res)
 	res += ")";
 }
 #endif
+
+bool DivisionFormulaNode::FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent)
+{
+	if (*begin == '/')
+	{
+		DivisionFormulaNode* d = new DivisionFormulaNode(parent, parent->wnd);
+		if (parent->ChildrenCount() > 0)
+			d->dividend->MoveChild((*parent)[0], 0);
+		else
+			d->dividend->AddChild(new EmptyFormulaNode(d->dividend));
+
+		++begin;
+		if (!FormulaNode::FromString(begin, end, d->divisor))
+			d->divisor->AddChild(new EmptyFormulaNode(d->divisor));
+
+		parent->AddChild(d);
+		return true;
+	}
+	
+	return false;
+}
+
+std::string DivisionFormulaNode::ToString()
+{
+	return dividend->ToString() + "/" + divisor->ToString();
+}
 
 /**
  * Makes a deep copy of this object.

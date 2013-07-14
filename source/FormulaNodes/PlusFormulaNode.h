@@ -33,6 +33,9 @@ public:
 	virtual void ParseStructure(QString& res);
 #endif
 
+	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent);
+	virtual std::string ToString();
+
 	virtual FormulaNode* Clone(FormulaNode* p);
 };
 
