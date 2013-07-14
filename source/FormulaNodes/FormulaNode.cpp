@@ -8,6 +8,7 @@
 #include "SquareRootFormulaNode.h"
 #include "DivisionFormulaNode.h"
 #include "BracesFormulaNode.h"
+#include "CommaFormulaNode.h"
 #include "../Main/FormulaWnd.h"
 #include "../Util/QRectEx.h"
 #include <QMenu>
@@ -120,6 +121,12 @@ void FormulaNode::ReplaceChild(FormulaNode* node, int pos)
 	RemoveChild(pos);
 	InsertChild(node, pos);
 	wnd->GetDocumentNode()->Remake();
+}
+
+void FormulaNode::Normalize()
+{
+	for (int i = 0; i < childNodes->Count(); ++i)
+		(*this)[i]->Normalize();
 }
 
 /**
@@ -326,6 +333,39 @@ void FormulaNode::ParseStructure(QString& res)
 	}
 }
 #endif
+
+bool FormulaNode::FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent)
+{
+	if (GroupFormulaNode::FromString(begin, end, parent))
+		return true;
+	if (PowerFormulaNode::FromString(begin, end, parent))
+		return true;
+	if (SquareRootFormulaNode::FromString(begin, end, parent))
+		return true;
+	if (CommaFormulaNode::FromString(begin, end, parent))
+		return true;
+	if (TextFormulaNode::FromString(begin, end, parent))
+		return true;
+	if (PlusFormulaNode::FromString(begin, end, parent))
+		return true;
+	if (MinusFormulaNode::FromString(begin, end, parent))
+		return true;
+	if (MultiplyFormulaNode::FromString(begin, end, parent))
+		return true;
+	if (DivisionFormulaNode::FromString(begin, end, parent))
+		return true;
+	if (BracesFormulaNode::FromString(begin, end, parent))
+		return true;
+	return false;
+}
+
+std::string FormulaNode::ToString()
+{
+	std::string res;
+	for (int i = 0; i < ChildrenCount(); ++i)
+		res += (*this)[i]->ToString();
+	return res;
+}
 
 /**
  * Gets a child position of a node.

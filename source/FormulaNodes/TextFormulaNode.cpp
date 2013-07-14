@@ -1,4 +1,5 @@
 #include <QFontMetrics>
+#include <boost/regex.hpp>
 #include "TextFormulaNode.h"
 #include "DivisionFormulaNode.h"
 #include "EmptyFormulaNode.h"
@@ -256,6 +257,38 @@ void TextFormulaNode::ParseStructure(QString& res)
 	res += GetText().toUtf8().data();
 }
 #endif
+
+bool TextFormulaNode::FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent)
+{
+	std::string res;
+	std::string::iterator i = begin;
+	while (i != end)
+	{
+		if (boost::regex_match(i, i + 1, boost::regex("[0-9a-zA-Z.]")))
+		{
+			res += *i;
+			++i;
+		}
+		else
+			break;
+	}
+	
+	if (!res.empty())
+	{
+		begin = i;
+		TextFormulaNode* t = new TextFormulaNode(parent);
+		t->SetText(res.c_str());
+		parent->AddChild(t);
+		return true;
+	}
+	
+	return false;
+}
+
+std::string TextFormulaNode::ToString()
+{
+	return GetText().toUtf8().data();
+}
 
 bool TextFormulaNode::DoInsertNode(Command* command)
 {

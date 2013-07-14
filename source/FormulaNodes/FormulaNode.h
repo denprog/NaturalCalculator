@@ -49,7 +49,8 @@ enum NodeType
 	BRACES_NODE, 
 	RESULT_NODE, 
 	RESULT_ITEM_NODE, 
-	EQUATION_NODE
+	EQUATION_NODE, 
+	COMMA_NODE
 };
 
 class Settings;
@@ -101,6 +102,8 @@ public:
 	virtual void RemoveChild(int pos);
 	virtual void RemoveChild(FormulaNode* node);
 	virtual void ReplaceChild(FormulaNode* node, int pos);
+	virtual void Normalize();
+	
 	virtual int ChildrenCount();
 	
 	virtual bool CanInsert(int pos);
@@ -130,6 +133,9 @@ public:
 #ifdef TEST
 	virtual void ParseStructure(QString& res);
 #endif
+	
+	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent);
+	virtual std::string ToString();
 	
 	int GetChildPos(const FormulaNode* node) const;
 	bool IsChild(const FormulaNode* node);

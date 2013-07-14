@@ -71,6 +71,23 @@ void PlusFormulaNode::ParseStructure(QString& res)
 }
 #endif
 
+bool PlusFormulaNode::FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent)
+{
+	if (*begin == '+')
+	{
+		parent->AddChild(new PlusFormulaNode(parent, parent->wnd));
+		++begin;
+		return true;
+	}
+	
+	return false;
+}
+
+std::string PlusFormulaNode::ToString()
+{
+	return "+";
+}
+
 /**
  * Makes a deep copy of this object.
  * @param [in] p The parent node.

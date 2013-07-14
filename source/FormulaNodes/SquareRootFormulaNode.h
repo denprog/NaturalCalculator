@@ -12,6 +12,7 @@ class SquareRootFormulaNode : public CompoundFormulaNode
 {
 public:
 	SquareRootFormulaNode(FormulaNode* _parent, FormulaWnd* wnd);
+	SquareRootFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, FormulaNode* _radicand);
 	virtual ~SquareRootFormulaNode();
 
 private:
@@ -51,6 +52,9 @@ public:
 	virtual void ParseStructure(QString& res);
 #endif
 	
+	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent);
+	virtual std::string ToString();
+	
 	virtual void RenderCaret(const int pos, const int anchor);
 	
 	//command functions
@@ -58,6 +62,7 @@ public:
 
 private:
 	ShapeFormulaNode* shape;
+	GroupFormulaNode* radicand;
 };
 
 namespace boost

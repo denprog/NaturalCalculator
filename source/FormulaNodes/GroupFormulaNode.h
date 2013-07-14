@@ -33,6 +33,7 @@ private:
 	BOOST_SERIALIZATION_SPLIT_MEMBER()
 	
 public:
+	virtual void Normalize();
 	virtual void Remake();
 	virtual void Update();
 	//virtual void UpdateBoundingRect();
@@ -43,6 +44,9 @@ public:
 #ifdef TEST
 	virtual void ParseStructure(QString& res);
 #endif
+	
+	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent);
+	virtual std::string ToString();
 
 	virtual ShapeFormulaNode* AddShapeNode();
 	virtual ShapeFormulaNode* InsertShapeNode(int pos);

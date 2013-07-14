@@ -14,6 +14,7 @@ class RootFormulaNode : public GroupFormulaNode
 public:
 	RootFormulaNode();
 	RootFormulaNode(FormulaNode* parent);
+	RootFormulaNode(FormulaWnd* wnd);
 	virtual ~RootFormulaNode();
 
 private:
@@ -50,6 +51,8 @@ public:
 
 	virtual bool UndoCreatePowerFormulaNode(Command* command);
 
+	static RootFormulaNode* FromString(std::string str, FormulaWnd* wnd);
+	
 private:
 	QGraphicsScene* scene;
 };

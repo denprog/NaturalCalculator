@@ -28,7 +28,14 @@ public:
 	virtual void Remake();
 	virtual void UpdateBoundingRect();
 
+#ifdef TEST
+	void ParseStructure(QString& res);
+#endif
+	
 	virtual void Parse(ParserString& expr);
+	
+	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent);
+	virtual std::string ToString();
 
 	virtual FormulaNode* Clone(FormulaNode* p);
 };
