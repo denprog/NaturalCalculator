@@ -68,6 +68,23 @@ void EmptyFormulaNode::ParseStructure(QString& res)
 }
 #endif
 
+bool EmptyFormulaNode::FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent)
+{
+	if (*begin == '~')
+	{
+		parent->AddChild(new EmptyFormulaNode(parent));
+		++begin;
+		return true;
+	}
+	
+	return false;
+}
+
+std::string EmptyFormulaNode::ToString()
+{
+	return "~";
+}
+
 /**
  * Gets the next caret position of the node.
  * @param [in,out] relativeState State of the relative.

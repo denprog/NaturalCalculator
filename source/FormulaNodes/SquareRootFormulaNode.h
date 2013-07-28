@@ -36,6 +36,8 @@ private:
 	BOOST_SERIALIZATION_SPLIT_MEMBER()
 	
 public:
+	virtual void RemoveChildNodes();
+
 	virtual void Remake();
 	virtual void UpdateBoundingRect();
 

@@ -37,6 +37,13 @@ PowerFormulaNode::~PowerFormulaNode()
 {
 }
 
+void PowerFormulaNode::RemoveChildNodes()
+{
+	childNodes->Clear();
+	base = NULL;
+	exponent = NULL;
+}
+
 /**
  * Remakes this node.
  */

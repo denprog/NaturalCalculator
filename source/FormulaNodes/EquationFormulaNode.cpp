@@ -20,6 +20,8 @@ EquationFormulaNode::EquationFormulaNode()
  */
 EquationFormulaNode::EquationFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : CompoundFormulaNode(_parent, wnd)
 {
+	left = new GroupFormulaNode(this, wnd);
+	AddChild(left);
 	shape = AddShapeNode();
 	resNode = NULL;
 	type = EQUATION_NODE;
@@ -30,6 +32,12 @@ EquationFormulaNode::EquationFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) 
  */
 EquationFormulaNode::~EquationFormulaNode()
 {
+}
+
+void EquationFormulaNode::RemoveChildNodes()
+{
+	childNodes->Clear();
+	left = NULL;
 }
 
 /**
@@ -56,7 +64,6 @@ void EquationFormulaNode::Remake()
 				(FractionType)wnd->settings->Load("RationalNumbers", "form", PROPER_FRACTION).toInt());
 		}
 		
-		FormulaNode* left = (*this)[0];
 		ParserString expr;
 		//parse the left nodes
 		left->Parse(expr);
@@ -120,6 +127,15 @@ void EquationFormulaNode::Parse(ParserString& expr)
 	if (childNodes->Count() > 0)
 		(*childNodes)[0]->Parse(expr);
 }
+
+#ifdef TEST
+void EquationFormulaNode::ParseStructure(QString& res)
+{
+	left->ParseStructure(res);
+	res += "=";
+	resNode->ParseStructure(res);
+}
+#endif
 
 /**
  * Executes the insert text operation.

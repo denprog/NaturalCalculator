@@ -16,21 +16,20 @@ void BracesTest::Test1()
 	
 	QTest::keyClick(wnd, Qt::Key_ParenLeft);
 	doc->ParseStructure(s);
-	Check(s, "g(1+2+3+4[sg(e))", 0);
+	Check(s, "g(1+2+3+4[g(e))", 0);
 	s = "";
-	
-	QTest::qWait(1000);
-	UndoKeys();
+
+	wnd->Undo();
 	doc->ParseStructure(s);
 	Check(s, "g(1+2+3+4)", 1);
 	s = "";
 
-	RedoKeys();
+	wnd->Redo();
 	doc->ParseStructure(s);
-	Check(s, "g(1+2+3+4[sg(e))", 0);
+	Check(s, "g(1+2+3+4[g(e))", 0);
 	s = "";
 
-	UndoKeys();
+	wnd->Undo();
 	doc->ParseStructure(s);
 	Check(s, "g(1+2+3+4)", 1);
 	s = "";
@@ -38,7 +37,7 @@ void BracesTest::Test1()
 	MoveLeft();
 	QTest::keyClick(wnd, Qt::Key_ParenLeft);
 	doc->ParseStructure(s);
-	Check(s, "g(1+2+3+[sg(4))", 0);
+	Check(s, "g(1+2+3+[g(4))", 0);
 	s = "";
 
 	mainWindow->OnUndo();
@@ -46,12 +45,12 @@ void BracesTest::Test1()
 	Check(s, "g(1+2+3+4)", 0);
 	s = "";
 
-	RedoKeys();
+	wnd->Redo();
 	doc->ParseStructure(s);
-	Check(s, "g(1+2+3+[sg(4))", 0);
+	Check(s, "g(1+2+3+[g(4))", 0);
 	s = "";
 
-	UndoKeys();
+	wnd->Undo();
 	doc->ParseStructure(s);
 	Check(s, "g(1+2+3+4)", 0);
 	s = "";
@@ -59,7 +58,7 @@ void BracesTest::Test1()
 	MoveLeft(10);
 	QTest::keyClick(wnd, Qt::Key_ParenLeft);
 	doc->ParseStructure(s);
-	Check(s, "g([sg(1+2+3+4))", 0);
+	Check(s, "g([g(1+2+3+4))", 0);
 	s = "";
 }
 
@@ -78,21 +77,20 @@ void BracesTest::Test2()
 	
 	QTest::keyClick(wnd, Qt::Key_ParenRight);
 	doc->ParseStructure(s);
-	Check(s, "g(g(1+2+3+4)s])", 1);
+	Check(s, "g(g(1+2+3+4)])", 1);
 	s = "";
 	
-	mainWindow->OnUndo();
-	UndoKeys();
+	wnd->Undo();
 	doc->ParseStructure(s);
 	Check(s, "g(1+2+3+4)", 1);
 	s = "";
 
-	RedoKeys();
+	wnd->Redo();
 	doc->ParseStructure(s);
-	Check(s, "g(g(1+2+3+4)s])", 1);
+	Check(s, "g(g(1+2+3+4)])", 1);
 	s = "";
 
-	UndoKeys();
+	wnd->Undo();
 	doc->ParseStructure(s);
 	Check(s, "g(1+2+3+4)", 1);
 	s = "";
@@ -100,20 +98,20 @@ void BracesTest::Test2()
 	MoveLeft();
 	QTest::keyClick(wnd, Qt::Key_ParenRight);
 	doc->ParseStructure(s);
-	Check(s, "g(g(1+2+3+)s]4)", 0);
+	Check(s, "g(g(1+2+3+)]4)", 0);
 	s = "";
 
-	UndoKeys();
+	wnd->Undo();
 	doc->ParseStructure(s);
 	Check(s, "g(1+2+3+4)", 0);
 	s = "";
 
-	RedoKeys();
+	wnd->Redo();
 	doc->ParseStructure(s);
-	Check(s, "g(g(1+2+3+)s]4)", 0);
+	Check(s, "g(g(1+2+3+)]4)", 0);
 	s = "";
 
-	UndoKeys();
+	wnd->Undo();
 	doc->ParseStructure(s);
 	Check(s, "g(1+2+3+4)", 0);
 	s = "";
@@ -121,7 +119,7 @@ void BracesTest::Test2()
 	MoveLeft(10);
 	QTest::keyClick(wnd, Qt::Key_ParenRight);
 	doc->ParseStructure(s);
-	Check(s, "g(g(e)s]1+2+3+4)", 0);
+	Check(s, "g(g(e)]1+2+3+4)", 0);
 	s = "";
 }
 
@@ -141,13 +139,13 @@ void BracesTest::Test3()
 	MoveLeft(7);
 	QTest::keyClick(wnd, Qt::Key_ParenLeft);
 	doc->ParseStructure(s);
-	Check(s, "g(1+[sg(2+3+4))", 0);
+	Check(s, "g(1+[g(2+3+4))", 0);
 	s = "";
 	
 	MoveRight(5);
 	QTest::keyClick(wnd, Qt::Key_ParenRight);
 	doc->ParseStructure(s);
-	Check(s, "g(1+[sg(2+3)s]+4)", 3);
+	Check(s, "g(1+[g(2+3)]+4)", 3);
 	s = "";
 }
 
@@ -167,11 +165,11 @@ void BracesTest::Test4()
 	QTest::keyClick(wnd, Qt::Key_ParenRight);
 	QTest::keyClick(wnd, Qt::Key_ParenRight);
 	doc->ParseStructure(s);
-	Check(s, "g(g(g(12+234)s])s])", 1);
+	Check(s, "g(g(g(12+234)])])", 1);
 	s = "";
 
-	UndoKeys();
-	UndoKeys();
+	wnd->Undo();
+	wnd->Undo();
 	doc->ParseStructure(s);
 	Check(s, "g(12+234)", 3);
 	s = "";
@@ -180,11 +178,11 @@ void BracesTest::Test4()
 	QTest::keyClick(wnd, Qt::Key_ParenRight);
 	QTest::keyClick(wnd, Qt::Key_ParenRight);
 	doc->ParseStructure(s);
-	Check(s, "g(g(g(12+)s])s]234)", 0);
+	Check(s, "g(g(g(12+)])]234)", 0);
 	s = "";
 
-	UndoKeys();
-	UndoKeys();
+	wnd->Undo();
+	wnd->Undo();
 	doc->ParseStructure(s);
 	Check(s, "g(12+234)", 0);
 	s = "";
@@ -193,11 +191,11 @@ void BracesTest::Test4()
 	QTest::keyClick(wnd, Qt::Key_ParenRight);
 	QTest::keyClick(wnd, Qt::Key_ParenRight);
 	doc->ParseStructure(s);
-	Check(s, "g(g(g(e)s])s]12+234)", 0);
+	Check(s, "g(g(g(e)])]12+234)", 0);
 	s = "";
 
-	UndoKeys();
-	UndoKeys();
+	wnd->Undo();
+	wnd->Undo();
 	doc->ParseStructure(s);
 	Check(s, "g(12+234)", 0);
 	s = "";
@@ -206,11 +204,11 @@ void BracesTest::Test4()
 	QTest::keyClick(wnd, Qt::Key_ParenLeft);
 	QTest::keyClick(wnd, Qt::Key_ParenLeft);
 	doc->ParseStructure(s);
-	Check(s, "g(12+[sg([sg(234)))", 0);
+	Check(s, "g(12+[g([g(234)))", 0);
 	s = "";
 
-	UndoKeys();
-	UndoKeys();
+	wnd->Undo();
+	wnd->Undo();
 	doc->ParseStructure(s);
 	Check(s, "g(12+234)", 0);
 	s = "";
@@ -220,11 +218,11 @@ void BracesTest::Test4()
 	MoveLeft(2);
 	QTest::keyClick(wnd, Qt::Key_ParenRight);
 	doc->ParseStructure(s);
-	Check(s, "g(g(g(12)s])s]+234)", 1);
+	Check(s, "g(g(g(12)])]+234)", 1);
 	s = "";
 
-	UndoKeys();
-	UndoKeys();
+	wnd->Undo();
+	wnd->Undo();
 	doc->ParseStructure(s);
 	Check(s, "g(12+234)", 2);
 	s = "";
@@ -233,11 +231,11 @@ void BracesTest::Test4()
 	QTest::keyClick(wnd, Qt::Key_ParenLeft);
 	QTest::keyClick(wnd, Qt::Key_ParenLeft);
 	doc->ParseStructure(s);
-	Check(s, "g(12[sg([sg(+234)))", 0);
+	Check(s, "g(12[g([g(+234)))", 0);
 	s = "";
 
-	UndoKeys();
-	UndoKeys();
+	wnd->Undo();
+	wnd->Undo();
 	doc->ParseStructure(s);
 	Check(s, "g(12+234)", 1);
 	s = "";
@@ -249,11 +247,11 @@ void BracesTest::Test4()
 	MoveLeft(1);
 	QTest::keyClick(wnd, Qt::Key_ParenRight);
 	doc->ParseStructure(s);
-	Check(s, "g(g(g(12+)s])s]234)", 1);
+	Check(s, "g(g(g(12+)])]234)", 1);
 	s = "";
 	
-	UndoKeys();
-	UndoKeys();
+	wnd->Undo();
+	wnd->Undo();
 	doc->ParseStructure(s);
 	Check(s, "g(12+234)", 0);
 	s = "";
@@ -269,24 +267,24 @@ void BracesTest::Test5()
 	wnd->New();
 	QTest::keyClicks(wnd, "12/234");
 	doc->ParseStructure(s);
-	Check(s, "g(g(g(12)s/g(234)))", 3);
+	Check(s, "g((g(12)/g(234)))", 3);
 	s = "";
 	
 	MoveRight(1);
 	QTest::keyClick(wnd, Qt::Key_ParenRight);
 	doc->ParseStructure(s);
-	Check(s, "g(g(g(g(12)s/g(234)))s])", 1);
+	Check(s, "g(g((g(12)/g(234)))])", 1);
 	s = "";
 	
-	UndoKeys();
+	wnd->Undo();
 	doc->ParseStructure(s);
-	Check(s, "g(g(g(12)s/g(234)))", 1);
+	Check(s, "g((g(12)/g(234)))", 1);
 	s = "";
 	
 	MoveLeft(9);
 	QTest::keyClick(wnd, Qt::Key_ParenLeft);
 	doc->ParseStructure(s);
-	Check(s, "g([sg(g(g(12)s/g(234))))", 0);
+	Check(s, "g([g((g(12)/g(234))))", 0);
 	s = "";
 	
 	MoveRight(4);
@@ -294,64 +292,27 @@ void BracesTest::Test5()
 	MoveLeft(1);
 	QTest::keyClick(wnd, Qt::Key_ParenRight);
 	doc->ParseStructure(s);
-	Check(s, "g([sg(g(g(g(12)s])s/g(234))))", 1);
+	Check(s, "g([g((g(g(12)])/g(234))))", 1);
 	s = "";
 
-	UndoKeys();
+	wnd->Undo();
 	MoveRight(6);
 	QTest::keyClick(wnd, Qt::Key_ParenRight);
 	doc->ParseStructure(s);
-	Check(s, "g([sg(g(g(12)s/g(234)))s])", 1);
+	Check(s, "g([g((g(12)/g(234)))])", 1);
 	s = "";
 
-	UndoKeys();
+	wnd->Undo();
 	MoveRight(1);
 	QTest::keyClick(wnd, Qt::Key_ParenRight);
 	doc->ParseStructure(s);
-	Check(s, "g([sg(g(g(12)s/g(234)))s])", 1);
+	Check(s, "g([g((g(12)/g(234)))])", 1);
 	s = "";
 	
-	UndoKeys();
-	UndoKeys();
+	wnd->Undo();
+	wnd->Undo();
 	doc->ParseStructure(s);
-	Check(s, "g(g(g(12)s/g(234)))", 0);
-	s = "";
-	
-	MoveRight(10);
-	QTest::keyClicks(wnd, "+\\567");
-	MoveLeft(5);
-	QTest::keyClick(wnd, Qt::Key_ParenLeft);
-	doc->ParseStructure(s);
-	Check(s, "g(g(g(12)s/g(234))+[sg(sqrt(g(567))))", 0);
-	s = "";
-
-	UndoKeys();
-	doc->ParseStructure(s);
-	Check(s, "g(g(g(12)s/g(234))+sqrt(g(567)))", 2);
-	s = "";
-	
-	MoveRight(1);
-	QTest::keyClick(wnd, Qt::Key_ParenLeft);
-	doc->ParseStructure(s);
-	Check(s, "g(g(g(12)s/g(234))+sqrt(g(567)))", 0);
-	s = "";
-	
-	MoveRight(1);
-	QTest::keyClick(wnd, Qt::Key_ParenLeft);
-	doc->ParseStructure(s);
-	Check(s, "g(g(g(12)s/g(234))+sqrt(g([sg(567))))", 0);
-	s = "";
-	
-	MoveRight(3);
-	QTest::keyClick(wnd, Qt::Key_ParenRight);
-	doc->ParseStructure(s);
-	Check(s, "g(g(g(12)s/g(234))+sqrt(g([sg(567)s])))", 1);
-	s = "";
-	
-	UndoKeys();
-	UndoKeys();
-	doc->ParseStructure(s);
-	Check(s, "g(g(g(12)s/g(234))+sqrt(g(567)))", 0);
+	Check(s, "g((g(12)/g(234)))", 0);
 	s = "";
 }
 

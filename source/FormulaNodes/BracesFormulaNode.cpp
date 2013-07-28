@@ -15,7 +15,7 @@ BracesFormulaNode::BracesFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, bool
 	
 	leftShape = left ? AddShapeNode() : NULL;
 	rightShape = right ? AddShapeNode() : NULL;
-	inside = new GroupFormulaNode(parent, wnd);
+	inside = new GroupFormulaNode(this, wnd);
 	InsertChild(inside, left ? 1 : 0);
 }
 
@@ -32,6 +32,14 @@ void BracesFormulaNode::AddChild(FormulaNode* node)
 		inside->AddChild(node);
 	else
 		FormulaNode::AddChild(node);
+}
+
+void BracesFormulaNode::RemoveChildNodes()
+{
+	childNodes->Clear();
+	leftShape = NULL;
+	inside = NULL;
+	rightShape = NULL;
 }
 
 /**
@@ -259,4 +267,42 @@ std::string BracesFormulaNode::ToString()
 bool BracesFormulaNode::DoRemoveItem(Command* command)
 {
 	return false;
+}
+
+SharedCaretState BracesFormulaNode::GetNextPosition(SharedCaretState relativeState)
+{
+	if (!relativeState)
+		return SharedCaretState(new CaretState(parent, parent->GetChildPos(this)));
+	else
+	{
+		if (relativeState->CheckInNode(this) && relativeState->GetPos() == 1)
+		{
+			if (leftShape && !rightShape)
+			{
+				SharedCaretState c = CompoundFormulaNode::GetNextPosition(relativeState);
+				return parent->GetNextPosition(c);
+			}
+		}
+	}
+	
+	return CompoundFormulaNode::GetNextPosition(relativeState);
+}
+
+SharedCaretState BracesFormulaNode::GetPreviousPosition(SharedCaretState relativeState)
+{
+	if (!relativeState)
+		return CompoundFormulaNode::GetPreviousPosition(relativeState);
+	else
+	{
+		if (relativeState->CheckInNode(this) && relativeState->GetPos() == 0)
+		{
+			if (!leftShape && rightShape)
+			{
+				SharedCaretState c = CompoundFormulaNode::GetPreviousPosition(relativeState);
+				return parent->GetPreviousPosition(c);
+			}
+		}
+	}
+	
+	return CompoundFormulaNode::GetPreviousPosition(relativeState);
 }

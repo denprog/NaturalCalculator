@@ -35,6 +35,8 @@ private:
 
 public:
 	virtual void AddChild(FormulaNode* node);
+	virtual void RemoveChildNodes();
+
 	virtual void Remake();
 
 	virtual bool CanInsert(int pos);
@@ -58,6 +60,9 @@ public:
 	//command functions
 	virtual bool DoRemoveItem(Command* command);
 	
+	virtual SharedCaretState GetNextPosition(SharedCaretState relativeState = SharedCaretState());
+	virtual SharedCaretState GetPreviousPosition(SharedCaretState relativeState = SharedCaretState());
+
 private:
 	ShapeFormulaNode *leftShape, *rightShape;
 	GroupFormulaNode* inside;

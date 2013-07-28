@@ -142,7 +142,7 @@ void SolvingThread::operator()()
 		}
 		
 		//solve the expressions
-		for (int i = 0, j; i < (int)expressions.size(); ++i)
+		for (int i = 0; i < (int)expressions.size(); ++i)
 		{
 			ParserExpressionVariant& expr = expressions[i];
 			

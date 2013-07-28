@@ -14,25 +14,51 @@ void SquareRootTest::Test1()
 	Check(s, "g(sqrt(g(e)))", 0);
 	s = "";
 	
-	UndoKeys();
+	wnd->Undo();
 	doc->ParseStructure(s);
 	Check(s, "g(e)", 0);
 	s = "";
 	
-	RedoKeys();
+	wnd->Redo();
 	doc->ParseStructure(s);
 	Check(s, "g(sqrt(g(e)))", 0);
 	s = "";
 
-	UndoKeys();
+	wnd->Undo();
 	QTest::keyClicks(wnd, "123\\");
 	doc->ParseStructure(s);
 	Check(s, "g(sqrt(g(123)))", 3);
 	s = "";
 	
-	UndoKeys();
+	wnd->Undo();
 	doc->ParseStructure(s);
 	Check(s, "g(123)", 3);
+	s = "";
+	
+	wnd->Redo();
+	doc->ParseStructure(s);
+	Check(s, "g(sqrt(g(123)))", 3);
+	s = "";
+	
+	QTest::keyClicks(wnd, "+23-4");
+	doc->ParseStructure(s);
+	Check(s, "g(sqrt(g(123+23-4)))", 1);
+	s = "";
+	
+	wnd->Undo();
+	wnd->Undo();
+	wnd->Undo();
+	wnd->Undo();
+	doc->ParseStructure(s);
+	Check(s, "g(sqrt(g(123+)))", 2);
+	s = "";
+
+	wnd->Undo();
+	wnd->Undo();
+	wnd->Undo();
+	wnd->Undo();
+	doc->ParseStructure(s);
+	Check(s, "g(1)", 1);
 	s = "";
 }
 
@@ -61,22 +87,22 @@ void SquareRootTest::Test2()
 	Check(s, "g(e)", 0);
 	s = "";
 	
-	UndoKeys();
+	wnd->Undo();
 	doc->ParseStructure(s);
 	Check(s, "g(sqrt(g(e)))", 0);
 	s = "";
 	
-	RedoKeys();
+	wnd->Redo();
 	doc->ParseStructure(s);
 	Check(s, "g(e)", 0);
 	s = "";
 
-	UndoKeys();
+	wnd->Undo();
 	doc->ParseStructure(s);
 	Check(s, "g(sqrt(g(e)))", 0);
 	s = "";
 
-	UndoKeys();
+	wnd->Undo();
 	doc->ParseStructure(s);
 	Check(s, "g(sqrt(g(sqrt(g(e)))))", 0);
 	s = "";
@@ -92,7 +118,7 @@ void SquareRootTest::Test3()
 	wnd->New();
 	QTest::keyClicks(wnd, "\\\\2/4");
 	doc->ParseStructure(s);
-	Check(s, "g(sqrt(g(sqrt(g(g(g(2)s/g(4)))))))", 1);
+	Check(s, "g(sqrt(g(sqrt(g((g(2)/g(4)))))))", 1);
 	s = "";
 	
 	QTest::keyClick(wnd, Qt::Key_Home);
@@ -102,9 +128,9 @@ void SquareRootTest::Test3()
 	Check(s, "g(sqrt(g(sqrt(g(e)))))", 0);
 	s = "";
 	
-	UndoKeys();
+	wnd->Undo();
 	doc->ParseStructure(s);
-	Check(s, "g(sqrt(g(sqrt(g(g(g(2)s/g(4)))))))", 0);
+	Check(s, "g(sqrt(g(sqrt(g((g(2)/g(4)))))))", 0);
 	s = "";
 
 	QTest::keyClick(wnd, Qt::Key_Home);
@@ -113,8 +139,8 @@ void SquareRootTest::Test3()
 	Check(s, "g(sqrt(g(e)))", 0);
 	s = "";
 	
-	RedoKeys();
-	RedoKeys();
+	wnd->Redo();
+	wnd->Redo();
 }
 
 #endif

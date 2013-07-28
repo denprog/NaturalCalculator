@@ -39,23 +39,21 @@ public:
 
 public:
 	friend class CommandManager;
-		
+	
 public:
 	bool DoAction();
 	bool UndoAction();
 	
-	void SetParam(FormulaNode* node, const char* name, boost::any param);
-	boost::any GetParam(FormulaNode* node, const char* name);
-	bool ContainsParam(FormulaNode* node, const char* name);
-	void RemoveParam(FormulaNode* node, const char* name);
-	
+	void SaveNodeState(FormulaNode* node);
+
 public:
 	NodeEvent nodeEvent; //action parameters
+	SharedCaretState beforeCaretState, afterCaretState; //caret states before and after executing the command
 	
 private:
-	CommandAction doAction, undoAction; //functions to be called for do and undo actions
-	SharedCaretState beforeCaretState, afterCaretState; //caret states before and after executing the command
-	QMap<std::vector<int>, QMap<QString, boost::any> > params; //command parameters fills by nodes being operated
+	CommandAction doAction;
+	std::string savedNode;
+	SharedCaretState savedNodePos;
 };
 
 #endif

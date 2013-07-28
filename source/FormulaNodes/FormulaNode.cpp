@@ -116,6 +116,13 @@ void FormulaNode::RemoveChild(FormulaNode* node)
 	return RemoveChild(pos);
 }
 
+void FormulaNode::RemoveChildNodes()
+{
+	for (int i = 0; i < childNodes->Count(); ++i)
+		(*this)[i]->RemoveChildNodes();
+	childNodes->Clear();
+}
+
 void FormulaNode::ReplaceChild(FormulaNode* node, int pos)
 {
 	RemoveChild(pos);
@@ -343,6 +350,8 @@ bool FormulaNode::FromString(std::string::iterator& begin, std::string::iterator
 	if (SquareRootFormulaNode::FromString(begin, end, parent))
 		return true;
 	if (CommaFormulaNode::FromString(begin, end, parent))
+		return true;
+	if (EmptyFormulaNode::FromString(begin, end, parent))
 		return true;
 	if (TextFormulaNode::FromString(begin, end, parent))
 		return true;
@@ -579,11 +588,6 @@ bool FormulaNode::DoInsertNode(Command* command)
 	return false;
 }
 
-bool FormulaNode::UndoInsertNode(Command* command)
-{
-	return false;
-}
-
 /**
  * Executes the insert text operation.
  * @param [in,out] nodeEvent The node event.
@@ -591,50 +595,23 @@ bool FormulaNode::UndoInsertNode(Command* command)
  */
 bool FormulaNode::DoInsertText(Command* command)
 {
-	NodeEvent& nodeEvent = command->nodeEvent;
-	QString str = any_cast<QString>(nodeEvent["text"]);
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	command->SaveNodeState(parent);
+	
+	QString str = any_cast<QString>(command->nodeEvent["text"]);
+	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
 	FormulaNode* n = c->GetNode();
 	int pos = c->GetPos();
 	
 	if (pos < n->childNodes->Count() && (*n)[pos]->type == EMPTY_NODE)
-	{
-		//remove the empty node and store its being
 		RemoveChild(pos);
-		command->SetParam(this, "empty", true);
-	}
 	
 	//insert a text node
 	TextFormulaNode* t = new TextFormulaNode(this);
 	t->SetText(str);
 	InsertChild(t, pos);
-
-	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoInsertText);
+	
 	c->SetToNode(t, 1);
-
-	return true;
-}
-
-/**
- * Undo insert text.
- * @param [in,out] nodeEvent The node event.
- * @return true if it succeeds, false if it fails.
- */
-bool FormulaNode::UndoInsertText(Command* command)
-{
-	NodeEvent& nodeEvent = command->nodeEvent;
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	bool empty = command->ContainsParam(this, "empty");
-	int pos = c->GetNode()->parent->GetChildPos(c->GetNode());
-
-	//remove the text node
-	RemoveChild(pos);
-		
-	if (empty)
-	{
-		//restore the empty node
-		InsertChild(new EmptyFormulaNode(this), pos);
-	}
+	command->afterCaretState = c;
 	
 	return true;
 }
@@ -670,11 +647,12 @@ bool FormulaNode::UndoInsertLine(Command* command)
  */
 bool FormulaNode::DoRemoveItem(Command* command)
 {
-	NodeEvent& nodeEvent = command->nodeEvent;
-	bool right = any_cast<bool>(nodeEvent["right"]);
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	bool right = any_cast<bool>(command->nodeEvent["right"]);
+	
+	command->SaveNodeState(parent);
+	
+	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
 	int pos = c->GetPos();
-	command->SetParam(this, "pos", pos);
 
 	if (right)
 	{
@@ -683,9 +661,6 @@ bool FormulaNode::DoRemoveItem(Command* command)
 			if (ChildrenCount() == 1 && (*this)[0]->IsEmptySymbol())
 				return false;
 			
-			//store the node
-			if (!command->ContainsParam(this, "node"))
-				command->SetParam(this, "node", (*this)[pos]->Clone(NULL));
 			//remove the node
 			RemoveChild(pos);
 			if (childNodes->Count() == 0)
@@ -702,8 +677,6 @@ bool FormulaNode::DoRemoveItem(Command* command)
 			if (ChildrenCount() == 1 && (*this)[0]->IsEmptySymbol())
 				return false;
 			
-			//store the node
-			command->SetParam(this, "node", (*this)[pos - 1]->Clone(NULL));
 			//remove the node
 			RemoveChild(pos - 1);
 			c->SetToNode(this, pos - 1);
@@ -711,35 +684,8 @@ bool FormulaNode::DoRemoveItem(Command* command)
 		else
 			return false;
 	}
-
-	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoRemoveItem);
 	
-	return true;
-}
-
-/**
- * Undo remove item.
- * @param [in] nodeEvent The node event.
- * @return true if it succeeds, false if it fails.
- */
-bool FormulaNode::UndoRemoveItem(Command* command)
-{
-	NodeEvent& nodeEvent = command->nodeEvent;
-	bool right = any_cast<bool>(nodeEvent["right"]);
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	int pos = any_cast<int>(nodeEvent["pos"]);
-	
-	if (command->ContainsParam(this, "removeCount"))
-	{
-		//remove the child nodes, which have been replaced from the deleted node
-		int count = any_cast<int>(command->GetParam(this, "removeCount"));
-		for (int i = 0; i < count; ++i)
-			RemoveChild(pos);
-	}
-
-	if (pos < ChildrenCount() && (*this)[pos]->IsEmptySymbol())
-		RemoveChild(pos);	
-	InsertChild((any_cast<FormulaNode*>(command->GetParam(this, "node")))->Clone(NULL), pos);
+	command->afterCaretState = c;
 	
 	return true;
 }
@@ -751,29 +697,16 @@ bool FormulaNode::UndoRemoveItem(Command* command)
  */
 bool FormulaNode::DoCreatePlusFormulaNode(Command* command)
 {
-	NodeEvent& nodeEvent = command->nodeEvent;
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
+
+	command->SaveNodeState(parent);
+	
 	//create a plus node and insert it into the child nodes
 	FormulaNode* p = new PlusFormulaNode(this, wnd);
 	InsertChild(p, c->GetPos());
-	
-	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreatePlusFormulaNode);
 	c->SetToNode(this, c->GetPos() + 1);
+	command->afterCaretState = c;
 
-	return true;
-}
-
-/**
- * Undo create plus formula node.
- * @param [in] nodeEvent The node event.
- * @return true if it succeeds, false if it fails.
- */
-bool FormulaNode::UndoCreatePlusFormulaNode(Command* command)
-{
-	NodeEvent& nodeEvent = command->nodeEvent;
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	RemoveChild(c->GetPos() - 1);
-	
 	return true;
 }
 
@@ -784,29 +717,16 @@ bool FormulaNode::UndoCreatePlusFormulaNode(Command* command)
  */
 bool FormulaNode::DoCreateMinusFormulaNode(Command* command)
 {
-	NodeEvent& nodeEvent = command->nodeEvent;
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	//create a plus node and insert it into the child nodes
+	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
+
+	command->SaveNodeState(parent);
+	
+	//create a minus node and insert it into the child nodes
 	FormulaNode* p = new MinusFormulaNode(this, wnd);
 	InsertChild(p, c->GetPos());
-	
-	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreateMinusFormulaNode);
 	c->SetToNode(this, c->GetPos() + 1);
+	command->afterCaretState = c;
 
-	return true;
-}
-
-/**
- * Undo create minus formula node.
- * @param [in] nodeEvent The node event.
- * @return true if it succeeds, false if it fails.
- */
-bool FormulaNode::UndoCreateMinusFormulaNode(Command* command)
-{
-	NodeEvent& nodeEvent = command->nodeEvent;
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	RemoveChild(c->GetPos() - 1);
-	
 	return true;
 }
 
@@ -817,29 +737,16 @@ bool FormulaNode::UndoCreateMinusFormulaNode(Command* command)
  */
 bool FormulaNode::DoCreateMultiplyFormulaNode(Command* command)
 {
-	NodeEvent& nodeEvent = command->nodeEvent;
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	//create a plus node and insert it into the child nodes
+	command->SaveNodeState(parent);
+	
+	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
+
+	//create a multiply node and insert it into the child nodes
 	FormulaNode* p = new MultiplyFormulaNode(this, wnd);
 	InsertChild(p, c->GetPos());
-	
-	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreateMultiplyFormulaNode);
 	c->SetToNode(this, c->GetPos() + 1);
+	command->afterCaretState = c;
 
-	return true;
-}
-
-/**
- * Undo create multiply formula node.
- * @param [in] nodeEvent The node event.
- * @return true if it succeeds, false if it fails.
- */
-bool FormulaNode::UndoCreateMultiplyFormulaNode(Command* command)
-{
-	NodeEvent& nodeEvent = command->nodeEvent;
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	RemoveChild(c->GetPos() - 1);
-	
 	return true;
 }
 
@@ -850,39 +757,21 @@ bool FormulaNode::UndoCreateMultiplyFormulaNode(Command* command)
  */
 bool FormulaNode::DoCreatePowerFormulaNode(Command* command)
 {
-	NodeEvent& nodeEvent = command->nodeEvent;
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	command->SaveNodeState(parent);
+	
+	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
 	int pos = c->GetPos();
 	//create a power node, insert current node into it and insert the result into the parent
-	FormulaNode* d = new PowerFormulaNode(this, wnd);
-	FormulaNode* g = new GroupFormulaNode(d, wnd);
+	PowerFormulaNode* p = new PowerFormulaNode(this, wnd);
 	if (ChildrenCount() <= pos)
 		InsertChild(new EmptyFormulaNode(this), pos);
-	g->MoveChild((*this)[pos], 0);
-	d->InsertChild(g, 0);
-	g = new GroupFormulaNode(d, wnd);
-	FormulaNode* n = new EmptyFormulaNode(g);
-	g->AddChild(n);
-	d->AddChild(g);
-	InsertChild(d, pos);
-
-	nodeEvent["undoAction"] = CommandAction(this, pos, &FormulaNode::UndoCreatePowerFormulaNode);
-	c->SetToNode(g, 0);
+	p->base->MoveChild((*this)[pos], 0);
+	FormulaNode* n = new EmptyFormulaNode(p->exponent);
+	p->exponent->AddChild(n);
+	InsertChild(p, pos);
 	
-	return true;
-}
-
-/**
- * Undo create power formula node.
- * @param [in] nodeEvent The node event.
- * @return true if it succeeds, false if it fails.
- */
-bool FormulaNode::UndoCreatePowerFormulaNode(Command* command)
-{
-	FormulaNode* p = parent->parent->parent;
-	int pos = p->GetChildPos(parent->parent);
-	p->MoveChild(this, pos);
-	p->RemoveChild(pos + 1);
+	c->SetToNode(p->exponent, 0);
+	command->afterCaretState = c;
 	
 	return true;
 }
@@ -894,8 +783,9 @@ bool FormulaNode::UndoCreatePowerFormulaNode(Command* command)
  */
 bool FormulaNode::DoCreateSquareRootFormulaNode(Command* command)
 {
-	NodeEvent& nodeEvent = command->nodeEvent;
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	command->SaveNodeState(parent);
+	
+	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
 	int pos = c->GetPos();
 	//create a square root node, insert current node into it and insert the result into the parent
 	FormulaNode* d = new SquareRootFormulaNode(this, wnd);
@@ -904,37 +794,9 @@ bool FormulaNode::DoCreateSquareRootFormulaNode(Command* command)
 		InsertChild(new EmptyFormulaNode(this), pos);
 	expr->MoveChild((*this)[pos], 0);
 	InsertChild(d, pos);
-
-	nodeEvent["undoAction"] = CommandAction(this, pos, &FormulaNode::UndoCreateSquareRootFormulaNode);
-	c->SetToNode(expr, 0);
 	
-	return true;
-}
-
-/**
- * Undo create square root formula node.
- * @param [in] nodeEvent The node event.
- * @return true if it succeeds, false if it fails.
- */
-bool FormulaNode::UndoCreateSquareRootFormulaNode(Command* command)
-{
-	NodeEvent& nodeEvent = command->nodeEvent;
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	FormulaNode* node = c->GetNode();
-	int pos = GetFirstLevelChildPos(node);
-	if (!node->IsEmptySymbol())
-	{
-		FormulaNode* expr = node->GetExpression(0);
-		for (int i = 0; i < expr->ChildrenCount();)
-			MoveChild((*expr)[i], pos++);
-		RemoveChild(pos + 1);
-	}
-	else
-	{
-		RemoveChild(pos);
-		if (ChildrenCount() == 0)
-			InsertChild(new EmptyFormulaNode(this), 0);
-	}
+	c->SetToNode(expr, 0);
+	command->afterCaretState = c;
 	
 	return true;
 }
@@ -950,93 +812,48 @@ bool FormulaNode::DoCreateDivisionFormulaNode(Command* command)
 }
 
 /**
- * Undo create division formula node.
- * @param [in] nodeEvent The node event.
- * @return true if it succeeds, false if it fails.
- */
-bool FormulaNode::UndoCreateDivisionFormulaNode(Command* command)
-{
-	return false;
-}
-
-/**
  * Executes the create a braces formula node operation with a left brace.
  * @param [in,out] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
  */
 bool FormulaNode::DoCreateLeftBraceFormulaNode(Command* command)
 {
-	NodeEvent& nodeEvent = command->nodeEvent;
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
 	FormulaNode* node = c->GetNode();
 	int pos = c->GetPos();
 	
 	if (node->parent->type == BRACES_NODE && node->parent->IsShapeVisible(1))
 	{
+		command->SaveNodeState(parent->parent);
+
 		FormulaNode* p = node->parent->parent;
 		//this is a braces node with a right brace, set a left brace
-		command->SetParam(p, "setLeft", pos);
 		node->parent->ShowShape(0, true);
 		
 		//move the remain child nodes after the caret to the parent node
 		for (int i = pos - 1; i >= 0; --i)
 			p->MoveChild((*node)[i], 0);
 
-		nodeEvent["undoAction"] = CommandAction(p, 0, &FormulaNode::UndoCreateLeftBraceFormulaNode);
 		c->SetToNode(p, pos);
+		command->afterCaretState = c;
 	
 		return true;
 	}
 
-	//create a braces node, insert the nodes being located to the right in the collection, into it and insert the result into the parent
+	if (parent->parent != NULL)
+		command->SaveNodeState(parent->parent);
+	else
+		command->SaveNodeState(parent);
+
+	//create a braces node, insert the nodes which are located to the right in the collection, into it and insert the result into the parent
 	FormulaNode* d = new BracesFormulaNode(this, wnd, true, false);
 	FormulaNode* expr = d->GetExpression(0);
 	for (int i = pos; i < ChildrenCount();)
 		expr->MoveChild((*this)[pos], expr->ChildrenCount());
 	InsertChild(d, pos);
 
-	nodeEvent["undoAction"] = CommandAction(this, pos, &FormulaNode::UndoCreateLeftBraceFormulaNode);
 	c->SetToNode(expr, 0);
-	
-	return true;
-}
-
-/**
- * Undo create a braces formula node with a left brace.
- * @param [in,out] nodeEvent The node event.
- * @return true if it succeeds, false if it fails.
- */
-bool FormulaNode::UndoCreateLeftBraceFormulaNode(Command* command)
-{
-	NodeEvent& nodeEvent = command->nodeEvent;
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	BracesFormulaNode* node = (BracesFormulaNode*)c->GetNode()->parent;
-	
-	if (command->ContainsParam(this, "setLeft"))
-	{
-		//clear the left brace
-		int pos = any_cast<int>(command->GetParam(this, "setLeft"));
-		FormulaNode* n = (*this)[pos];
-		n->ShowShape(0, false);
-		FormulaNode* expr = n->GetExpression(0);
-		
-		//move the child nodes from the parent node back to the braces
-		for (int i = pos - 1; i >= 0; --i)
-			expr->MoveChild((*this)[i], 0);
-		
-		return true;
-	}
-	
-	int pos = GetFirstLevelChildPos(node);
-	FormulaNode* expr = node->GetExpression(0);
-
-	if (!expr->IsEmptySymbol() || ChildrenCount() == 1)
-	{
-		//move the braces' child nodes back in the parent
-		for (int i = 0; i < expr->ChildrenCount();)
-			MoveChild((*expr)[0], ChildrenCount());
-	}
-	RemoveChild(pos);
+	command->afterCaretState = c;
 	
 	return true;
 }
@@ -1048,96 +865,44 @@ bool FormulaNode::UndoCreateLeftBraceFormulaNode(Command* command)
  */
 bool FormulaNode::DoCreateRightBraceFormulaNode(Command* command)
 {
-	NodeEvent& nodeEvent = command->nodeEvent;
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
 	int pos = c->GetPos();
 	FormulaNode* node = c->GetNode();
 	
 	if (node->parent->type == BRACES_NODE && node->parent->IsShapeVisible(0))
 	{
+		command->SaveNodeState(parent->parent);
+		
 		FormulaNode* b = node->parent;
 		FormulaNode* p = b->parent;
 		int j = p->GetFirstLevelChildPos(b);
 		//this is a braces node with a left brace, set a right brace
-		command->SetParam(p, "setRight", j);
 		b->ShowShape(1, true);
 		
 		//move the remain child nodes after the caret to the parent node
 		for (int i = pos; i < node->ChildrenCount();)
 			p->MoveChild((*node)[i], p->ChildrenCount());
 
-		nodeEvent["undoAction"] = CommandAction(p, 0, &FormulaNode::UndoCreateRightBraceFormulaNode);
 		c->SetToNode(p, j + 1);
+		command->afterCaretState = c;
 	
 		return true;
 	}
 	
-	if (pos == ChildrenCount())
-	{
-		//search for an open brace
-		BracesFormulaNode* n = dynamic_cast<BracesFormulaNode*>((*this)[pos - 1]);
-		if (n && !n->IsShapeVisible(1))
-		{
-			command->SetParam(this, "setRight", pos - 1);
-			n->ShowShape(1, true);
-
-			nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreateRightBraceFormulaNode);
-			c->SetToNodeEnd(this);
-			
-			return true;
-		}
-	}
-
-	//create a braces node, insert the nodes being located to the left in the collection, into it and insert the result into the parent
+	if (parent->parent != NULL)
+		command->SaveNodeState(parent->parent);
+	else
+		command->SaveNodeState(parent);
+	
+	//create a braces node, insert the nodes which are located to the left in the collection, into it and insert the result into the parent
 	FormulaNode* d = new BracesFormulaNode(this, wnd, false, true);
 	FormulaNode* expr = d->GetExpression(0);
 	for (int i = pos - 1; i >= 0; --i)
 		expr->MoveChild((*this)[i], 0);
 	InsertChild(d, 0);
 
-	nodeEvent["undoAction"] = CommandAction(this, 1, &FormulaNode::UndoCreateRightBraceFormulaNode);
 	c->SetToNode(this, 1);
-	
-	return true;
-}
-
-/**
- * Undo create a braces formula node with a right shape.
- * @param [in,out] nodeEvent The node event.
- * @return true if it succeeds, false if it fails.
- */
-bool FormulaNode::UndoCreateRightBraceFormulaNode(Command* command)
-{
-	NodeEvent& nodeEvent = command->nodeEvent;
-	
-	if (command->ContainsParam(this, "setRight"))
-	{
-		//clear the right brace
-		int pos = any_cast<int>(command->GetParam(this, "setRight"));
-		FormulaNode* n = (*this)[pos];
-		n->ShowShape(1, false);
-		FormulaNode* expr = n->GetExpression(0);
-		
-		if (expr->IsEmptySymbol())
-			expr->childNodes->Clear();
-		
-		//move the child nodes from the parent node back to the braces
-		for (int i = pos + 1; i < ChildrenCount();)
-			expr->MoveChild((*this)[i], expr->ChildrenCount());
-		
-		return true;
-	}
-
-	FormulaNode* node = (*this)[0];
-
-	if (!(*node)[1]->IsEmptySymbol() || ChildrenCount() == 1)
-	{
-		//move the braces' child nodes back in the parent
-		FormulaNode* expr = node->GetExpression(0);
-		for (int i = expr->ChildrenCount() - 1; i >= 0; --i)
-			MoveChild((*expr)[i], 1);
-	}
-	RemoveChild(0);
+	command->afterCaretState = c;
 	
 	return true;
 }

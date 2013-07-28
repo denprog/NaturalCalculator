@@ -142,17 +142,17 @@ SharedCaretState DocumentFormulaNode::GetPreviousPosition(SharedCaretState relat
  */
 bool DocumentFormulaNode::DoInsertLine(Command* command)
 {
-	NodeEvent& nodeEvent = command->nodeEvent;
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	FormulaNode* node = c->GetNode();
-	int pos = GetFirstLevelChildPos(node);
-	RootFormulaNode* rootNode = new RootFormulaNode(this);
-	EmptyFormulaNode* n = new EmptyFormulaNode(rootNode);
-	rootNode->AddChild(n);
-	InsertChild(rootNode, pos + 1);
-	
-	nodeEvent["undoAction"] = CommandAction(rootNode, 0, &FormulaNode::UndoInsertLine);
-	c->SetToNode(rootNode, 0);
+//	NodeEvent& nodeEvent = command->nodeEvent;
+//	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+//	FormulaNode* node = c->GetNode();
+//	int pos = GetFirstLevelChildPos(node);
+//	RootFormulaNode* rootNode = new RootFormulaNode(this);
+//	EmptyFormulaNode* n = new EmptyFormulaNode(rootNode);
+//	rootNode->AddChild(n);
+//	InsertChild(rootNode, pos + 1);
+//	
+//	nodeEvent["undoAction"] = CommandAction(rootNode, 0, &FormulaNode::UndoInsertLine);
+//	c->SetToNode(rootNode, 0);
 
 	return true;
 }
@@ -164,11 +164,11 @@ bool DocumentFormulaNode::DoInsertLine(Command* command)
  */
 bool DocumentFormulaNode::UndoInsertLine(Command* command)
 {
-	NodeEvent& nodeEvent = command->nodeEvent;
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	FormulaNode* node = c->GetNode();
-	int pos = GetFirstLevelChildPos(node);
-	RemoveChild(pos);
+//	NodeEvent& nodeEvent = command->nodeEvent;
+//	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+//	FormulaNode* node = c->GetNode();
+//	int pos = GetFirstLevelChildPos(node);
+//	RemoveChild(pos);
 	
 	return true;
 }

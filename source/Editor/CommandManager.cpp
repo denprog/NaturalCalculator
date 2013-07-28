@@ -53,7 +53,7 @@ bool CommandManager::InsertText(QString& text, CommandAction doAction, bool comm
 	NodeEvent nodeEvent;
 	nodeEvent["text"] = text;
 
-	return DoAction(doAction, nodeEvent, commit);	
+	return DoAction(doAction, nodeEvent, commit);
 }
 
 bool CommandManager::InsertLine(bool commit)

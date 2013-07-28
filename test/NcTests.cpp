@@ -4,15 +4,18 @@
 #include "BracesTest.h"
 #include "SquareRootTest.h"
 #include "ParseTest.h"
+#include "PowerTest.h"
+#include "EquationTest.h"
 
 /**
  * Text tests.
  */
 void NcTests::TextTests()
 {
-//	TextTest textTest(mainWindow);
-//	textTest.Test1();
-//	textTest.Test2();
+	TextTest textTest(mainWindow);
+	textTest.Test1();
+	textTest.Test2();
+	textTest.Test3();
 }
 
 /**
@@ -20,12 +23,18 @@ void NcTests::TextTests()
  */
 void NcTests::BracesTests()
 {
-//	BracesTest bracesTest(mainWindow);
-//	bracesTest.Test1();
-//	bracesTest.Test2();
-//	bracesTest.Test3();
-//	bracesTest.Test4();
-//	bracesTest.Test5();
+	BracesTest bracesTest(mainWindow);
+	bracesTest.Test1();
+	bracesTest.Test2();
+	bracesTest.Test3();
+	bracesTest.Test4();
+	bracesTest.Test5();
+}
+
+void NcTests::PowerTests()
+{
+	PowerTest powerTest(mainWindow);
+	powerTest.Test1();
 }
 
 /**
@@ -33,10 +42,16 @@ void NcTests::BracesTests()
  */
 void NcTests::SquareRootTests()
 {
-//	SquareRootTest squareRootTest(mainWindow);
-//	squareRootTest.Test1();
-//	squareRootTest.Test2();
-//	squareRootTest.Test3();
+	SquareRootTest squareRootTest(mainWindow);
+	squareRootTest.Test1();
+	squareRootTest.Test2();
+	squareRootTest.Test3();
+}
+
+void NcTests::EquationTests()
+{
+	EquationTest equationTest(mainWindow);
+	equationTest.Test1();
 }
 
 void NcTests::ParseTests()

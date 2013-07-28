@@ -56,6 +56,13 @@ void DivisionFormulaNode::InsertChild(FormulaNode* node, int pos)
 	FormulaNode::InsertChild(node, pos);
 }
 
+void DivisionFormulaNode::RemoveChildNodes()
+{
+	childNodes->Clear();
+	dividend = NULL;
+	divisor = NULL;
+}
+
 /**
  * Remakes this node.
  */
@@ -127,10 +134,9 @@ void DivisionFormulaNode::Parse(ParserString& expr)
 void DivisionFormulaNode::ParseStructure(QString& res)
 {
 	res += "(";
-	(*this)[0]->ParseStructure(res);
-	(*this)[1]->ParseStructure(res);
+	dividend->ParseStructure(res);
 	res += "/";
-	(*this)[2]->ParseStructure(res);
+	divisor->ParseStructure(res);
 	res += ")";
 }
 #endif
@@ -141,7 +147,15 @@ bool DivisionFormulaNode::FromString(std::string::iterator& begin, std::string::
 	{
 		DivisionFormulaNode* d = new DivisionFormulaNode(parent, parent->wnd);
 		if (parent->ChildrenCount() > 0)
-			d->dividend->MoveChild((*parent)[0], 0);
+		{
+			if (parent->type == GROUP_NODE)
+			{
+				//for (int i = 0; i < (*parent->childNodes)[parent->ChildrenCount() - 1];)
+				d->dividend->MoveChild((*parent->childNodes)[parent->ChildrenCount() - 1], 0);
+			}
+			else
+				d->dividend->MoveChild((*parent)[0], 0);
+		}
 		else
 			d->dividend->AddChild(new EmptyFormulaNode(d->dividend));
 
@@ -235,38 +249,38 @@ void DivisionFormulaNode::RenderCaret(const int pos, const int anchor)
  */
 bool DivisionFormulaNode::DoRemoveItem(Command* command)
 {
-	NodeEvent& nodeEvent = command->nodeEvent;
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	int pos = c->GetPos();
-	
-	if (pos == 1)
-	{
-		//removing the symbol
-		bool right = any_cast<bool>(nodeEvent["right"]);
-		if (!right)
-			return false;
-
-		FormulaNode* dividend = (*this)[0];
-		FormulaNode* divisor = (*this)[2];
-		
-		command = any_cast<Command*>(nodeEvent["command"]);
-		command->SetParam(parent, "node", Clone(NULL));
-		//count parameter needed to remove the child nodes in the undo
-		command->SetParam(parent, "removeCount", dividend->childNodes->Count() + divisor->childNodes->Count());
-		int j = parent->GetFirstLevelChildPos(this);
-		int i = 0;
-		while (dividend->childNodes->Count() > 0)
-			parent->MoveChild((*dividend)[0], j + i++);
-		while (divisor->childNodes->Count() > 0)
-			parent->MoveChild((*divisor)[0], j + i++);
-		c->SetToNode(parent, j);
-
-		nodeEvent["undoAction"] = CommandAction(parent, j, &FormulaNode::UndoRemoveItem);
-
-		parent->RemoveChild(j + i);		
-		
-		return true;
-	}
+//	NodeEvent& nodeEvent = command->nodeEvent;
+//	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+//	int pos = c->GetPos();
+//	
+//	if (pos == 1)
+//	{
+//		//removing the symbol
+//		bool right = any_cast<bool>(nodeEvent["right"]);
+//		if (!right)
+//			return false;
+//
+//		FormulaNode* dividend = (*this)[0];
+//		FormulaNode* divisor = (*this)[2];
+//		
+//		command = any_cast<Command*>(nodeEvent["command"]);
+//		command->SetParam(parent, "node", Clone(NULL));
+//		//count parameter needed to remove the child nodes in the undo
+//		command->SetParam(parent, "removeCount", dividend->childNodes->Count() + divisor->childNodes->Count());
+//		int j = parent->GetFirstLevelChildPos(this);
+//		int i = 0;
+//		while (dividend->childNodes->Count() > 0)
+//			parent->MoveChild((*dividend)[0], j + i++);
+//		while (divisor->childNodes->Count() > 0)
+//			parent->MoveChild((*divisor)[0], j + i++);
+//		c->SetToNode(parent, j);
+//
+//		nodeEvent["undoAction"] = CommandAction(parent, j, &FormulaNode::UndoRemoveItem);
+//
+//		parent->RemoveChild(j + i);		
+//		
+//		return true;
+//	}
 
 	return FormulaNode::DoRemoveItem(command);
 }

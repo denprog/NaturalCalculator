@@ -47,9 +47,6 @@ public:
 
 public:
 	virtual bool DoCreateEquationFormulaNode(Command* command);
-	virtual bool UndoCreateEquationFormulaNode(Command* command);
-
-	virtual bool UndoCreatePowerFormulaNode(Command* command);
 
 	static RootFormulaNode* FromString(std::string str, FormulaWnd* wnd);
 	

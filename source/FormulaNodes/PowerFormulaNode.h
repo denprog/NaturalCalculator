@@ -36,6 +36,8 @@ private:
 	BOOST_SERIALIZATION_SPLIT_MEMBER()
 
 public:
+	virtual void RemoveChildNodes();
+	
 	virtual void Remake();
 
 	virtual FormulaNode* Clone(FormulaNode* p);
@@ -48,10 +50,12 @@ public:
 
 	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent);
 	virtual std::string ToString();
+
+public:
+	GroupFormulaNode *base, *exponent;
 	
 private:
 	ShapeFormulaNode* shape;
-	GroupFormulaNode *base, *exponent;
 };
 
 namespace boost

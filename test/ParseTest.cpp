@@ -1,3 +1,4 @@
+#ifdef TEST
 #include "ParseTest.h"
 #include <auto_ptr.h>
 
@@ -39,6 +40,8 @@ void ParseTest::Test1()
 	for (std::string s : tests)
 	{
 		n = std::auto_ptr<RootFormulaNode>(RootFormulaNode::FromString(s, wnd));
-		Check(n->ToString(), s, 0);
+		QCOMPARE(n->ToString(), s);
 	}
 }
+
+#endif

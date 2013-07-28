@@ -73,34 +73,17 @@ public:
 	virtual bool DoInsertNode(Command* command);
 	virtual bool UndoInsertNode(Command* command);
 	virtual bool DoInsertText(Command* command);
-	virtual bool UndoInsertText(Command* command);
 	
 	virtual bool DoRemoveItem(Command* command);
-	virtual bool UndoRemoveItem(Command* command);
 
 	virtual bool DoCreatePlusFormulaNode(Command* command);
-	virtual bool UndoCreatePlusFormulaNode(Command* command);
-
 	virtual bool DoCreateMinusFormulaNode(Command* command);
-	virtual bool UndoCreateMinusFormulaNode(Command* command);
-
 	virtual bool DoCreateMultiplyFormulaNode(Command* command);
-	virtual bool UndoCreateMultiplyFormulaNode(Command* command);
-	
 	virtual bool DoCreateDivisionFormulaNode(Command* command);
-	virtual bool UndoCreateDivisionFormulaNode(Command* command);
-	
 	virtual bool DoCreatePowerFormulaNode(Command* command);
-	virtual bool UndoCreatePowerFormulaNode(Command* command);
-
 	virtual bool DoCreateSquareRootFormulaNode(Command* command);
-	virtual bool UndoCreateSquareRootFormulaNode(Command* command);
-
 	virtual bool DoCreateLeftBraceFormulaNode(Command* command);
-	virtual bool UndoCreateLeftBraceFormulaNode(Command* command);
-
 	virtual bool DoCreateRightBraceFormulaNode(Command* command);
-	virtual bool UndoCreateRightBraceFormulaNode(Command* command);
 	
 public slots:
 	virtual void OnCopy();

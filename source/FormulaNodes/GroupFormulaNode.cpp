@@ -130,7 +130,7 @@ bool GroupFormulaNode::FromString(std::string::iterator& begin, std::string::ite
 			if (!FormulaNode::FromString(begin, end, g))
 				break;
 		}
-		
+
 		parent->AddChild(g);
 		return true;
 	}

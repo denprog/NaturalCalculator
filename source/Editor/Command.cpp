@@ -1,5 +1,6 @@
 #include "Command.h"
 #include "../FormulaNodes/FormulaNode.h"
+#include "../FormulaNodes/FormulaNodesCollection.h"
 
 /**
  * Default constructor.
@@ -47,8 +48,6 @@ CommandAction::CommandAction(FormulaNode* node, int pos, FormulaNode* _actionNod
  */
 bool CommandAction::operator()(Command* command)
 {
-	if (actionNode && actionNode->GetNode())
-		command->nodeEvent["actionNode"] = actionNode;
 	return action(caretState->GetNode(), command);
 }
 
@@ -58,13 +57,10 @@ bool CommandAction::operator()(Command* command)
  * @param _doAction	The do action.
  * @param _nodeEvent The node event.
  */
-Command::Command(SharedCaretState _caretState, CommandAction _doAction, NodeEvent _nodeEvent) : doAction(_doAction)
+Command::Command(SharedCaretState _caretState, CommandAction _doAction, NodeEvent _nodeEvent) : nodeEvent(_nodeEvent), doAction(_doAction)
 {
 	beforeCaretState = SharedCaretState(_caretState->Dublicate());
-	nodeEvent = _nodeEvent;
 	afterCaretState = SharedCaretState(_caretState->Dublicate());
-	nodeEvent["caretState"] = afterCaretState;
-	nodeEvent["command"] = this;
 }
 
 /**
@@ -72,11 +68,6 @@ Command::Command(SharedCaretState _caretState, CommandAction _doAction, NodeEven
  */
 Command::~Command()
 {
-	for (QMap<vector<int>, QMap<QString, boost::any> >::iterator iter = params.begin(); iter != params.end(); ++iter)
-	{
-		if (iter.value().contains("node"))
-			delete any_cast<FormulaNode*>(iter.value()["node"]);
-	}
 }
 
 /**
@@ -89,11 +80,7 @@ bool Command::DoAction()
 	
 	//do the action
 	if (doAction(this))
-	{
-		//command must pass these parameters in case of successfull action
-		undoAction = any_cast<CommandAction>(nodeEvent["undoAction"]);
 		return true;
-	}
 	
 	return false;
 }
@@ -104,61 +91,19 @@ bool Command::DoAction()
  */
 bool Command::UndoAction()
 {
-	//undo action
-	return undoAction(this);
+	std::string::iterator b = savedNode.begin();
+	std::string::iterator e = savedNode.end();
+	FormulaNode* n = savedNodePos->GetCurrentNode();
+	n->RemoveChildNodes();
+	FormulaNode::FromString(b, e, n);
+	n->Normalize();
+	return true;
 }
 
-/**
- * Sets a parameter of this command.
- * @param [in,out] node The node, which needs this parameter.
- * @param name The name of the parameter.
- * @param param The parameter.
- */
-void Command::SetParam(FormulaNode* node, const char* name, boost::any param)
+void Command::SaveNodeState(FormulaNode* node)
 {
-	vector<int> pos;
-	node->GetHierarchyPos(pos);
-	
-	params[pos][name] = param;
-}
-
-/**
- * Gets a parameter.
- * @param [in,out] node The node, which stored this parameter.
- * @param name The name of the parameter.
- * @return The parameter.
- */
-boost::any Command::GetParam(FormulaNode* node, const char* name)
-{
-	vector<int> pos;
-	node->GetHierarchyPos(pos);
-	
-	return params[pos][name];
-}
-
-/**
- * Query if this command contains a parameter.
- * @param [in,out] node The node, which may be stored this parameter.
- * @param name The name of the parameter.
- * @return true if it contains the parameter.
- */
-bool Command::ContainsParam(FormulaNode* node, const char* name)
-{
-	vector<int> pos;
-	node->GetHierarchyPos(pos);
-	
-	return params.contains(pos) && params[pos].contains(name);
-}
-
-/**
- * Removes a parameter.
- * @param [in,out] node The node, which stored the parameter.
- * @param name The name of the parameter.
- */
-void Command::RemoveParam(FormulaNode* node, const char* name)
-{
-	vector<int> pos;
-	node->GetHierarchyPos(pos);
-	
-	params[pos].remove(name);
+	while (node->type == BRACES_NODE || node->type == DIVISION_NODE || node->type == SQUARE_ROOT_NODE)
+		node = node->parent;
+	savedNode = node->ToString();
+	savedNodePos = SharedCaretState(new CaretState(node));
 }

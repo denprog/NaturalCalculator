@@ -38,12 +38,16 @@ private:
 	BOOST_SERIALIZATION_SPLIT_MEMBER()
 
 public:
+	virtual void RemoveChildNodes();
 	virtual void Remake();
 	virtual void UpdateBoundingRect();
 
 	virtual FormulaNode* Clone(FormulaNode* p);
 
 	virtual void Parse(ParserString& expr);
+#ifdef TEST
+	virtual void ParseStructure(QString& res);
+#endif
 
 	//command functions
 	virtual bool DoInsertText(Command* command);
@@ -56,6 +60,9 @@ public slots:
 	virtual void OnAddRealResult();
 	virtual void OnAddIntegerResult();
 	virtual void OnAddRationalResult();
+
+public:
+	GroupFormulaNode* left;
 
 private:
 	ShapeFormulaNode* shape;

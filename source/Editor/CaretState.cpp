@@ -29,7 +29,10 @@ CaretState::CaretState(FormulaNode* node, int pos)
  */
 CaretState::CaretState(FormulaNode* node)
 {
-	currentNode = new CurrentNode(node->parent, node->parent->GetChildPos(node));
+	if (node->parent == NULL)
+		currentNode = new CurrentNode(node, 0);
+	else
+		currentNode = new CurrentNode(node->parent, node->parent->GetChildPos(node));
 }
 
 /**
@@ -111,7 +114,7 @@ FormulaNode* CaretState::GetCurrentNode()
 		return NULL;
 	FormulaNode* node = currentNode->GetNode();
 	int pos = currentNode->GetPos();
-	if (!node->type == TEXT_NODE)
+	if (node->type != TEXT_NODE)
 	{
 		if (pos < node->childNodes->Count())
 			return (*node)[pos];
@@ -129,7 +132,7 @@ bool CaretState::CheckOnNode(FormulaNode* node)
 {
 	FormulaNode* n = GetNode();
 	
-	return n->childNodes->Count() > GetPos() ? (*n)[GetPos()] == node : NULL;
+	return n->childNodes->Count() > GetPos() ? (*n)[GetPos()] == node : false;
 }
 
 /**

@@ -29,7 +29,9 @@ private slots:
 
 	void TextTests();
 	void BracesTests();
+	void PowerTests();
 	void SquareRootTests();
+	void EquationTests();
 	void ParseTests();
 
 private:

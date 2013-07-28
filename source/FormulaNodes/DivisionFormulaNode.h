@@ -38,6 +38,8 @@ private:
 public:
 	virtual void AddChild(FormulaNode* node);
 	virtual void InsertChild(FormulaNode* node, int pos);
+	virtual void RemoveChildNodes();
+	
 	virtual void Remake();
 	virtual void UpdateBoundingRect();
 
@@ -61,9 +63,11 @@ public:
 	//command functions
 	virtual bool DoRemoveItem(Command* command);
 
+public:
+	GroupFormulaNode *dividend, *divisor;
+		
 private:
 	ShapeFormulaNode* shape;
-	GroupFormulaNode *dividend, *divisor;
 };
 
 namespace boost

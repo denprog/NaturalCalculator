@@ -181,55 +181,18 @@ SharedCaretState RootFormulaNode::GetPreviousPosition(SharedCaretState relativeS
  */
 bool RootFormulaNode::DoCreateEquationFormulaNode(Command* command)
 {
-	NodeEvent& nodeEvent = command->nodeEvent;
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
+	command->SaveNodeState(parent);
+	
+	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
 	//create a equation node and move the first level nodes in its left side
-	FormulaNode* e = new EquationFormulaNode(this, wnd);
-	FormulaNode* g = new GroupFormulaNode(e, wnd);
+	EquationFormulaNode* e = new EquationFormulaNode(this, wnd);
 	for (int i = 0, j = 0; i < childNodes->Count(); ++j)
-		g->MoveChild((*childNodes)[0], j);
-	e->InsertChild(g, 0);
+		e->left->MoveChild((*childNodes)[0], j);
 	AddChild(e);
-
-	nodeEvent["undoAction"] = CommandAction(this, 0, &FormulaNode::UndoCreateEquationFormulaNode);
+	
 	c->SetToNode(e, 1);
+	command->afterCaretState = c;
 	
-	return true;
-}
-
-/**
- * Undo create equation formula node.
- * @param [in,out] nodeEvent The node event.
- * @return true if it succeeds, false if it fails.
- */
-bool RootFormulaNode::UndoCreateEquationFormulaNode(Command* command)
-{
-	NodeEvent& nodeEvent = command->nodeEvent;
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	FormulaNode* node = c->GetNode();
-	int pos = GetFirstLevelChildPos(node);
-	EquationFormulaNode* eq = (EquationFormulaNode*)node;
-	int i;
-	for (i = 0; (*eq)[0]->childNodes->Count() > 0; ++i)
-		MoveChild((*eq)[0]->childNodes->Get(0), pos + i);
-	RemoveChild(pos + i);
-	
-	return true;
-}
-
-/**
- * Undo create power formula node.
- * @param [in] nodeEvent The node event.
- * @return true if it succeeds, false if it fails.
- */
-bool RootFormulaNode::UndoCreatePowerFormulaNode(Command* command)
-{
-	NodeEvent& nodeEvent = command->nodeEvent;
-	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-	FormulaNode* n = c->GetNode();
-	int pos = GetFirstLevelChildPos(n);
-	RemoveChild(pos);
-
 	return true;
 }
 
