@@ -66,9 +66,9 @@ void MinusFormulaNode::Parse(ParserString& expr)
 }
 
 #ifdef TEST
-void MinusFormulaNode::ParseStructure(QString& res)
+std::string MinusFormulaNode::ParseStructure()
 {
-	res += "-";
+	return "-";
 }
 #endif
 

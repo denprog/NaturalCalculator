@@ -198,13 +198,15 @@ void BracesFormulaNode::Parse(ParserString& expr)
 }
 
 #ifdef TEST
-void BracesFormulaNode::ParseStructure(QString& res)
+std::string BracesFormulaNode::ParseStructure()
 {
+	std::string res;
 	if (leftShape)
 		res += "[";
-	inside->ParseStructure(res);
+	res += inside->ParseStructure();
 	if (rightShape)
 		res += "]";
+	return res;
 }
 #endif
 

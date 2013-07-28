@@ -52,9 +52,9 @@ void MultiplyFormulaNode::Parse(ParserString& expr)
 }
 
 #ifdef TEST
-void MultiplyFormulaNode::ParseStructure(QString& res)
+std::string MultiplyFormulaNode::ParseStructure()
 {
-	res += "*";
+	return "*";
 }
 #endif
 

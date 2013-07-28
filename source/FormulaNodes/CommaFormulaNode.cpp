@@ -62,9 +62,9 @@ void CommaFormulaNode::Parse(ParserString& expr)
 }
 
 #ifdef TEST
-void CommaFormulaNode::ParseStructure(QString& res)
+std::string CommaFormulaNode::ParseStructure()
 {
-	res += ",";
+	return ",";
 }
 #endif
 

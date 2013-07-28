@@ -46,7 +46,7 @@ public:
 
 	virtual void Parse(ParserString& expr);
 #ifdef TEST
-	virtual void ParseStructure(QString& res);
+	virtual std::string ParseStructure();
 #endif
 
 	//command functions

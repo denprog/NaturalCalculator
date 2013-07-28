@@ -62,9 +62,9 @@ FormulaNode* EmptyFormulaNode::Clone(FormulaNode* p)
 }
 
 #ifdef TEST
-void EmptyFormulaNode::ParseStructure(QString& res)
+std::string EmptyFormulaNode::ParseStructure()
 {
-	res += "e";
+	return "e";
 }
 #endif
 

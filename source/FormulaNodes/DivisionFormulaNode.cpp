@@ -131,13 +131,9 @@ void DivisionFormulaNode::Parse(ParserString& expr)
 }
 
 #ifdef TEST
-void DivisionFormulaNode::ParseStructure(QString& res)
+std::string DivisionFormulaNode::ParseStructure()
 {
-	res += "(";
-	dividend->ParseStructure(res);
-	res += "/";
-	divisor->ParseStructure(res);
-	res += ")";
+	return "(" + dividend->ParseStructure() + "/" + divisor->ParseStructure() + ")";
 }
 #endif
 

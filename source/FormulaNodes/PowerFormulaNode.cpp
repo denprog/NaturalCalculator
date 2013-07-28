@@ -95,13 +95,9 @@ void PowerFormulaNode::Parse(ParserString& expr)
 }
 
 #ifdef TEST
-void PowerFormulaNode::ParseStructure(QString& res)
+std::string PowerFormulaNode::ParseStructure()
 {
-	res += "pow(";
-	(*this)[0]->ParseStructure(res);
-	res += ",";
-	(*this)[2]->ParseStructure(res);
-	res += ")";
+	return "pow(" + base->ParseStructure() + "," + exponent->ParseStructure() + ")";
 }
 #endif
 

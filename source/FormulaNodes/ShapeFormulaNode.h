@@ -34,7 +34,7 @@ public:
 	virtual FormulaNode* Clone(FormulaNode* p);
 
 #ifdef TEST
-	virtual void ParseStructure(QString& res);
+	virtual std::string ParseStructure();
 #endif
 
 	void AddLine(qreal x1, qreal y1, qreal x2, qreal y2, QColor color);

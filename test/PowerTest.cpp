@@ -7,24 +7,20 @@ void PowerTest::Test1()
 
 	wnd->New();
 	QTest::keyClicks(wnd, "^");
-	doc->ParseStructure(s);
-	Check(s, "g(pow(g(e),g(e)))", 0);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(pow(g(e),g(e)))");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
 	
 	wnd->Undo();
-	doc->ParseStructure(s);
-	Check(s, "g(e)", 0);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(e)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
 
 	QTest::keyClicks(wnd, "12^");
-	doc->ParseStructure(s);
-	Check(s, "g(pow(g(12),g(e)))", 0);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(pow(g(12),g(e)))");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
 
 	QTest::keyClicks(wnd, "3");
-	doc->ParseStructure(s);
-	Check(s, "g(pow(g(12),g(3)))", 1);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(pow(g(12),g(3)))");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 1);
 }
 
 #endif

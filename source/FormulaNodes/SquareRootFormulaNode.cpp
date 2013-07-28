@@ -127,11 +127,9 @@ void SquareRootFormulaNode::Parse(ParserString& expr)
 }
 
 #ifdef TEST
-void SquareRootFormulaNode::ParseStructure(QString& res)
+std::string SquareRootFormulaNode::ParseStructure()
 {
-	res += "sqrt(";
-	(*this)[1]->ParseStructure(res);
-	res += ")";
+	return "sqrt(" + radicand->ParseStructure() + ")";
 }
 #endif
 

@@ -252,9 +252,9 @@ void TextFormulaNode::Parse(ParserString& expr)
 }
 
 #ifdef TEST
-void TextFormulaNode::ParseStructure(QString& res)
+std::string TextFormulaNode::ParseStructure()
 {
-	res += GetText().toUtf8().data();
+	return GetText().toUtf8().data();
 }
 #endif
 

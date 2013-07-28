@@ -28,9 +28,9 @@ FormulaNode* ShapeFormulaNode::Clone(FormulaNode* p)
 }
 
 #ifdef TEST
-void ShapeFormulaNode::ParseStructure(QString& res)
+std::string ShapeFormulaNode::ParseStructure()
 {
-	res += "s";
+	return "s";
 }
 #endif
 

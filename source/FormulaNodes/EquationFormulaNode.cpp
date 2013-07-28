@@ -129,11 +129,9 @@ void EquationFormulaNode::Parse(ParserString& expr)
 }
 
 #ifdef TEST
-void EquationFormulaNode::ParseStructure(QString& res)
+std::string EquationFormulaNode::ParseStructure()
 {
-	left->ParseStructure(res);
-	res += "=";
-	resNode->ParseStructure(res);
+	return left->ParseStructure() + "=" + resNode->ParseStructure();
 }
 #endif
 

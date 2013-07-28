@@ -10,79 +10,64 @@ void TextTest::Test1()
 
 	wnd->New();
 	QTest::keyClicks(wnd, "123");
-	doc->ParseStructure(s);
-	Check(s, "g(123)", 3);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(123)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 3);
 	
 	wnd->Undo();
-	doc->ParseStructure(s);
-	Check(s, "g(12)", 2);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(12)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 2);
 	
 	wnd->Undo();
-	doc->ParseStructure(s);
-	Check(s, "g(1)", 1);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(1)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 1);
 	
 	wnd->Undo();
-	doc->ParseStructure(s);
-	Check(s, "g(e)", 0);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(e)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
 	
 	wnd->Undo();
-	doc->ParseStructure(s);
-	Check(s, "g(e)", 0);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(e)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
 	
 	wnd->Redo();
-	doc->ParseStructure(s);
-	Check(s, "g(1)", 1);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(1)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 1);
 	
 	wnd->Redo();
-	doc->ParseStructure(s);
-	Check(s, "g(12)", 2);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(12)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 2);
 
 	wnd->Redo();
-	doc->ParseStructure(s);
-	Check(s, "g(123)", 3);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(123)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 3);
 	
 	wnd->Undo();
-	doc->ParseStructure(s);
-	Check(s, "g(12)", 2);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(12)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 2);
 
 	wnd->Redo();
-	doc->ParseStructure(s);
-	Check(s, "g(123)", 3);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(123)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 3);
 	
 	QTest::keyClick(wnd, Qt::Key_Backspace);
-	doc->ParseStructure(s);
-	Check(s, "g(12)", 2);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(12)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 2);
 	
 	QTest::keyClick(wnd, Qt::Key_Left);
-	doc->ParseStructure(s);
-	Check(s, "g(12)", 1);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(12)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 1);
 	
 	QTest::keyClick(wnd, Qt::Key_Delete);
-	doc->ParseStructure(s);
-	Check(s, "g(1)", 1);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(1)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 1);
 	
 	QTest::keyClick(wnd, Qt::Key_Backspace);
-	doc->ParseStructure(s);
-	Check(s, "g(e)", 0);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(e)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
 	
 	QTest::keyClick(wnd, Qt::Key_Backspace);
-	doc->ParseStructure(s);
-	Check(s, "g(e)", 0);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(e)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
 }
 
 /**
@@ -94,62 +79,52 @@ void TextTest::Test2()
 
 	wnd->New();
 	QTest::keyClicks(wnd, "123+56");
-	doc->ParseStructure(s);
-	Check(s, "g(123+56)", 2);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(123+56)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 2);
 	
 	QTest::keyClick(wnd, Qt::Key_Backspace);
 	QTest::keyClick(wnd, Qt::Key_Backspace);
-	doc->ParseStructure(s);
-	Check(s, "g(123+)", 2);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(123+)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 2);
 	
 	QTest::keyClick(wnd, Qt::Key_Backspace);
-	doc->ParseStructure(s);
-	Check(s, "g(123)", 1);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(123)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 1);
 	
 	wnd->Undo();
-	doc->ParseStructure(s);
-	Check(s, "g(123+)", 2);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(123+)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 2);
 	
 	wnd->Undo();
 	wnd->Undo();
-	doc->ParseStructure(s);
-	Check(s, "g(123+56)", 2);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(123+56)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 2);
 	
 	MoveLeft(7);
 	QTest::keyClick(wnd, Qt::Key_Delete);
 	QTest::keyClick(wnd, Qt::Key_Delete);
 	QTest::keyClick(wnd, Qt::Key_Delete);
-	doc->ParseStructure(s);
-	Check(s, "g(+56)", 0);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(+56)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
 
 	wnd->Undo();
-	doc->ParseStructure(s);
-	Check(s, "g(3+56)", 0);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(3+56)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
 	
 	wnd->Undo();
 	wnd->Undo();
-	doc->ParseStructure(s);
-	Check(s, "g(123+56)", 0);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(123+56)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
 
 	QTest::keyClick(wnd, Qt::Key_Right);
 	QTest::keyClick(wnd, Qt::Key_Right);
 	QTest::keyClicks(wnd, "-4.3");
-	doc->ParseStructure(s);
-	Check(s, "g(123-4.3+56)", 3);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(123-4.3+56)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 3);
 
 	QTest::keyClicks(wnd, "*2");
-	doc->ParseStructure(s);
-	Check(s, "g(123-4.3*2+56)", 1);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(123-4.3*2+56)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 1);
 }
 
 void TextTest::Test3()
@@ -158,36 +133,30 @@ void TextTest::Test3()
 
 	wnd->New();
 	QTest::keyClicks(wnd, "123/");
-	doc->ParseStructure(s);
-	Check(s, "g((g(123)/g(e)))", 0);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g((g(123)/g(e)))");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
 
 	wnd->Undo();
-	doc->ParseStructure(s);
-	Check(s, "g(123)", 3);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(123)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 3);
 
 	wnd->Redo();
-	doc->ParseStructure(s);
-	Check(s, "g((g(123)/g(e)))", 0);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g((g(123)/g(e)))");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
 	
 	wnd->Undo();
-	doc->ParseStructure(s);
-	Check(s, "g(123)", 3);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(123)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 3);
 	
 	wnd->Undo();
 	wnd->Undo();
 	wnd->Undo();
-	doc->ParseStructure(s);
-	Check(s, "g(e)", 0);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(e)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
 	
 	QTest::keyClicks(wnd, "2.3^");
-	doc->ParseStructure(s);
-	Check(s, "g(pow(g(2.3),g(e)))", 0);
-	s = "";
+	QCOMPARE(doc->ParseStructure().c_str(), "g(pow(g(2.3),g(e)))");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
 }
 
 #endif

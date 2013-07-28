@@ -101,15 +101,17 @@ FormulaNode* GroupFormulaNode::Clone(FormulaNode* p)
 }
 
 #ifdef TEST
-void GroupFormulaNode::ParseStructure(QString& res)
+std::string GroupFormulaNode::ParseStructure()
 {
+	std::string res;
 	res += "g(";
 	for (int i = 0; i < childNodes->Count(); ++i)
 	{
 		FormulaNode* n = (*this)[i];
-		n->ParseStructure(res);
+		res += n->ParseStructure();
 	}
 	res += ")";
+	return res;
 }
 #endif
 

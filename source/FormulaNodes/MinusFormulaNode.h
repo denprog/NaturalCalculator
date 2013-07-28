@@ -29,7 +29,7 @@ public:
 	virtual void UpdateBoundingRect();
 
 #ifdef TEST
-	void ParseStructure(QString& res);
+	virtual std::string ParseStructure();
 #endif
 	
 	virtual void Parse(ParserString& expr);

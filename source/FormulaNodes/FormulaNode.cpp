@@ -331,13 +331,15 @@ void FormulaNode::Parse(ParserString& expr)
 }
 
 #ifdef TEST
-void FormulaNode::ParseStructure(QString& res)
+std::string FormulaNode::ParseStructure()
 {
+	std::string res;
 	for (int i = 0; i < childNodes->Count(); ++i)
 	{
 		FormulaNode* n = (*this)[i];
-		n->ParseStructure(res);
+		res += n->ParseStructure();
 	}
+	return res;
 }
 #endif
 

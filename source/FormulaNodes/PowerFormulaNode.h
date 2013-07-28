@@ -45,7 +45,7 @@ public:
 	virtual void Parse(ParserString& expr);
 
 #ifdef TEST
-	void ParseStructure(QString& res);
+	virtual std::string ParseStructure();
 #endif
 
 	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent);
