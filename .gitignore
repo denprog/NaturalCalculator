@@ -13,3 +13,8 @@ build/vc2008/NaturalCalculator.sln
 build/vc2012/GeneratedFiles/
 build/vc2012/Debug/
 /dist/
+/build/dist/
+/build/build/
+/build/nbproject/rcc
+/build/nbproject/moc
+/build/nbproject/ui
