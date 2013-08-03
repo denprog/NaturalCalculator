@@ -121,12 +121,16 @@
     <logicalFolder name="test" displayName="test" projectFiles="true">
       <itemPath>../test/BracesTest.cpp</itemPath>
       <itemPath>../test/BracesTest.h</itemPath>
+      <itemPath>../test/EquationTest.cpp</itemPath>
+      <itemPath>../test/EquationTest.h</itemPath>
       <itemPath>../test/NcTestBase.cpp</itemPath>
       <itemPath>../test/NcTestBase.h</itemPath>
       <itemPath>../test/NcTests.cpp</itemPath>
       <itemPath>../test/NcTests.h</itemPath>
       <itemPath>../test/ParseTest.cpp</itemPath>
       <itemPath>../test/ParseTest.h</itemPath>
+      <itemPath>../test/PowerTest.cpp</itemPath>
+      <itemPath>../test/PowerTest.h</itemPath>
       <itemPath>../test/SquareRootTest.cpp</itemPath>
       <itemPath>../test/SquareRootTest.h</itemPath>
       <itemPath>../test/TextTest.cpp</itemPath>
@@ -151,6 +155,896 @@
   <projectmakefile>nbproject/Makefile</projectmakefile>
   <confs>
     <conf name="Debug" type="4">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <qt>
+        <modules>core gui</modules>
+        <mocDir>./nbproject/moc</mocDir>
+        <rccDir>./nbproject/rcc</rccDir>
+        <uiDir>./nbproject/ui</uiDir>
+        <defs>
+          <Elem>QMAKE_CXXFLAGS+=-Wno-unused-parameter</Elem>
+          <Elem>QMAKE_CXXFLAGS+=-std=c++0x</Elem>
+          <Elem>QMAKE_FLAGS+=-sj4</Elem>
+        </defs>
+      </qt>
+      <compileType>
+        <ccTool>
+          <incDir>
+            <pElem>../../BigNumbersParser/source</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibFileItem>../../BigNumbersParser/build/nbproject/build/Debug_shared/libBigNumbersParser.so</linkerLibFileItem>
+            <linkerLibLibItem>boost_thread</linkerLibLibItem>
+            <linkerLibLibItem>boost_serialization</linkerLibLibItem>
+            <linkerLibLibItem>QtTest</linkerLibLibItem>
+            <linkerLibLibItem>boost_regex</linkerLibLibItem>
+            <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="../source/Editor/Caret.cpp" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../source/Editor/Caret.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../source/Editor/CaretState.cpp" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../source/Editor/CaretState.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../source/Editor/Command.cpp" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../source/Editor/Command.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../source/Editor/CommandManager.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/Editor/CommandManager.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../source/Forms/OptionsDialog.ui" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../source/Forms/SettingsDialog.ui" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/BracesFormulaNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/BracesFormulaNode.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/CommaFormulaNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/CommaFormulaNode.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/CompoundFormulaNode.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/CompoundFormulaNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/DivisionFormulaNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/DivisionFormulaNode.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/DocumentFormulaNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/DocumentFormulaNode.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/EmptyFormulaNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/EmptyFormulaNode.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/EquationFormulaNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/EquationFormulaNode.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/FormulaNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/FormulaNode.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/FormulaNodesCollection.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/FormulaNodesCollection.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/GroupFormulaNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/GroupFormulaNode.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/MinusFormulaNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/MinusFormulaNode.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/MultiplyFormulaNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/MultiplyFormulaNode.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/PlusFormulaNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/PlusFormulaNode.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/PowerFormulaNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/PowerFormulaNode.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/ResultFormulaNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/ResultFormulaNode.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/ResultItemFormulaNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/ResultItemFormulaNode.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/RootFormulaNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/RootFormulaNode.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/ShapeFormulaNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/ShapeFormulaNode.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/SquareRootFormulaNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/SquareRootFormulaNode.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/TextFormulaNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/TextFormulaNode.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/Main/FormulaWnd.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../source/Main/FormulaWnd.h" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../source/Main/MainWindow.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../source/Main/MainWindow.h" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../source/Main/NaturalCalculatorApp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/Main/NaturalCalculatorApp.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/Main/Settings.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../source/Main/Settings.h" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../source/Main/SettingsDialog.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../source/Main/SettingsDialog.h" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../source/Main/SettingsDialogPages.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/Main/SettingsDialogPages.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/Main/main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../source/ParserThread/ParserExpression.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/ParserThread/ParserExpression.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/ParserThread/ParserThread.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/ParserThread/ParserThread.h"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/dialogs/downarrow.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/dialogs/uparrow.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/math/division.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/math/equality.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/math/minus.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/math/multiply.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/math/nthroot.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/math/plus.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/math/power.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/math/sin.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/math/sqrt.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/new.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../source/Resources/images/open.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/redo.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/save.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/settings.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/undo.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/naturalcalculator.qrc"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Translation/naturalcalculator_ru.qm"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Translation/naturalcalculator_ru.ts"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Util/QRectEx.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../source/Util/QRectEx.h" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/BracesTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/BracesTest.h" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/EquationTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/EquationTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../test/NcTestBase.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/NcTestBase.h" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/NcTests.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/NcTests.h" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/ParseTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/ParseTest.h" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/PowerTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/PowerTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../test/SquareRootTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/SquareRootTest.h" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/TextTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/TextTest.h" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="4">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <qt>
+        <buildMode>1</buildMode>
+        <modules>core gui</modules>
+      </qt>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <item path="../source/Editor/Caret.cpp" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../source/Editor/Caret.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../source/Editor/CaretState.cpp" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../source/Editor/CaretState.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../source/Editor/Command.cpp" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../source/Editor/Command.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../source/Editor/CommandManager.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/Editor/CommandManager.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../source/Forms/OptionsDialog.ui" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../source/Forms/SettingsDialog.ui" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/BracesFormulaNode.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/BracesFormulaNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/CommaFormulaNode.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/CommaFormulaNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/CompoundFormulaNode.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/CompoundFormulaNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/DivisionFormulaNode.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/DivisionFormulaNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/DocumentFormulaNode.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/DocumentFormulaNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/EmptyFormulaNode.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/EmptyFormulaNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/EquationFormulaNode.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/EquationFormulaNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/FormulaNode.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/FormulaNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/FormulaNodesCollection.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/FormulaNodesCollection.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/GroupFormulaNode.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/GroupFormulaNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/MinusFormulaNode.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/MinusFormulaNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/MultiplyFormulaNode.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/MultiplyFormulaNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/PlusFormulaNode.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/PlusFormulaNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/PowerFormulaNode.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/PowerFormulaNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/ResultFormulaNode.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/ResultFormulaNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/ResultItemFormulaNode.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/ResultItemFormulaNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/RootFormulaNode.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/RootFormulaNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/ShapeFormulaNode.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/ShapeFormulaNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/SquareRootFormulaNode.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/SquareRootFormulaNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/TextFormulaNode.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/FormulaNodes/TextFormulaNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Main/FormulaWnd.cpp" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../source/Main/FormulaWnd.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../source/Main/MainWindow.cpp" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../source/Main/MainWindow.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../source/Main/NaturalCalculatorApp.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/Main/NaturalCalculatorApp.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Main/Settings.cpp" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../source/Main/Settings.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../source/Main/SettingsDialog.cpp" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../source/Main/SettingsDialog.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../source/Main/SettingsDialogPages.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/Main/SettingsDialogPages.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Main/main.cpp" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../source/ParserThread/ParserExpression.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/ParserThread/ParserExpression.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/ParserThread/ParserThread.cpp"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../source/ParserThread/ParserThread.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/dialogs/downarrow.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/dialogs/uparrow.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/math/division.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/math/equality.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/math/minus.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/math/multiply.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/math/nthroot.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/math/plus.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/math/power.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/math/sin.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/math/sqrt.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/new.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../source/Resources/images/open.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/redo.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/save.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/settings.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/images/undo.png"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Resources/naturalcalculator.qrc"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Translation/naturalcalculator_ru.qm"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Translation/naturalcalculator_ru.ts"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../source/Util/QRectEx.cpp" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../source/Util/QRectEx.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../test/BracesTest.cpp" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../test/BracesTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../test/EquationTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/EquationTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../test/NcTestBase.cpp" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../test/NcTestBase.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../test/NcTests.cpp" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../test/NcTests.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../test/ParseTest.cpp" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../test/ParseTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../test/PowerTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/PowerTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../test/SquareRootTest.cpp" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../test/SquareRootTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../test/TextTest.cpp" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../test/TextTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="DebugTest" type="4">
       <toolsSet>
         <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
         <compilerSet>default</compilerSet>
@@ -573,6 +1467,10 @@
       </item>
       <item path="../test/BracesTest.h" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="../test/EquationTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/EquationTest.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../test/NcTestBase.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../test/NcTestBase.h" ex="false" tool="1" flavor2="0">
@@ -585,6 +1483,10 @@
       </item>
       <item path="../test/ParseTest.h" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="../test/PowerTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/PowerTest.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../test/SquareRootTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../test/SquareRootTest.h" ex="false" tool="1" flavor2="0">
@@ -592,438 +1494,6 @@
       <item path="../test/TextTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../test/TextTest.h" ex="false" tool="1" flavor2="0">
-      </item>
-    </conf>
-    <conf name="Release" type="4">
-      <toolsSet>
-        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
-        <compilerSet>default</compilerSet>
-        <dependencyChecking>true</dependencyChecking>
-        <rebuildPropChanged>false</rebuildPropChanged>
-      </toolsSet>
-      <qt>
-        <buildMode>1</buildMode>
-        <modules>core gui</modules>
-      </qt>
-      <compileType>
-        <cTool>
-          <developmentMode>5</developmentMode>
-        </cTool>
-        <ccTool>
-          <developmentMode>5</developmentMode>
-        </ccTool>
-        <fortranCompilerTool>
-          <developmentMode>5</developmentMode>
-        </fortranCompilerTool>
-        <asmTool>
-          <developmentMode>5</developmentMode>
-        </asmTool>
-      </compileType>
-      <item path="../source/Editor/Caret.cpp" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../source/Editor/Caret.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../source/Editor/CaretState.cpp" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../source/Editor/CaretState.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../source/Editor/Command.cpp" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../source/Editor/Command.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../source/Editor/CommandManager.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/Editor/CommandManager.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../source/Forms/OptionsDialog.ui" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../source/Forms/SettingsDialog.ui" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/BracesFormulaNode.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/BracesFormulaNode.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/CommaFormulaNode.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/CommaFormulaNode.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/CompoundFormulaNode.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/CompoundFormulaNode.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/DivisionFormulaNode.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/DivisionFormulaNode.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/DocumentFormulaNode.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/DocumentFormulaNode.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/EmptyFormulaNode.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/EmptyFormulaNode.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/EquationFormulaNode.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/EquationFormulaNode.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/FormulaNode.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/FormulaNode.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/FormulaNodesCollection.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/FormulaNodesCollection.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/GroupFormulaNode.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/GroupFormulaNode.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/MinusFormulaNode.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/MinusFormulaNode.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/MultiplyFormulaNode.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/MultiplyFormulaNode.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/PlusFormulaNode.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/PlusFormulaNode.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/PowerFormulaNode.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/PowerFormulaNode.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/ResultFormulaNode.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/ResultFormulaNode.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/ResultItemFormulaNode.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/ResultItemFormulaNode.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/RootFormulaNode.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/RootFormulaNode.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/ShapeFormulaNode.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/ShapeFormulaNode.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/SquareRootFormulaNode.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/SquareRootFormulaNode.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/TextFormulaNode.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/FormulaNodes/TextFormulaNode.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Main/FormulaWnd.cpp" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../source/Main/FormulaWnd.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../source/Main/MainWindow.cpp" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../source/Main/MainWindow.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../source/Main/NaturalCalculatorApp.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/Main/NaturalCalculatorApp.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Main/Settings.cpp" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../source/Main/Settings.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../source/Main/SettingsDialog.cpp" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../source/Main/SettingsDialog.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../source/Main/SettingsDialogPages.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/Main/SettingsDialogPages.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Main/main.cpp" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../source/ParserThread/ParserExpression.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/ParserThread/ParserExpression.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/ParserThread/ParserThread.cpp"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../source/ParserThread/ParserThread.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Resources/images/dialogs/downarrow.png"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Resources/images/dialogs/uparrow.png"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Resources/images/math/division.png"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Resources/images/math/equality.png"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Resources/images/math/minus.png"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Resources/images/math/multiply.png"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Resources/images/math/nthroot.png"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Resources/images/math/plus.png"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Resources/images/math/power.png"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Resources/images/math/sin.png"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Resources/images/math/sqrt.png"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Resources/images/new.png" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../source/Resources/images/open.png"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Resources/images/redo.png"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Resources/images/save.png"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Resources/images/settings.png"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Resources/images/undo.png"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Resources/naturalcalculator.qrc"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Translation/naturalcalculator_ru.qm"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Translation/naturalcalculator_ru.ts"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../source/Util/QRectEx.cpp" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../source/Util/QRectEx.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../test/BracesTest.cpp" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../test/BracesTest.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../test/NcTestBase.cpp" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../test/NcTestBase.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../test/NcTests.cpp" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../test/NcTests.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../test/ParseTest.cpp" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../test/ParseTest.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../test/SquareRootTest.cpp" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../test/SquareRootTest.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../test/TextTest.cpp" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../test/TextTest.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>
