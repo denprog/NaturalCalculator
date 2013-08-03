@@ -6,8 +6,6 @@
  */
 void TextTest::Test1()
 {
-	QString s;
-
 	wnd->New();
 	QTest::keyClicks(wnd, "123");
 	QCOMPARE(doc->ParseStructure().c_str(), "g(123)");
@@ -75,8 +73,6 @@ void TextTest::Test1()
  */
 void TextTest::Test2()
 {
-	QString s;
-
 	wnd->New();
 	QTest::keyClicks(wnd, "123+56");
 	QCOMPARE(doc->ParseStructure().c_str(), "g(123+56)");
@@ -129,8 +125,6 @@ void TextTest::Test2()
 
 void TextTest::Test3()
 {
-	QString s;
-
 	wnd->New();
 	QTest::keyClicks(wnd, "123/");
 	QCOMPARE(doc->ParseStructure().c_str(), "g((g(123)/g(e)))");

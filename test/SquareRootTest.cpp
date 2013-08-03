@@ -6,8 +6,6 @@
  */
 void SquareRootTest::Test1()
 {
-	QString s;
-
 	wnd->New();
 	QTest::keyClicks(wnd, "\\");
 	QCOMPARE(doc->ParseStructure().c_str(), "g(sqrt(g(e)))");
@@ -51,6 +49,26 @@ void SquareRootTest::Test1()
 	wnd->Undo();
 	QCOMPARE(doc->ParseStructure().c_str(), "g(1)");
 	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 1);
+	
+	QTest::keyClicks(wnd, "\\");
+	QTest::keyClick(wnd, Qt::Key_Delete);
+	QCOMPARE(doc->ParseStructure().c_str(), "g(sqrt(g(1)))");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 1);
+	
+	wnd->Undo();
+	QCOMPARE(doc->ParseStructure().c_str(), "g(1)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 1);
+
+	QTest::keyClicks(wnd, "\\+234");
+	for (int i = 0; i < 7; ++i)
+		QTest::keyClick(wnd, Qt::Key_Left);
+	QTest::keyClick(wnd, Qt::Key_Delete);
+	QCOMPARE(doc->ParseStructure().c_str(), "g(1+234)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
+
+	wnd->Undo();
+	QCOMPARE(doc->ParseStructure().c_str(), "g(sqrt(g(1+234)))");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
 }
 
 /**
@@ -58,8 +76,6 @@ void SquareRootTest::Test1()
  */
 void SquareRootTest::Test2()
 {
-	QString s;
-
 	wnd->New();
 	QTest::keyClicks(wnd, "\\\\");
 	QCOMPARE(doc->ParseStructure().c_str(), "g(sqrt(g(sqrt(g(e)))))");
@@ -97,8 +113,6 @@ void SquareRootTest::Test2()
  */
 void SquareRootTest::Test3()
 {
-	QString s;
-
 	wnd->New();
 	QTest::keyClicks(wnd, "\\\\2/4");
 	QCOMPARE(doc->ParseStructure().c_str(), "g(sqrt(g(sqrt(g((g(2)/g(4)))))))");

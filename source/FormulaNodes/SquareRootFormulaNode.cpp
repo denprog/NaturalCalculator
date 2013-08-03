@@ -232,34 +232,28 @@ void SquareRootFormulaNode::RenderCaret(const int pos, const int anchor)
  */
 bool SquareRootFormulaNode::DoRemoveItem(Command* command)
 {
-//	NodeEvent& nodeEvent = command->nodeEvent;
-//	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-//	int pos = c->GetPos();
-//	
-//	if (pos == 0)
-//	{
-//		//removing the symbol
-//		bool right = any_cast<bool>(nodeEvent["right"]);
-//		if (!right)
-//			return false;
-//		
-//		FormulaNode* radicand = GetExpression(0);
-//		command = any_cast<Command*>(nodeEvent["command"]);
-//		command->SetParam(parent, "node", Clone(NULL));
-//		//count parameter needed to remove the child nodes in the undo
-//		command->SetParam(parent, "removeCount", radicand->childNodes->Count());
-//		int j = parent->GetFirstLevelChildPos(this);
-//		int i = 0;
-//		while (radicand->childNodes->Count() > 0)
-//			parent->MoveChild((*radicand)[0], j + i++);
-//		c->SetToNode(parent, j);
-//
-//		nodeEvent["undoAction"] = CommandAction(parent, j, &FormulaNode::UndoRemoveItem);
-//
-//		parent->RemoveChild(j + i);		
-//		
-//		return true;
-//	}
+	command->SaveNodeState(parent);
+	
+	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
+	int pos = c->GetPos();
+	
+	if (pos == 0)
+	{
+		//removing the symbol
+		bool right = any_cast<bool>(command->nodeEvent["right"]);
+		if (!right)
+			return false;
+		
+		int j = parent->GetFirstLevelChildPos(this);
+		int i = 0;
+		while (radicand->childNodes->Count() > 0)
+			parent->MoveChild((*radicand)[0], j + i++);
+		c->SetToNode(parent, j);
+		command->afterCaretState = c;
+
+		parent->RemoveChild(j + i);		
+		return true;
+	}
 
 	return FormulaNode::DoRemoveItem(command);
 }

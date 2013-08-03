@@ -68,7 +68,7 @@ void CaretState::SetState(CaretState& state)
  */
 void CaretState::SetToNode(FormulaNode* node, int pos)
 {
-	if (!node->type == TEXT_NODE && node->childNodes->Count() > pos && (*node)[pos]->type == TEXT_NODE)
+	if (node->type != TEXT_NODE && node->childNodes->Count() > pos && (*node)[pos]->type == TEXT_NODE)
 		currentNode->SetNodePos((*node)[pos], 0);
 	else
 		currentNode->SetNodePos(node, pos);
