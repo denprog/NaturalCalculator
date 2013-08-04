@@ -128,6 +128,7 @@ public:
 	
 public:
 	static int updateEventId;
+	Settings* settings; ///< Options for the application
 	
 private:
 	DocumentFormulaNode* documentNode;	///< The main document node
@@ -135,7 +136,6 @@ private:
 	ParserThread* parserThread; ///< The parser thread
 	QGraphicsScene* scene;	///< The graphics scene
 	CommandManager commandManager;	///< Manager for commands
-	Settings* settings; ///< Options for the application
 	
 	vector<FormulaNode*> mouseOverNodes;
 	

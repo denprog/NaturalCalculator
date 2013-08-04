@@ -14,9 +14,6 @@ public:
 	ResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd);
 	virtual ~ResultItemFormulaNode();
 
-public:
-	virtual void UpdateExpression() = 0;
-	
 public slots:
 	void OnPresentAsAutoResult();
 	void OnPresentAsRealResult();
@@ -46,10 +43,17 @@ public:
 	virtual ~AutoResultItemFormulaNode();
 
 public:
-	virtual void UpdateExpression();
+	virtual void Normalize();
 
 	virtual void MakeContextMenu(QMenu* menu);
 
+#ifdef TEST
+	virtual std::string ParseStructure();
+#endif
+
+	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* _parent);
+	virtual std::string ToString();
+	
 private:
 	int realPrecision;
 	int realExp;

@@ -145,10 +145,7 @@ bool DivisionFormulaNode::FromString(std::string::iterator& begin, std::string::
 		if (parent->ChildrenCount() > 0)
 		{
 			if (parent->type == GROUP_NODE)
-			{
-				//for (int i = 0; i < (*parent->childNodes)[parent->ChildrenCount() - 1];)
 				d->dividend->MoveChild((*parent->childNodes)[parent->ChildrenCount() - 1], 0);
-			}
 			else
 				d->dividend->MoveChild((*parent)[0], 0);
 		}

@@ -137,6 +137,9 @@ public:
 	
 	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent);
 	virtual std::string ToString();
+	static bool GetIntParams(std::string::iterator& begin, std::string::iterator& end, std::vector<int>& params);
+	
+	static bool FindSubstring(std::string::iterator& begin, std::string::iterator& end, std::string subString);
 	
 	int GetChildPos(const FormulaNode* node) const;
 	bool IsChild(const FormulaNode* node);
@@ -180,9 +183,7 @@ public:
 	virtual bool DoCreateSquareRootFormulaNode(Command* command);
 	virtual bool DoCreateLeftBraceFormulaNode(Command* command);
 	virtual bool DoCreateRightBraceFormulaNode(Command* command);
-	
 	virtual bool DoCreateEquationFormulaNode(Command* command);
-	virtual bool UndoCreateEquationFormulaNode(Command* command);
 	
 public:
 	virtual void MakeContextMenu(QMenu* menu);

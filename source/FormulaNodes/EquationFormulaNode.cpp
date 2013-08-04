@@ -20,11 +20,14 @@ EquationFormulaNode::EquationFormulaNode()
  */
 EquationFormulaNode::EquationFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : CompoundFormulaNode(_parent, wnd)
 {
+	type = EQUATION_NODE;
+	
 	left = new GroupFormulaNode(this, wnd);
 	AddChild(left);
 	shape = AddShapeNode();
-	resNode = NULL;
-	type = EQUATION_NODE;
+	right = new GroupFormulaNode(this, wnd);
+	AddChild(right);
+	result = NULL;
 }
 
 /**
@@ -38,6 +41,8 @@ void EquationFormulaNode::RemoveChildNodes()
 {
 	childNodes->Clear();
 	left = NULL;
+	right = NULL;
+	shape = NULL;
 }
 
 /**
@@ -51,27 +56,28 @@ void EquationFormulaNode::Remake()
 	
 	if (childNodes->Count() > 0)
 	{
-		if (!resNode)
+		if (right->ChildrenCount() == 0)
 		{
 			//make a result node
-			resNode = new ResultFormulaNode(this, wnd);
-			AddChild(resNode);
+			result = new ResultFormulaNode(this, wnd);
+			right->AddChild(result);
 			
-			//resNode->AddAutoResultNode(wnd->settings->value("auto/precision", 8).toInt(), wnd->settings->value("auto/exp", 3).toInt());
-			resNode->AddAutoResultNode(wnd->settings->Load("ScientificNumbers", "resultAccuracy", 3).toInt(), 
+			result->AddAutoResultNode(wnd->settings->Load("ScientificNumbers", "resultAccuracy", 3).toInt(), 
 				wnd->settings->Load("ScientificNumbers", "exponentialThreshold", 8).toInt(), 
 				(ExpressionNotation)wnd->settings->Load("IntegerNumbers", "notation", DECIMAL_NOTATION).toInt(), 
 				(FractionType)wnd->settings->Load("RationalNumbers", "form", PROPER_FRACTION).toInt());
 		}
+		else
+			result = (ResultFormulaNode*)(*right->childNodes)[0];
 		
 		ParserString expr;
 		//parse the left nodes
 		left->Parse(expr);
-		resNode->SetExpression(expr);
+		result->SetExpression(expr);
 
 		//place the child nodes
 		int cx = left->boundingRect.width();
-		int cy = max(left->baseline, resNode->baseline);
+		int cy = max(left->baseline, result->baseline);
 		baseline = cy;
 		
 		QFont font = settings->GetTextFormulaNodeFont(level);
@@ -86,7 +92,7 @@ void EquationFormulaNode::Remake()
 		shape->AddFillRect(0, h * 0.4, w * 0.8, h < 20 ? 1 : h * 0.05, QColor("black"));
 		shape->AddFillRect(0, h >= 20 ? h * 0.55 : h * 0.5 + 2, w * 0.8, h < 20 ? 1 : h * 0.05, QColor("black"));
 		shape->Move(cx + w * 0.1 + settings->GetValue("InterNodeSpace", level), cy - font.pointSize());
-		resNode->Move(cx + w * 1.1 + settings->GetValue("InterNodeSpace", level) * 2, baseline - resNode->baseline);
+		result->Move(cx + w * 1.1 + settings->GetValue("InterNodeSpace", level) * 2, baseline - result->baseline);
 
 		//the shape, that wides the node's bounds for getting mouse events
 		r = m.boundingRect("T");
@@ -131,9 +137,39 @@ void EquationFormulaNode::Parse(ParserString& expr)
 #ifdef TEST
 std::string EquationFormulaNode::ParseStructure()
 {
-	return left->ParseStructure() + "=" + resNode->ParseStructure();
+	return left->ParseStructure() + "=" + result->ParseStructure();
 }
 #endif
+
+bool EquationFormulaNode::FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent)
+{
+	if (*begin == '=')
+	{
+		EquationFormulaNode* e = new EquationFormulaNode(parent, parent->wnd);
+		if (parent->ChildrenCount() > 0)
+		{
+			if (parent->type == GROUP_NODE)
+				e->left->MoveChild((*parent->childNodes)[parent->ChildrenCount() - 1], 0);
+			else
+				e->left->MoveChild((*parent)[0], 0);
+		}
+		else
+			e->left->AddChild(new EmptyFormulaNode(e->left));
+
+		++begin;
+		FormulaNode::FromString(begin, end, e->right);
+		e->result = (ResultFormulaNode*)(*e->right->childNodes)[0];
+		parent->AddChild(e);
+		return true;
+	}
+	
+	return false;
+}
+
+std::string EquationFormulaNode::ToString()
+{
+	return left->ToString() + "=" + right->ToString();
+}
 
 /**
  * Executes the insert text operation.
@@ -177,7 +213,8 @@ void EquationFormulaNode::MakeContextMenu(QMenu* menu)
  */
 void EquationFormulaNode::OnAddAutoResult()
 {
-	resNode->AddAutoResultNode(wnd->settings->Load("ScientificNumbers", "resultAccuracy", 3).toInt(), 
+	assert(result);
+	result->AddAutoResultNode(wnd->settings->Load("ScientificNumbers", "resultAccuracy", 3).toInt(), 
 		wnd->settings->Load("ScientificNumbers", "exponentialThreshold", 8).toInt(), 
 		(ExpressionNotation)wnd->settings->Load("IntegerNumbers", "notation", DECIMAL_NOTATION).toInt(), 
 		(FractionType)wnd->settings->Load("RationalNumbers", "form", PROPER_FRACTION).toInt());
@@ -189,7 +226,8 @@ void EquationFormulaNode::OnAddAutoResult()
  */
 void EquationFormulaNode::OnAddRealResult()
 {
-	resNode->AddRealResultNode(wnd->settings->value("auto/precision", 8).toInt(), wnd->settings->value("auto/exp", 3).toInt());
+	assert(result);
+	result->AddRealResultNode(wnd->settings->value("auto/precision", 8).toInt(), wnd->settings->value("auto/exp", 3).toInt());
 	Remake();
 }
 
@@ -198,7 +236,8 @@ void EquationFormulaNode::OnAddRealResult()
  */
 void EquationFormulaNode::OnAddIntegerResult()
 {
-	resNode->AddIntegerResultNode(DECIMAL_NOTATION);
+	assert(result);
+	result->AddIntegerResultNode(DECIMAL_NOTATION);
 	Remake();
 }
 
@@ -207,6 +246,7 @@ void EquationFormulaNode::OnAddIntegerResult()
  */
 void EquationFormulaNode::OnAddRationalResult()
 {
-	resNode->AddRationalResultNode(IMPROPER_FRACTION);
+	assert(result);
+	result->AddRationalResultNode(IMPROPER_FRACTION);
 	Remake();
 }

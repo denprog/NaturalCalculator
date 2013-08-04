@@ -4,4 +4,27 @@
         <activeConfTypeElem>4</activeConfTypeElem>
         <activeConfIndexElem>2</activeConfIndexElem>
     </data>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="4">
+        <file>
+            <url>source/FormulaNodes/TextFormulaNode.cpp</url>
+            <bookmark id="1">
+                <name/>
+                <line>72</line>
+                <key/>
+            </bookmark>
+            <bookmark id="2">
+                <name/>
+                <line>195</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>file:/home/denis/programs/NaturalCalculator/test/BracesTest.cpp</url>
+            <bookmark id="4">
+                <name/>
+                <line>187</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
 </project-private>

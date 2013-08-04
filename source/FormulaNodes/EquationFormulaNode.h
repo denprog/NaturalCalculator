@@ -49,6 +49,9 @@ public:
 	virtual std::string ParseStructure();
 #endif
 
+	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent);
+	virtual std::string ToString();
+	
 	//command functions
 	virtual bool DoInsertText(Command* command);
 
@@ -66,7 +69,8 @@ public:
 
 private:
 	ShapeFormulaNode* shape;
-	ResultFormulaNode* resNode;
+	GroupFormulaNode* right;
+	ResultFormulaNode* result;
 	string lastExpression;
 };
 

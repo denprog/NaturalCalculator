@@ -17,7 +17,6 @@ public:
 	virtual ~ResultFormulaNode();
 
 public:
-	virtual void AddChild(FormulaNode* node);
 	virtual void Remake();
 	
 public:
@@ -28,6 +27,13 @@ public:
 	void AddIntegerResultNode(ExpressionNotation notation);
 	void AddRationalResultNode(FractionType type);
 	void RemoveResultNode();
+
+#ifdef TEST
+	virtual std::string ParseStructure();
+#endif
+
+	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent);
+	virtual std::string ToString();
 
 public slots:
 	void OnDelayTimer();

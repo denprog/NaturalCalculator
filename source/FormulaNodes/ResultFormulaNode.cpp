@@ -36,19 +36,11 @@ ResultFormulaNode::~ResultFormulaNode()
 {
 }
 
-void ResultFormulaNode::AddChild(FormulaNode* node)
-{
-	GroupFormulaNode::AddChild(node);
-	((ResultItemFormulaNode*)node)->UpdateExpression();
-}
-
 /**
  * Remakes this node.
  */
 void ResultFormulaNode::Remake()
 {
-	ParserExpression expr;
-
 	//solve all the result's variants
 	for (int i = 0; i < childNodes->Count(); ++i)
 	{
@@ -91,7 +83,7 @@ void ResultFormulaNode::Remake()
  */
 void ResultFormulaNode::SetExpression(ParserString& expr)
 {
-	if (lastExpression == expr)
+	if (lastExpression == expr && !expr.expression.empty())
 	{
 		Remake();
 		return;
@@ -161,6 +153,41 @@ void ResultFormulaNode::AddRationalResultNode(FractionType type)
 
 void ResultFormulaNode::RemoveResultNode()
 {
+}
+
+#ifdef TEST
+std::string ResultFormulaNode::ParseStructure()
+{
+	return "$res(" + GroupFormulaNode::ParseStructure() + ")";
+}
+#endif
+
+bool ResultFormulaNode::FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent)
+{
+	std::string::iterator i = begin;
+	
+	if (FindSubstring(begin, end, "$res"))
+	{
+		ResultFormulaNode* r = new ResultFormulaNode(parent, parent->wnd);
+
+		i += 4;
+		if (!GroupFormulaNode::FromString(i, end, r))
+		{
+			delete r;
+			return false;
+		}
+
+		parent->AddChild(r);
+		begin = i;
+		return true;
+	}
+	
+	return false;
+}
+
+std::string ResultFormulaNode::ToString()
+{
+	return "$res" + GroupFormulaNode::ToString();
 }
 
 void ResultFormulaNode::OnDelayTimer()
