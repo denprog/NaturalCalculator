@@ -35,9 +35,6 @@ private:
 	BOOST_SERIALIZATION_SPLIT_MEMBER()
 
 public:
-	//virtual void Remake();
-	//virtual void Render();
-
 	virtual FormulaNode* Clone(FormulaNode* p);
 	
 	virtual SharedCaretState GetFirstPosition();

@@ -158,3 +158,35 @@ std::string PowerFormulaNode::ToString()
 {
 	return "pow(" + base->ToString() + "," + exponent->ToString() + ")";
 }
+
+bool PowerFormulaNode::DoRemoveItem(Command* command)
+{
+	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
+	int pos = c->GetPos();
+	
+	if (pos == 1)
+	{
+		bool right = any_cast<bool>(command->nodeEvent["right"]);
+		if (!right)
+			return false;
+		
+		command->SaveNodeState(parent);
+		
+		//removing the symbol
+		int j = parent->GetFirstLevelChildPos(this);
+		int i = 0;
+		while (base->childNodes->Count() > 0)
+			parent->MoveChild((*base)[0], j + i++);
+		int k = j;
+		while (exponent->childNodes->Count() > 0)
+			parent->MoveChild((*exponent)[0], j + i++);
+		
+		c->SetToNode(parent, k + 1);
+		command->afterCaretState = c;
+
+		parent->RemoveChild(j + i);		
+		return true;
+	}
+
+	return FormulaNode::DoRemoveItem(command);
+}

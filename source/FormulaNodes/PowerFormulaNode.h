@@ -51,6 +51,9 @@ public:
 	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent);
 	virtual std::string ToString();
 
+	//command functions
+	virtual bool DoRemoveItem(Command* command);
+
 public:
 	GroupFormulaNode *base, *exponent;
 	
