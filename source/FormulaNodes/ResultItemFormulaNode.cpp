@@ -29,7 +29,7 @@ void ResultItemFormulaNode::OnPresentAsAutoResult()
 		settings->Load("ScientificNumbers", "exponentialThreshold", 8).toInt(), 
 		(ExpressionNotation)settings->Load("IntegerNumbers", "notation", DECIMAL_NOTATION).toInt(), 
 		(FractionType)settings->Load("RationalNumbers", "form", PROPER_FRACTION).toInt());
-	node->UpdateExpression();
+	node->Normalize();
 	parent->ReplaceChild(node, parent->GetChildPos(this));
 }
 
@@ -75,6 +75,7 @@ AutoResultItemFormulaNode::AutoResultItemFormulaNode(FormulaNode* _parent, Formu
 	ExpressionNotation _notation, FractionType _fractionType) : 
 	ResultItemFormulaNode(_parent, wnd), realPrecision(_realPrecision), realExp(_realExp), notation(_notation), fractionType(_fractionType)
 {
+	Normalize();
 }
 
 /**
@@ -87,7 +88,7 @@ AutoResultItemFormulaNode::~AutoResultItemFormulaNode()
 /**
  * Updates the expression.
  */
-void AutoResultItemFormulaNode::UpdateExpression()
+void AutoResultItemFormulaNode::Normalize()
 {
 	expression = AutoParserExpression(this, realPrecision, realExp, notation, fractionType);
 }
@@ -116,6 +117,53 @@ void AutoResultItemFormulaNode::MakeContextMenu(QMenu* menu)
 	a = new QAction(tr("Rational"), subMenu);
 	subMenu->addAction(a);
 	connect(a, SIGNAL(triggered()), this, SLOT(OnPresentAsRationalResult()));
+}
+
+#ifdef TEST
+std::string AutoResultItemFormulaNode::ParseStructure()
+{
+	return "$auto(" + ResultItemFormulaNode::ParseStructure() + ")";
+}
+#endif
+
+bool AutoResultItemFormulaNode::FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* _parent)
+{
+	std::string::iterator i = begin;
+	
+	if (FindSubstring(begin, end, "$auto"))
+	{
+		int realPrecision = _parent->wnd->settings->Load("ScientificNumbers", "resultAccuracy", 3).toInt();
+		int realExp = _parent->wnd->settings->Load("ScientificNumbers", "exponentialThreshold", 8).toInt();
+		ExpressionNotation notation = (ExpressionNotation)_parent->wnd->settings->Load("IntegerNumbers", "notation", DECIMAL_NOTATION).toInt();
+		FractionType fractionType = (FractionType)_parent->wnd->settings->Load("RationalNumbers", "form", PROPER_FRACTION).toInt();
+		
+		i += 5;
+		std::vector<int> params;
+		if (FormulaNode::GetIntParams(i, end, params) && params.size() == 4)
+		{
+			realPrecision = params[0];
+			realExp = params[1];
+			notation = (ExpressionNotation)params[2];
+			fractionType = (FractionType)params[3];
+		}
+		
+		_parent->AddChild(new AutoResultItemFormulaNode(_parent, _parent->wnd, realPrecision, realExp, notation, fractionType));
+		begin = i;
+		return true;
+	}
+	
+	return false;
+}
+
+std::string AutoResultItemFormulaNode::ToString()
+{
+	std::stringstream res;
+	res << "$auto(";
+	res << realPrecision << ",";
+	res << realExp << ",";
+	res << (int)notation << ",";
+	res << (int)fractionType << ")";
+	return res.str();
 }
 
 //RealResultItemFormulaNode

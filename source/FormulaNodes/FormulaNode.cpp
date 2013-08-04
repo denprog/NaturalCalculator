@@ -9,6 +9,7 @@
 #include "DivisionFormulaNode.h"
 #include "BracesFormulaNode.h"
 #include "CommaFormulaNode.h"
+#include "ResultItemFormulaNode.h"
 #include "../Main/FormulaWnd.h"
 #include "../Util/QRectEx.h"
 #include <QMenu>
@@ -367,6 +368,12 @@ bool FormulaNode::FromString(std::string::iterator& begin, std::string::iterator
 		return true;
 	if (BracesFormulaNode::FromString(begin, end, parent))
 		return true;
+	if (EquationFormulaNode::FromString(begin, end, parent))
+		return true;
+	if (ResultFormulaNode::FromString(begin, end, parent))
+		return true;
+	if (AutoResultItemFormulaNode::FromString(begin, end, parent))
+		return true;
 	return false;
 }
 
@@ -376,6 +383,52 @@ std::string FormulaNode::ToString()
 	for (int i = 0; i < ChildrenCount(); ++i)
 		res += (*this)[i]->ToString();
 	return res;
+}
+
+bool FormulaNode::GetIntParams(std::string::iterator& begin, std::string::iterator& end, std::vector<int>& params)
+{
+	std::string s;
+	
+	if (*begin == '(')
+	{
+		++begin;
+		
+		while (begin != end)
+		{
+			if (*begin == ')')
+			{
+				++begin;
+				break;
+			}
+			else if (*begin == '\0')
+				return false;
+			s += *begin++;
+		}
+		
+		std::stringstream ss(s);
+		std::string item;
+    while (std::getline(ss, item, ','))
+			params.push_back(std::stoi(item));
+		
+		return true;
+	}
+
+	return false;
+}
+
+bool FormulaNode::FindSubstring(std::string::iterator& begin, std::string::iterator& end, std::string subString)
+{
+	std::string res;
+	std::string::iterator i = begin;
+	while (i != end)
+	{
+		res += *i;
+		++i;
+		if (res.size() == subString.size())
+			break;
+	}
+	
+	return res == subString;
 }
 
 /**
@@ -919,18 +972,6 @@ bool FormulaNode::DoCreateEquationFormulaNode(Command* command)
 	//pass the request to the root node
 	if (parent)
 		return parent->DoCreateEquationFormulaNode(command);
-	return false;
-}
-
-/**
- * Undo create equation formula node.
- * @param [in] nodeEvent The node event.
- * @return true if it succeeds, false if it fails.
- */
-bool FormulaNode::UndoCreateEquationFormulaNode(Command* command)
-{
-	if (parent)
-		return parent->UndoCreateEquationFormulaNode(command);
 	return false;
 }
 
