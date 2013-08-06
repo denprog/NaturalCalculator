@@ -1,55 +1,13 @@
 #include "CommaFormulaNode.h"
-#include "../Main/Settings.h"
-#include <QFontMetrics>
 
 /**
  * Constructor.
  * @param [in,out] _parent The parent node.
  * @param [in,out] wnd The formula window.
  */
-CommaFormulaNode::CommaFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : ShapeFormulaNode(_parent, wnd)
+CommaFormulaNode::CommaFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : TextShapeFormulaNode(_parent, wnd, ",")
 {
 	type = COMMA_NODE;
-}
-
-/**
- * Destructor.
- */
-CommaFormulaNode::~CommaFormulaNode()
-{
-}
-
-/**
- * Remakes this node.
- */
-void CommaFormulaNode::Remake()
-{
-	QFont font = settings->GetTextFormulaNodeFont(level);
-	QFontMetrics m(font);
-	QRect r = m.boundingRect(",");
-	
-	qreal w = r.width();
-	baseline = font.pointSize() / 2 + 2;
-
-	ClearShapes();
-	
-	//the shape, that wides the node's bounds for getting mouse events
-	AddFillRect(0, 0, w, w, QColor("white"), 0);
-	
-	boundingRect.setCoords(0, 0, w, w);
-}
-
-/**
- * Updates the bounding rectangle.
- */
-void CommaFormulaNode::UpdateBoundingRect()
-{
-	QFont font = settings->GetTextFormulaNodeFont(level);
-	QFontMetrics m(font);
-	QRect r = m.boundingRect(",");
-	
-	boundingRect.setCoords(0, 0, r.width(), r.width());
-	boundingRect.moveTo(item->pos().x(), item->pos().y());
 }
 
 /**

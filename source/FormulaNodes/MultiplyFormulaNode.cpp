@@ -1,62 +1,14 @@
 #include "MultiplyFormulaNode.h"
-#include "../Main/Settings.h"
-#include <QFontMetrics>
 
 /**
  * Constructor.
  * @param [in,out] _parent The parent node.
  * @param [in,out] wnd The formula window.
  */
-MultiplyFormulaNode::MultiplyFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : ShapeFormulaNode(_parent, wnd)
+MultiplyFormulaNode::MultiplyFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : TextShapeFormulaNode(_parent, wnd, QString::fromUtf8("·"))
 {
 	type = MULTIPLY_NODE;
 }
-
-/**
- * Destructor.
- */
-MultiplyFormulaNode::~MultiplyFormulaNode()
-{
-}
-
-/**
- * Remakes this node.
- */
-void MultiplyFormulaNode::Remake()
-{
-	QFont font = settings->GetTextFormulaNodeFont(level);
-	QFontMetrics m(font);
-	QRect r = m.boundingRect("+");
-	
-	qreal w = r.width() * 0.8;
-	baseline = font.pointSize() / 2 + 2;
-
-	ClearShapes();
-	
-	//the shape
-	AddFillCircle(w / 2 - w / 10, w / 2 - w / 10, w / 5, QColor("black"));
-	
-	//the shape, that wides the node's bounds for getting mouse events
-	AddFillRect(0, 0, w, w, QColor("white"), 0);
-
-	boundingRect.setCoords(0, 0, w, w);
-}
-
-/**
- * Adds the sign to the expression.
- * @param [in,out] expr The expression.
- */
-void MultiplyFormulaNode::Parse(ParserString& expr)
-{
-	expr.Add(std::string("*"), this);
-}
-
-#ifdef TEST
-std::string MultiplyFormulaNode::ParseStructure()
-{
-	return "*";
-}
-#endif
 
 bool MultiplyFormulaNode::FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent)
 {
@@ -70,22 +22,21 @@ bool MultiplyFormulaNode::FromString(std::string::iterator& begin, std::string::
 	return false;
 }
 
-std::string MultiplyFormulaNode::ToString()
+void MultiplyFormulaNode::Parse(ParserString& expr)
+{
+	expr.Add(std::string("*"), this);
+}
+
+#ifdef TEST
+std::string MultiplyFormulaNode::ParseStructure()
 {
 	return "*";
 }
-
-/**
- * Updates the bounding rectangle.
- */
-void MultiplyFormulaNode::UpdateBoundingRect()
-{
-	QFont font = settings->GetTextFormulaNodeFont(level);
-	QFontMetrics m(font);
-	QRect r = m.boundingRect("+");
+#endif
 	
-	boundingRect.setCoords(0, 0, r.width() * 0.8, r.width());
-	boundingRect.moveTo(item->pos().x(), item->pos().y());
+std::string MultiplyFormulaNode::ToString()
+{
+	return "*";
 }
 
 /**

@@ -43,6 +43,7 @@ public:
 	void AddPolygon(QVector<QPointF>& points, QColor color, bool smooth = true);
 	void AddFillCircle(qreal x, qreal y, qreal radius, QColor color, bool smooth = true);
 	void AddPath(QPainterPath path, QColor color, bool smooth = true);
+	void AddText(qreal x, qreal y, QString text, QFont font);
 	void ClearShapes();
 
 	virtual SharedCaretState GetNextPosition(SharedCaretState relativeState = SharedCaretState());

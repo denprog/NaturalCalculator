@@ -679,6 +679,37 @@ void TextFormulaNode::OnCut()
 {
 }
 
+//TextShapeFormulaNode
+
+TextShapeFormulaNode::TextShapeFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, QString _text) : ShapeFormulaNode(_parent, wnd), text(_text)
+{
+	item = new FormulaTextItem(settings, level, boundingRect, _parent->item);
+	item->setData(0, qVariantFromValue((void*)this));
+	((QGraphicsTextItem*)item)->setPlainText(_text);
+	
+	QFont font = settings->GetTextFormulaNodeFont(level);
+	((QGraphicsTextItem*)item)->setFont(font);
+}
+	
+void TextShapeFormulaNode::Remake()
+{
+	((FormulaTextItem*)item)->level = level;
+	UpdateBoundingRect();
+	baseline = ((FormulaTextItem*)item)->font().pointSize();
+}
+
+void TextShapeFormulaNode::UpdateBoundingRect()
+{
+	QFont& font = settings->GetTextFormulaNodeFont(level);
+	((FormulaTextItem*)item)->setFont(font);
+	QFontMetrics m(font);
+	QRectF b = m.boundingRect(((QGraphicsTextItem*)item)->toPlainText());
+	
+	boundingRect.setCoords(0, 0, m.width(((QGraphicsTextItem*)item)->toPlainText()), b.height());
+	((FormulaTextItem*)item)->boundingRect = boundingRect;
+	boundingRect.moveTo(item->pos().x(), item->pos().y());
+}
+
 //FormulaTextItem
 
 /**

@@ -1,4 +1,5 @@
 #include "ShapeFormulaNode.h"
+#include "../Main/Settings.h"
 
 /**
  * Constructor.
@@ -117,6 +118,16 @@ void ShapeFormulaNode::AddPath(QPainterPath path, QColor color, bool smooth)
 {
 	QGraphicsPathItem* i = smooth ? new SmoothGraphicsPathItem(path, item) : new QGraphicsPathItem(path, item);
 	i->setBrush(QBrush(color));
+	((QGraphicsItemGroup*)item)->addToGroup(i);
+}
+
+void ShapeFormulaNode::AddText(qreal x, qreal y, QString text, QFont font)
+{
+	QGraphicsTextItem* i = new QGraphicsTextItem(item);
+	i->setPlainText(text);
+	i->setFont(font);
+	i->setX(x);
+	i->setY(y);
 	((QGraphicsItemGroup*)item)->addToGroup(i);
 }
 

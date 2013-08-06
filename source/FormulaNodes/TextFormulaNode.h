@@ -3,6 +3,7 @@
 
 #include <QGraphicsTextItem>
 #include "FormulaNode.h"
+#include "ShapeFormulaNode.h"
 
 /**
  * Text formula node.
@@ -91,18 +92,28 @@ public slots:
 	virtual void OnCut();
 };
 
+class TextShapeFormulaNode : public ShapeFormulaNode
+{
+public:
+	TextShapeFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, QString _text);
+	
+public:
+	virtual void Remake();
+	virtual void UpdateBoundingRect();
+	
+protected:
+	QString text;
+};
+
 class FormulaTextItem : public QGraphicsTextItem
 {
 public:
 	FormulaTextItem(Settings* _settings, FormulaNodeLevel _level, QRectF& _boundingRect, QGraphicsItem* parent = 0);
 	
 public:
-	friend class TextFormulaNode;
-	
-public:
 	virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
 	
-private:
+public:
 	Settings* settings;
 	FormulaNodeLevel level;
 	QRectF boundingRect;

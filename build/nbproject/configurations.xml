@@ -1233,6 +1233,8 @@
             ex="false"
             tool="1"
             flavor2="0">
+        <ccTool>
+        </ccTool>
       </item>
       <item path="../source/FormulaNodes/PowerFormulaNode.cpp"
             ex="false"
