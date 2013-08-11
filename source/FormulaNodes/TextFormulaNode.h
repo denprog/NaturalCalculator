@@ -74,9 +74,7 @@ public:
 	virtual bool DoInsertNode(Command* command);
 	virtual bool UndoInsertNode(Command* command);
 	virtual bool DoInsertText(Command* command);
-	
 	virtual bool DoRemoveItem(Command* command);
-
 	virtual bool DoCreatePlusFormulaNode(Command* command);
 	virtual bool DoCreateMinusFormulaNode(Command* command);
 	virtual bool DoCreateMultiplyFormulaNode(Command* command);

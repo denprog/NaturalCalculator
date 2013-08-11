@@ -234,12 +234,12 @@
       </item>
       <item path="../source/FormulaNodes/CompoundFormulaNode.cpp"
             ex="false"
-            tool="0"
+            tool="1"
             flavor2="0">
       </item>
       <item path="../source/FormulaNodes/CompoundFormulaNode.h"
             ex="false"
-            tool="3"
+            tool="1"
             flavor2="0">
       </item>
       <item path="../source/FormulaNodes/DivisionFormulaNode.cpp"
@@ -1233,8 +1233,6 @@
             ex="false"
             tool="1"
             flavor2="0">
-        <ccTool>
-        </ccTool>
       </item>
       <item path="../source/FormulaNodes/PowerFormulaNode.cpp"
             ex="false"

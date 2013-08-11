@@ -29,6 +29,7 @@ void NcTests::BracesTests()
 	bracesTest.Test3();
 	bracesTest.Test4();
 	bracesTest.Test5();
+	bracesTest.Test6();
 }
 
 void NcTests::PowerTests()

@@ -588,8 +588,7 @@ bool TextFormulaNode::DoCreateLeftBraceFormulaNode(Command* command)
 		for (int i = pos - 1; i >= 0; --i)
 			p->MoveChild((*node)[i], 0);
 
-		c->SetToNode(p, pos);
-		command->afterCaretState = c;
+		command->afterCaretState = ((BracesFormulaNode*)node->parent)->inside->GetFirstPosition();
 	
 		return true;
 	}

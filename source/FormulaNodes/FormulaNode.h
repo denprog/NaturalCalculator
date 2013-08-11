@@ -99,6 +99,7 @@ public:
 	virtual void AddChild(FormulaNode* node);
 	virtual void InsertChild(FormulaNode* node, int pos);
 	virtual void MoveChild(FormulaNode* node, int pos);
+	virtual void MoveChildren(FormulaNode* fromNode, int beginPos, int endPos, int destPos);
 	virtual void RemoveChild(int pos);
 	virtual void RemoveChild(FormulaNode* node);
 	virtual void RemoveChildNodes();

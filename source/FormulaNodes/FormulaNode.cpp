@@ -98,6 +98,16 @@ void FormulaNode::MoveChild(FormulaNode* node, int pos)
 	InsertChild(node, pos);
 }
 
+void FormulaNode::MoveChildren(FormulaNode* fromNode, int beginPos, int endPos, int destPos)
+{
+	for (int i = beginPos; i < endPos; ++i)
+	{
+		FormulaNode* n = (*fromNode)[beginPos];
+		InsertChild(n, destPos++);
+		fromNode->childNodes->Remove(beginPos);
+	}
+}
+
 /**
  * Removes a child node.
  * @param pos The position of the node.
