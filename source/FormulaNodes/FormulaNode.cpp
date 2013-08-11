@@ -915,6 +915,8 @@ bool FormulaNode::DoCreateLeftBraceFormulaNode(Command* command)
 	FormulaNode* expr = d->GetExpression(0);
 	for (int i = pos; i < ChildrenCount();)
 		expr->MoveChild((*this)[pos], expr->ChildrenCount());
+	if (expr->ChildrenCount() == 0)
+		expr->AddChild(new EmptyFormulaNode(expr));
 	InsertChild(d, pos);
 
 	c->SetToNode(expr, 0);
