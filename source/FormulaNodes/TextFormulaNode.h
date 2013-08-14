@@ -81,6 +81,7 @@ public:
 	virtual bool DoCreateDivisionFormulaNode(Command* command);
 	virtual bool DoCreatePowerFormulaNode(Command* command);
 	virtual bool DoCreateSquareRootFormulaNode(Command* command);
+	virtual bool DoCreateNthRootFormulaNode(Command* command);
 	virtual bool DoCreateLeftBraceFormulaNode(Command* command);
 	virtual bool DoCreateRightBraceFormulaNode(Command* command);
 	

@@ -46,6 +46,7 @@ enum NodeType
 	DIVISION_NODE, 
 	POWER_NODE, 
 	SQUARE_ROOT_NODE, 
+	NTH_ROOT_NODE, 
 	BRACES_NODE, 
 	RESULT_NODE, 
 	RESULT_ITEM_NODE, 
@@ -182,6 +183,7 @@ public:
 	virtual bool DoCreateDivisionFormulaNode(Command* command);
 	virtual bool DoCreatePowerFormulaNode(Command* command);
 	virtual bool DoCreateSquareRootFormulaNode(Command* command);
+	virtual bool DoCreateNthRootFormulaNode(Command* command);
 	virtual bool DoCreateLeftBraceFormulaNode(Command* command);
 	virtual bool DoCreateRightBraceFormulaNode(Command* command);
 	virtual bool DoCreateEquationFormulaNode(Command* command);

@@ -13,7 +13,6 @@ class SquareRootFormulaNode : public CompoundFormulaNode
 public:
 	SquareRootFormulaNode(FormulaNode* _parent, FormulaWnd* wnd);
 	SquareRootFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, FormulaNode* _radicand);
-	virtual ~SquareRootFormulaNode();
 
 private:
 	friend class boost::serialization::access;
@@ -62,9 +61,11 @@ public:
 	//command functions
 	virtual bool DoRemoveItem(Command* command);
 
-private:
-	ShapeFormulaNode* shape;
+public:
 	GroupFormulaNode* radicand;
+	
+protected:
+	ShapeFormulaNode* shape;
 };
 
 namespace boost

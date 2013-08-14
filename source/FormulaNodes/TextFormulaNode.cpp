@@ -8,6 +8,7 @@
 #include "MultiplyFormulaNode.h"
 #include "PowerFormulaNode.h"
 #include "SquareRootFormulaNode.h"
+#include "NthRootFormulaNode.h"
 #include "../Main/FormulaWnd.h"
 #include "../Util/QRectEx.h"
 
@@ -551,10 +552,29 @@ bool TextFormulaNode::DoCreateSquareRootFormulaNode(Command* command)
 	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
 	FormulaNode* p = parent;
 	int pos = parent->GetChildPos(this);
-	//create a power node, insert current node into it and insert the result into the parent
+	//create a square root node, insert current node into it and insert the result into the parent
 	FormulaNode* d = new SquareRootFormulaNode(parent, wnd);
 	FormulaNode* expr = d->GetExpression(0);
 	expr->MoveChild(this, 0);
+	p->InsertChild(d, pos);
+
+	c->SetToNode(this, c->GetPos());
+	command->afterCaretState = c;
+	
+	return true;
+}
+
+bool TextFormulaNode::DoCreateNthRootFormulaNode(Command* command)
+{
+	command->SaveNodeState(parent);
+	
+	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
+	FormulaNode* p = parent;
+	int pos = parent->GetChildPos(this);
+	//create a nth root node, insert current node into it and insert the result into the parent
+	NthRootFormulaNode* d = new NthRootFormulaNode(parent, wnd);
+	d->degree->AddChild(new EmptyFormulaNode(d->degree));
+	d->radicand->MoveChild(this, 0);
 	p->InsertChild(d, pos);
 
 	c->SetToNode(this, c->GetPos());

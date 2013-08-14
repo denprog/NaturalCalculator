@@ -12,6 +12,7 @@
 #include "ResultItemFormulaNode.h"
 #include "../Main/FormulaWnd.h"
 #include "../Util/QRectEx.h"
+#include "NthRootFormulaNode.h"
 #include <QMenu>
 
 /**
@@ -361,6 +362,8 @@ bool FormulaNode::FromString(std::string::iterator& begin, std::string::iterator
 	if (PowerFormulaNode::FromString(begin, end, parent))
 		return true;
 	if (SquareRootFormulaNode::FromString(begin, end, parent))
+		return true;
+	if (NthRootFormulaNode::FromString(begin, end, parent))
 		return true;
 	if (CommaFormulaNode::FromString(begin, end, parent))
 		return true;
@@ -861,6 +864,26 @@ bool FormulaNode::DoCreateSquareRootFormulaNode(Command* command)
 	InsertChild(d, pos);
 	
 	c->SetToNode(expr, 0);
+	command->afterCaretState = c;
+	
+	return true;
+}
+
+bool FormulaNode::DoCreateNthRootFormulaNode(Command* command)
+{
+	command->SaveNodeState(parent);
+	
+	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
+	int pos = c->GetPos();
+	//create a square root node, insert current node into it and insert the result into the parent
+	NthRootFormulaNode* d = new NthRootFormulaNode(this, wnd);
+	d->degree->AddChild(new EmptyFormulaNode(this));
+	if (ChildrenCount() <= pos)
+		InsertChild(new EmptyFormulaNode(this), pos);
+	d->radicand->MoveChild((*this)[pos], 0);
+	InsertChild(d, pos);
+	
+	c->SetToNode(d->degree, 0);
 	command->afterCaretState = c;
 	
 	return true;
