@@ -6,8 +6,6 @@
  */
 void BracesTest::Test1()
 {
-	QString s;
-
 	wnd->New();
 	QTest::keyClicks(wnd, "1+2+3+4");
 	QCOMPARE(doc->ParseStructure().c_str(), "g(1+2+3+4)");
@@ -57,8 +55,6 @@ void BracesTest::Test1()
  */
 void BracesTest::Test2()
 {
-	QString s;
-
 	wnd->New();
 	QTest::keyClicks(wnd, "1+2+3+4");
 	QCOMPARE(doc->ParseStructure().c_str(), "g(1+2+3+4)");
@@ -108,8 +104,6 @@ void BracesTest::Test2()
  */
 void BracesTest::Test3()
 {
-	QString s;
-
 	wnd->New();
 	QTest::keyClicks(wnd, "1+2+3+4");
 	QCOMPARE(doc->ParseStructure().c_str(), "g(1+2+3+4)");
@@ -131,8 +125,6 @@ void BracesTest::Test3()
  */
 void BracesTest::Test4()
 {
-	QString s;
-
 	wnd->New();
 	QTest::keyClicks(wnd, "12+234");
 	QCOMPARE(doc->ParseStructure().c_str(), "g(12+234)");
@@ -267,6 +259,70 @@ void BracesTest::Test5()
 	wnd->Undo();
 	wnd->Undo();
 	QCOMPARE(doc->ParseStructure().c_str(), "g((g(12)/g(234)))");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
+}
+
+void BracesTest::Test6()
+{
+	wnd->New();
+	QTest::keyClicks(wnd, "12");
+	MoveLeft(2);
+	QTest::keyClicks(wnd, "(");
+	QCOMPARE(doc->ParseStructure().c_str(), "g([g(12))");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
+	
+	QTest::keyClick(wnd, Qt::Key_Left);
+	QTest::keyClick(wnd, Qt::Key_Delete);
+	QCOMPARE(doc->ParseStructure().c_str(), "g(12)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
+	
+	wnd->Undo();
+	QCOMPARE(doc->ParseStructure().c_str(), "g([g(12))");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
+
+	MoveRight(3);
+	QTest::keyClicks(wnd, ")");
+	QCOMPARE(doc->ParseStructure().c_str(), "g([g(12)])");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 1);
+
+	QTest::keyClick(wnd, Qt::Key_Left);
+	QTest::keyClick(wnd, Qt::Key_Delete);
+	QCOMPARE(doc->ParseStructure().c_str(), "g([g(12))");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 2);
+	
+	wnd->Undo();
+	QCOMPARE(doc->ParseStructure().c_str(), "g([g(12)])");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 2);
+	
+	QTest::keyClick(wnd, Qt::Key_Home);
+	QTest::keyClick(wnd, Qt::Key_Home);
+	QTest::keyClicks(wnd, "45+");
+	QCOMPARE(doc->ParseStructure().c_str(), "g(45+[g(12)])");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 2);
+	
+	QTest::keyClick(wnd, Qt::Key_Right);
+	QTest::keyClick(wnd, Qt::Key_Delete);
+	QCOMPARE(doc->ParseStructure().c_str(), "g(g(45+12)])");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
+	
+	QTest::keyClick(wnd, Qt::Key_End);
+	QTest::keyClick(wnd, Qt::Key_End);
+	QTest::keyClicks(wnd, "*56");
+	QCOMPARE(doc->ParseStructure().c_str(), "g(g(45+12)]*56)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 2);
+	
+	MoveLeft(4);
+	QTest::keyClick(wnd, Qt::Key_Delete);
+	QCOMPARE(doc->ParseStructure().c_str(), "g(45+12*56)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 3);
+	
+	wnd->Undo();
+	QCOMPARE(doc->ParseStructure().c_str(), "g(g(45+12)]*56)");
+	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 1);
+	
+	MoveLeft(3);
+	QTest::keyClick(wnd, Qt::Key_ParenLeft);
+	QCOMPARE(doc->ParseStructure().c_str(), "g(45+[g(12)]*56)");
 	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), 0);
 }
 

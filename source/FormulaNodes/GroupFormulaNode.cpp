@@ -58,6 +58,9 @@ void GroupFormulaNode::Remake()
 {
 	int x = 0;
 	
+	for (int i = 0; i < childNodes->Count(); ++i)
+		(*this)[i]->SetLevel(level);
+	
 	childNodes->Remake();
 
 	Update();

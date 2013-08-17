@@ -182,5 +182,5 @@ SharedCaretState CompoundFormulaNode::GetLineEnd(SharedCaretState& relativeState
 		if (p && *p == *relativeState)
 			return parent->GetLineEnd(relativeState);
 	}
-	return GroupFormulaNode::GetLineBegin(relativeState);
+	return GroupFormulaNode::GetLineEnd(relativeState);
 }

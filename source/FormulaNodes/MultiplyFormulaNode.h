@@ -1,13 +1,12 @@
 #ifndef MULTIPLYFORMULANODE_H
 #define MULTIPLYFORMULANODE_H
 
-#include "ShapeFormulaNode.h"
+#include "TextFormulaNode.h"
 
-class MultiplyFormulaNode : public ShapeFormulaNode
+class MultiplyFormulaNode : public TextShapeFormulaNode
 {
 public:
 	MultiplyFormulaNode(FormulaNode* _parent, FormulaWnd* wnd);
-	virtual ~MultiplyFormulaNode();
 
 private:
 	friend class boost::serialization::access;
@@ -25,16 +24,14 @@ private:
 	BOOST_SERIALIZATION_SPLIT_MEMBER()
 
 public:
-	virtual void Remake();
-	virtual void UpdateBoundingRect();
-
+	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent);
+	
 	virtual void Parse(ParserString& expr);
 	
 #ifdef TEST
 	virtual std::string ParseStructure();
 #endif
-
-	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent);
+	
 	virtual std::string ToString();
 	
 	virtual FormulaNode* Clone(FormulaNode* p);

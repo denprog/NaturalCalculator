@@ -22,13 +22,6 @@ SquareRootFormulaNode::SquareRootFormulaNode(FormulaNode* _parent, FormulaWnd* w
 	InsertChild(radicand, 1);
 }
 
-/**
- * Destructor.
- */
-SquareRootFormulaNode::~SquareRootFormulaNode()
-{
-}
-
 void SquareRootFormulaNode::RemoveChildNodes()
 {
 	childNodes->Clear();
@@ -72,6 +65,17 @@ void SquareRootFormulaNode::Remake()
 		boundingRect = shape->boundingRect;
 		boundingRect.setRight(boundingRect.right() + cx * 0.075);
 	}
+}
+
+/**
+ * Updates the bounding rectangle.
+ */
+void SquareRootFormulaNode::UpdateBoundingRect()
+{
+	boundingRect = shape->boundingRect;
+	qreal cx = GetExpression(0)->boundingRect.height() * 5 / 11;
+	boundingRect.setRight(boundingRect.right() + cx * 0.075);
+	boundingRect.moveTo(item->pos().x(), item->pos().y());
 }
 
 /**
@@ -135,19 +139,12 @@ std::string SquareRootFormulaNode::ParseStructure()
 
 bool SquareRootFormulaNode::FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent)
 {
-	std::string res;
 	std::string::iterator i = begin;
-	while (i != end)
-	{
-		res += *i;
-		++i;
-		if (res.size() == 4)
-			break;
-	}
 	
-	if (res == "sqrt")
+	if (FindSubstring(begin, end, "sqrt"))
 	{
 		SquareRootFormulaNode* t = new SquareRootFormulaNode(parent, parent->wnd);
+		i += 4;
 		
 		if (!GroupFormulaNode::FromString(i, end, t->radicand))
 		{
@@ -170,17 +167,6 @@ bool SquareRootFormulaNode::FromString(std::string::iterator& begin, std::string
 std::string SquareRootFormulaNode::ToString()
 {
 	return "sqrt(" + radicand->ToString() + ")";
-}
-
-/**
- * Updates the bounding rectangle.
- */
-void SquareRootFormulaNode::UpdateBoundingRect()
-{
-	boundingRect = shape->boundingRect;
-	qreal cx = GetExpression(0)->boundingRect.height() * 5 / 11;
-	boundingRect.setRight(boundingRect.right() + cx * 0.075);
-	boundingRect.moveTo(item->pos().x(), item->pos().y());
 }
 
 /**

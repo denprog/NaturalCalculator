@@ -93,7 +93,7 @@ void BracesFormulaNode::Remake()
 
 			rightShape->AddPath(p, QColor("black"));
 			rightShape->UpdateBoundingRect();
-			rightShape->Move(cx + expr->boundingRect.width(), 0);
+			rightShape->Move((leftShape ? cx : 0) + expr->boundingRect.width(), 0);
 		}
 		
 		baseline = expr->baseline + expr->boundingRect.height() * 0.1;
@@ -130,7 +130,7 @@ FormulaNode* BracesFormulaNode::GetExpression(int pos) const
  */
 void BracesFormulaNode::ShowShape(int pos, bool show)
 {
-	assert(pos <= 1);
+	assert(pos <= 2);
 	
 	if (show)
 	{
@@ -268,7 +268,59 @@ std::string BracesFormulaNode::ToString()
  */
 bool BracesFormulaNode::DoRemoveItem(Command* command)
 {
-	return false;
+	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
+	int pos = c->GetPos();
+	
+	if (pos == 0 || pos == 2 || (pos == 1 && leftShape == NULL))
+	{
+		bool right = any_cast<bool>(command->nodeEvent["right"]);
+		if (!right)
+			return false;
+
+		command->SaveNodeState(parent);
+		
+		int j = parent->GetFirstLevelChildPos(this);
+		if ((pos == 0 && rightShape == NULL) || (pos == 1 && leftShape == NULL))
+		{
+			//removing the node itself
+			int i = 0;
+			while (inside->childNodes->Count() > 0)
+				parent->MoveChild((*inside)[0], j + i++);
+
+			c->SetToNode(parent, pos == 0 ? j : j + i);
+			parent->RemoveChild(j + i);
+		}
+		else
+		{
+			//removing a symbol
+			ShowShape(pos, 0);
+			//move nodes inside this one
+			if (pos == 0)
+			{
+				int k = inside->ChildrenCount();
+				inside->MoveChildren(parent, 0, j, 0);
+				if (k == inside->ChildrenCount())
+					c = inside->GetFirstPosition();
+				else
+					c->SetToNode(inside, j);
+			}
+			else
+			{
+				int k = inside->ChildrenCount();
+				inside->MoveChildren(parent, j + 1, parent->ChildrenCount(), inside->ChildrenCount());
+				if (k == inside->ChildrenCount())
+					c = inside->GetLastPosition();
+				else
+					c->SetToNode(inside, k + 1);
+			}
+		}
+
+		command->afterCaretState = c;
+		
+		return true;
+	}
+
+	return FormulaNode::DoRemoveItem(command);
 }
 
 SharedCaretState BracesFormulaNode::GetNextPosition(SharedCaretState relativeState)

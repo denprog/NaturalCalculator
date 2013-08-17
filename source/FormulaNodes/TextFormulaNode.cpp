@@ -8,6 +8,7 @@
 #include "MultiplyFormulaNode.h"
 #include "PowerFormulaNode.h"
 #include "SquareRootFormulaNode.h"
+#include "NthRootFormulaNode.h"
 #include "../Main/FormulaWnd.h"
 #include "../Util/QRectEx.h"
 
@@ -551,10 +552,29 @@ bool TextFormulaNode::DoCreateSquareRootFormulaNode(Command* command)
 	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
 	FormulaNode* p = parent;
 	int pos = parent->GetChildPos(this);
-	//create a power node, insert current node into it and insert the result into the parent
+	//create a square root node, insert current node into it and insert the result into the parent
 	FormulaNode* d = new SquareRootFormulaNode(parent, wnd);
 	FormulaNode* expr = d->GetExpression(0);
 	expr->MoveChild(this, 0);
+	p->InsertChild(d, pos);
+
+	c->SetToNode(this, c->GetPos());
+	command->afterCaretState = c;
+	
+	return true;
+}
+
+bool TextFormulaNode::DoCreateNthRootFormulaNode(Command* command)
+{
+	command->SaveNodeState(parent);
+	
+	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
+	FormulaNode* p = parent;
+	int pos = parent->GetChildPos(this);
+	//create a nth root node, insert current node into it and insert the result into the parent
+	NthRootFormulaNode* d = new NthRootFormulaNode(parent, wnd);
+	d->degree->AddChild(new EmptyFormulaNode(d->degree));
+	d->radicand->MoveChild(this, 0);
 	p->InsertChild(d, pos);
 
 	c->SetToNode(this, c->GetPos());
@@ -588,8 +608,7 @@ bool TextFormulaNode::DoCreateLeftBraceFormulaNode(Command* command)
 		for (int i = pos - 1; i >= 0; --i)
 			p->MoveChild((*node)[i], 0);
 
-		c->SetToNode(p, pos);
-		command->afterCaretState = c;
+		command->afterCaretState = ((BracesFormulaNode*)node->parent)->inside->GetFirstPosition();
 	
 		return true;
 	}
@@ -677,6 +696,37 @@ void TextFormulaNode::OnPaste()
 
 void TextFormulaNode::OnCut()
 {
+}
+
+//TextShapeFormulaNode
+
+TextShapeFormulaNode::TextShapeFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, QString _text) : ShapeFormulaNode(_parent, wnd), text(_text)
+{
+	item = new FormulaTextItem(settings, level, boundingRect, _parent->item);
+	item->setData(0, qVariantFromValue((void*)this));
+	((QGraphicsTextItem*)item)->setPlainText(_text);
+	
+	QFont font = settings->GetTextFormulaNodeFont(level);
+	((QGraphicsTextItem*)item)->setFont(font);
+}
+	
+void TextShapeFormulaNode::Remake()
+{
+	((FormulaTextItem*)item)->level = level;
+	UpdateBoundingRect();
+	baseline = ((FormulaTextItem*)item)->font().pointSize();
+}
+
+void TextShapeFormulaNode::UpdateBoundingRect()
+{
+	QFont& font = settings->GetTextFormulaNodeFont(level);
+	((FormulaTextItem*)item)->setFont(font);
+	QFontMetrics m(font);
+	QRectF b = m.boundingRect(((QGraphicsTextItem*)item)->toPlainText());
+	
+	boundingRect.setCoords(0, 0, m.width(((QGraphicsTextItem*)item)->toPlainText()), b.height());
+	((FormulaTextItem*)item)->boundingRect = boundingRect;
+	boundingRect.moveTo(item->pos().x(), item->pos().y());
 }
 
 //FormulaTextItem

@@ -63,9 +63,11 @@ public:
 	virtual SharedCaretState GetNextPosition(SharedCaretState relativeState = SharedCaretState());
 	virtual SharedCaretState GetPreviousPosition(SharedCaretState relativeState = SharedCaretState());
 
+public:
+	GroupFormulaNode* inside;
+	
 private:
 	ShapeFormulaNode *leftShape, *rightShape;
-	GroupFormulaNode* inside;
 };
 
 namespace boost

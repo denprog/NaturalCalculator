@@ -136,7 +136,10 @@ void FormulaWnd::keyPressEvent(QKeyEvent* event)
 		InsertNode(&FormulaNode::DoCreateDivisionFormulaNode);
 		break;
 	case Qt::Key_Backslash:
-		InsertNode(&FormulaNode::DoCreateSquareRootFormulaNode);
+		if (event->modifiers() & Qt::ControlModifier)
+			InsertNode(&FormulaNode::DoCreateNthRootFormulaNode);
+		else
+			InsertNode(&FormulaNode::DoCreateSquareRootFormulaNode);
 		break;
 	case Qt::Key_ParenLeft:
 		InsertNode(&FormulaNode::DoCreateLeftBraceFormulaNode);

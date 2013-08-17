@@ -3,6 +3,7 @@
 
 #include <QGraphicsTextItem>
 #include "FormulaNode.h"
+#include "ShapeFormulaNode.h"
 
 /**
  * Text formula node.
@@ -73,15 +74,14 @@ public:
 	virtual bool DoInsertNode(Command* command);
 	virtual bool UndoInsertNode(Command* command);
 	virtual bool DoInsertText(Command* command);
-	
 	virtual bool DoRemoveItem(Command* command);
-
 	virtual bool DoCreatePlusFormulaNode(Command* command);
 	virtual bool DoCreateMinusFormulaNode(Command* command);
 	virtual bool DoCreateMultiplyFormulaNode(Command* command);
 	virtual bool DoCreateDivisionFormulaNode(Command* command);
 	virtual bool DoCreatePowerFormulaNode(Command* command);
 	virtual bool DoCreateSquareRootFormulaNode(Command* command);
+	virtual bool DoCreateNthRootFormulaNode(Command* command);
 	virtual bool DoCreateLeftBraceFormulaNode(Command* command);
 	virtual bool DoCreateRightBraceFormulaNode(Command* command);
 	
@@ -91,18 +91,28 @@ public slots:
 	virtual void OnCut();
 };
 
+class TextShapeFormulaNode : public ShapeFormulaNode
+{
+public:
+	TextShapeFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, QString _text);
+	
+public:
+	virtual void Remake();
+	virtual void UpdateBoundingRect();
+	
+protected:
+	QString text;
+};
+
 class FormulaTextItem : public QGraphicsTextItem
 {
 public:
 	FormulaTextItem(Settings* _settings, FormulaNodeLevel _level, QRectF& _boundingRect, QGraphicsItem* parent = 0);
 	
 public:
-	friend class TextFormulaNode;
-	
-public:
 	virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
 	
-private:
+public:
 	Settings* settings;
 	FormulaNodeLevel level;
 	QRectF boundingRect;

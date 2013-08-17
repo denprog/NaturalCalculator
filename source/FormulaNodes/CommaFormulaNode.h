@@ -1,13 +1,12 @@
 #ifndef COMMAFORMULANODE_H
 #define COMMAFORMULANODE_H
 
-#include "ShapeFormulaNode.h"
+#include "TextFormulaNode.h"
 
-class CommaFormulaNode : public ShapeFormulaNode
+class CommaFormulaNode : public TextShapeFormulaNode
 {
 public:
 	CommaFormulaNode(FormulaNode* _parent, FormulaWnd* wnd);
-	virtual ~CommaFormulaNode();
 	
 private:
 	friend class boost::serialization::access;
@@ -25,9 +24,6 @@ private:
 	BOOST_SERIALIZATION_SPLIT_MEMBER()
 	
 public:
-	virtual void Remake();
-	virtual void UpdateBoundingRect();
-
 	virtual void Parse(ParserString& expr);
 #ifdef TEST
 	virtual std::string ParseStructure();

@@ -25,6 +25,7 @@ public:
 	void Test3();
 	void Test4();
 	void Test5();
+	void Test6();
 };
 
 #endif

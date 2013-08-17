@@ -36,8 +36,6 @@ public:
 	virtual void Normalize();
 	virtual void Remake();
 	virtual void Update();
-	//virtual void UpdateBoundingRect();
-	//virtual void Move(int x, int y);
 
 	virtual FormulaNode* Clone(FormulaNode* p);
 
