@@ -102,7 +102,9 @@ void Command::SaveNodeState(FormulaNode* node)
 {
 	while (node->type == BRACES_NODE || node->type == DIVISION_NODE || node->type == SQUARE_ROOT_NODE || 
 		node->type == NTH_ROOT_NODE || node->type == EQUATION_NODE || node->type == POWER_NODE)
+	{
 		node = node->parent;
+	}
 	savedNode = node->ToString();
 	savedNodePos = SharedCaretState(new CaretState(node));
 }
