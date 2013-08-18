@@ -33,6 +33,7 @@ private slots:
 	void SquareRootTests();
 	void EquationTests();
 	void ParseTests();
+	void DocumentTests();
 
 private:
 	MainWindow* mainWindow;

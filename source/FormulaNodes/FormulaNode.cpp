@@ -663,7 +663,7 @@ bool FormulaNode::DoInsertNode(Command* command)
  */
 bool FormulaNode::DoInsertText(Command* command)
 {
-	command->SaveNodeState(parent);
+	command->SaveNodeState(type == ROOT_NODE ? this : parent);
 	
 	QString str = any_cast<QString>(command->nodeEvent["text"]);
 	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());

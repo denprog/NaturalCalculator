@@ -19,7 +19,6 @@ class DocumentFormulaNode : public FormulaNode
 public:
 	DocumentFormulaNode();
 	DocumentFormulaNode(FormulaWnd* wnd);
-	virtual ~DocumentFormulaNode();
 	
 private:
 	friend class boost::serialization::access;
@@ -52,9 +51,14 @@ public:
 	virtual SharedCaretState GetPreviousPosition(SharedCaretState relativeState = SharedCaretState());
 
 	//commands
-	
 	virtual bool DoInsertLine(Command* command);
-	virtual bool UndoInsertLine(Command* command);
+	
+#ifdef TEST
+	virtual std::string ParseStructure();
+#endif
+
+	static bool FromString(std::string& str, DocumentFormulaNode* node);
+	virtual std::string ToString();
 	
 public:
 	QGraphicsScene* scene;

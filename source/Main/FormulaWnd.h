@@ -127,11 +127,11 @@ public:
 	}
 	
 public:
+	DocumentFormulaNode* documentNode;	///< The main document node
 	static int updateEventId;
 	Settings* settings; ///< Options for the application
 	
 private:
-	DocumentFormulaNode* documentNode;	///< The main document node
 	Caret* caret; ///< The caret
 	ParserThread* parserThread; ///< The parser thread
 	QGraphicsScene* scene;	///< The graphics scene

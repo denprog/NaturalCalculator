@@ -6,6 +6,7 @@
 #include "ParseTest.h"
 #include "PowerTest.h"
 #include "EquationTest.h"
+#include "DocumentTest.h"
 
 /**
  * Text tests.
@@ -59,6 +60,12 @@ void NcTests::ParseTests()
 {
 	ParseTest parseTest(mainWindow);
 	parseTest.Test1();
+}
+
+void NcTests::DocumentTests()
+{
+	DocumentTest documentTest(mainWindow);
+	documentTest.Test1();
 }
 
 #endif

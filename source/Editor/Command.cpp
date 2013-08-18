@@ -1,6 +1,7 @@
 #include "Command.h"
 #include "../FormulaNodes/FormulaNode.h"
 #include "../FormulaNodes/FormulaNodesCollection.h"
+#include "../Main/FormulaWnd.h"
 
 /**
  * Default constructor.
@@ -63,9 +64,6 @@ Command::Command(SharedCaretState _caretState, CommandAction _doAction, NodeEven
 	afterCaretState = SharedCaretState(_caretState->Dublicate());
 }
 
-/**
- * Destructor.
- */
 Command::~Command()
 {
 }
@@ -107,4 +105,23 @@ void Command::SaveNodeState(FormulaNode* node)
 		node = node->parent;
 	savedNode = node->ToString();
 	savedNodePos = SharedCaretState(new CaretState(node));
+}
+
+//DocumentCommand
+
+DocumentCommand::DocumentCommand(SharedCaretState _caretState, CommandAction _doAction, NodeEvent nodeEvent, 
+	FormulaWnd* _wnd) : Command(_caretState, _doAction, nodeEvent), wnd(_wnd)
+{
+}
+
+bool DocumentCommand::UndoAction()
+{
+	wnd->documentNode->RemoveChildNodes();
+	DocumentFormulaNode::FromString(savedNode, wnd->documentNode);
+	return true;
+}
+	
+void DocumentCommand::SaveNodeState(FormulaNode* node)
+{
+	savedNode = node->ToString();
 }

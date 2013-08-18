@@ -35,25 +35,39 @@ class Command
 {
 public:
 	Command(SharedCaretState _caretState, CommandAction _doAction, NodeEvent nodeEvent);
-	~Command();
+	virtual ~Command();
 
 public:
 	friend class CommandManager;
 	
 public:
-	bool DoAction();
-	bool UndoAction();
+	virtual bool DoAction();
+	virtual bool UndoAction();
 	
-	void SaveNodeState(FormulaNode* node);
+	virtual void SaveNodeState(FormulaNode* node);
 
 public:
 	NodeEvent nodeEvent; //action parameters
 	SharedCaretState beforeCaretState, afterCaretState; //caret states before and after executing the command
 	
-private:
+protected:
 	CommandAction doAction;
 	std::string savedNode;
 	SharedCaretState savedNodePos;
+};
+
+class DocumentCommand : public Command
+{
+public:
+	DocumentCommand(SharedCaretState _caretState, CommandAction _doAction, NodeEvent nodeEvent, FormulaWnd* _wnd);
+
+public:
+	virtual bool UndoAction();
+	
+	virtual void SaveNodeState(FormulaNode* node);
+	
+protected:
+	FormulaWnd* wnd;
 };
 
 #endif

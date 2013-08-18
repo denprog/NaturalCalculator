@@ -28,13 +28,6 @@ RootFormulaNode::RootFormulaNode(FormulaWnd* wnd) : GroupFormulaNode(NULL, wnd),
 }
 
 /**
- * Destructor.
- */
-RootFormulaNode::~RootFormulaNode()
-{
-}
-
-/**
  * Makes a deep copy of this object.
  * @param [in] p The parent node.
  * @return A copy of this object.
@@ -181,7 +174,7 @@ SharedCaretState RootFormulaNode::GetPreviousPosition(SharedCaretState relativeS
  */
 bool RootFormulaNode::DoCreateEquationFormulaNode(Command* command)
 {
-	command->SaveNodeState(parent);
+	command->SaveNodeState(this);
 	
 	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
 	//create a equation node and move the first level nodes in its left side
@@ -198,7 +191,7 @@ bool RootFormulaNode::DoCreateEquationFormulaNode(Command* command)
 
 RootFormulaNode* RootFormulaNode::FromString(std::string str, FormulaWnd* wnd)
 {
-	RootFormulaNode* res = new RootFormulaNode(wnd);
+	RootFormulaNode* res = new RootFormulaNode(wnd->documentNode);
 	
 	std::string::iterator begin = str.begin();
 	std::string::iterator end = str.end();
