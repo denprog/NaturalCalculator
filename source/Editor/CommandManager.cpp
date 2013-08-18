@@ -62,10 +62,7 @@ bool CommandManager::InsertLine(bool commit)
 	if (!caretState->GetNode()->CanInsert(caretState->GetPos()))
 		return false;
 	
-	NodeEvent nodeEvent;
-	CommandAction doAction(caretState, &FormulaNode::DoInsertLine);
-	
-	return DoAction(doAction, nodeEvent, commit);
+	return DoAction(CommandAction(caretState, &FormulaNode::DoInsertLine), NodeEvent(), commit);
 }
 
 bool CommandManager::Remove(bool right, bool commit)
@@ -92,8 +89,13 @@ bool CommandManager::ChangeNodeParams(NodeEvent nodeEvent, CommandAction doActio
 bool CommandManager::DoAction(CommandAction doAction, NodeEvent nodeEvent, bool commit)
 {
 	SharedCaretState caretState = SharedCaretState(wnd->GetCaret()->currentState->Dublicate());
+	Command* command;
 	
-	Command* command = new Command(caretState, doAction, nodeEvent);
+	if (doAction.action == &FormulaNode::DoInsertLine)
+		command = new DocumentCommand(caretState, doAction, nodeEvent, wnd);
+	else
+		command = new Command(caretState, doAction, nodeEvent);
+	
 	//do action
 	if (command->DoAction())
 	{

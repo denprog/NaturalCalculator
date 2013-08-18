@@ -15,7 +15,6 @@ public:
 	RootFormulaNode();
 	RootFormulaNode(FormulaNode* parent);
 	RootFormulaNode(FormulaWnd* wnd);
-	virtual ~RootFormulaNode();
 
 private:
 	friend class boost::serialization::access;

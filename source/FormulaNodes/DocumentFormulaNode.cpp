@@ -20,13 +20,6 @@ DocumentFormulaNode::DocumentFormulaNode(FormulaWnd* wnd) : FormulaNode(NULL, wn
 }
 
 /**
- * Destructor.
- */
-DocumentFormulaNode::~DocumentFormulaNode()
-{
-}
-
-/**
  * Remakes this node.
  */
 void DocumentFormulaNode::Remake()
@@ -142,33 +135,62 @@ SharedCaretState DocumentFormulaNode::GetPreviousPosition(SharedCaretState relat
  */
 bool DocumentFormulaNode::DoInsertLine(Command* command)
 {
-//	NodeEvent& nodeEvent = command->nodeEvent;
-//	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-//	FormulaNode* node = c->GetNode();
-//	int pos = GetFirstLevelChildPos(node);
-//	RootFormulaNode* rootNode = new RootFormulaNode(this);
-//	EmptyFormulaNode* n = new EmptyFormulaNode(rootNode);
-//	rootNode->AddChild(n);
-//	InsertChild(rootNode, pos + 1);
-//	
-//	nodeEvent["undoAction"] = CommandAction(rootNode, 0, &FormulaNode::UndoInsertLine);
-//	c->SetToNode(rootNode, 0);
+	command->SaveNodeState(this);
+	
+	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
+	FormulaNode* node = c->GetNode();
+	int pos = GetFirstLevelChildPos(node);
+	RootFormulaNode* rootNode = new RootFormulaNode(this);
+	EmptyFormulaNode* n = new EmptyFormulaNode(rootNode);
+	rootNode->AddChild(n);
+	InsertChild(rootNode, pos + 1);
+	
+	c->SetToNode(rootNode, 0);
+	command->afterCaretState = c;
 
 	return true;
 }
 
-/**
- * Undo insert line.
- * @param [in,out] nodeEvent The node event.
- * @return true if it succeeds, false if it fails.
- */
-bool DocumentFormulaNode::UndoInsertLine(Command* command)
+#ifdef TEST
+std::string DocumentFormulaNode::ParseStructure()
 {
-//	NodeEvent& nodeEvent = command->nodeEvent;
-//	SharedCaretState c = any_cast<SharedCaretState>(nodeEvent["caretState"]);
-//	FormulaNode* node = c->GetNode();
-//	int pos = GetFirstLevelChildPos(node);
-//	RemoveChild(pos);
+	std::string res;
+	int i;
+	for (i = 0; i < ChildrenCount() - 1; ++i)
+		res += (*this)[i]->ParseStructure() + "\n\r";
+	res += (*this)[i]->ParseStructure();
+	return res;
+}
+#endif
+
+bool DocumentFormulaNode::FromString(std::string& str, DocumentFormulaNode* node)
+{
+	size_t pos = 0;
+	
+	while (pos != std::string::npos)
+	{
+		size_t i = str.find("\n\r", pos);
+		if (i == std::string::npos)
+		{
+			node->AddChild(RootFormulaNode::FromString(str.substr(pos), node->wnd));
+			pos = i;
+		}
+		else
+		{
+			node->AddChild(RootFormulaNode::FromString(str.substr(pos, i - pos), node->wnd));
+			pos = i + 2;
+		}
+	}
 	
 	return true;
+}
+
+std::string DocumentFormulaNode::ToString()
+{
+	std::string res;
+	int i;
+	for (i = 0; i < ChildrenCount() - 1; ++i)
+		res += (*this)[i]->ToString() + "\n\r";
+	res += (*this)[i]->ToString();
+	return res;
 }

@@ -236,12 +236,12 @@
       </item>
       <item path="../source/FormulaNodes/CompoundFormulaNode.cpp"
             ex="false"
-            tool="1"
+            tool="0"
             flavor2="0">
       </item>
       <item path="../source/FormulaNodes/CompoundFormulaNode.h"
             ex="false"
-            tool="1"
+            tool="3"
             flavor2="0">
       </item>
       <item path="../source/FormulaNodes/DivisionFormulaNode.cpp"
@@ -586,6 +586,10 @@
       <item path="../test/BracesTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../test/BracesTest.h" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/DocumentTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/DocumentTest.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../test/EquationTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -1037,6 +1041,10 @@
       </item>
       <item path="../test/BracesTest.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../test/DocumentTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/DocumentTest.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../test/EquationTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../test/EquationTest.h" ex="false" tool="3" flavor2="0">
@@ -1103,24 +1111,24 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
-      <item path="../source/Editor/Caret.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../source/Editor/Caret.cpp" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../source/Editor/Caret.h" ex="false" tool="1" flavor2="0">
+      <item path="../source/Editor/Caret.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../source/Editor/CaretState.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../source/Editor/CaretState.cpp" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../source/Editor/CaretState.h" ex="false" tool="1" flavor2="0">
+      <item path="../source/Editor/CaretState.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../source/Editor/Command.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../source/Editor/Command.cpp" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../source/Editor/Command.h" ex="false" tool="1" flavor2="0">
+      <item path="../source/Editor/Command.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../source/Editor/CommandManager.cpp"
             ex="false"
-            tool="1"
+            tool="0"
             flavor2="0">
       </item>
-      <item path="../source/Editor/CommandManager.h" ex="false" tool="1" flavor2="0">
+      <item path="../source/Editor/CommandManager.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../source/Forms/OptionsDialog.ui" ex="false" tool="3" flavor2="0">
       </item>
@@ -1498,6 +1506,10 @@
       <item path="../test/BracesTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../test/BracesTest.h" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/DocumentTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/DocumentTest.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../test/EquationTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
