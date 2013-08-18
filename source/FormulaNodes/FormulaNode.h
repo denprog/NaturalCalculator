@@ -96,7 +96,6 @@ private:
 
 public:
 	//child functions
-	
 	virtual void AddChild(FormulaNode* node);
 	virtual void InsertChild(FormulaNode* node, int pos);
 	virtual void MoveChild(FormulaNode* node, int pos);
@@ -111,6 +110,7 @@ public:
 	
 	virtual bool CanInsert(int pos);
 	virtual bool CanRemove(int pos);
+	virtual bool CanChangeParams(int pos);
 	
 	virtual FormulaNode* GetExpression(int pos) const;
 	virtual void ShowShape(int pos, bool show);
@@ -140,12 +140,14 @@ public:
 	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent);
 	virtual std::string ToString();
 	static bool GetIntParams(std::string::iterator& begin, std::string::iterator& end, std::vector<int>& params);
+	static bool FromNestedString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent);
 	
 	static bool FindSubstring(std::string::iterator& begin, std::string::iterator& end, std::string subString);
 	
 	int GetChildPos(const FormulaNode* node) const;
 	bool IsChild(const FormulaNode* node);
 	int GetFirstLevelChildPos(FormulaNode* node);
+	virtual FormulaNode* GetParentByType(NodeType type);
 	
 	virtual QRectF GetDocumentBounds();
 	virtual QRectF GetDocumentPosBounds(int pos);
@@ -155,7 +157,6 @@ public:
 	virtual bool IsEmptySymbol();
 	
 	//caret functions
-	
 	virtual SharedCaretState GetFirstPosition();
 	virtual SharedCaretState GetLastPosition();
 	virtual SharedCaretState GetNextPosition(SharedCaretState relativeState = SharedCaretState());
@@ -168,14 +169,11 @@ public:
 	virtual void RenderCaret(const int pos, const int anchor);
 	
 	//command functions
-	
 	virtual bool DoInsertNode(Command* command);
 	virtual bool DoInsertText(Command* command);
-	
 	virtual bool DoInsertLine(Command* command);
-	virtual bool UndoInsertLine(Command* command);
-	
 	virtual bool DoRemoveItem(Command* command);
+	virtual bool DoChangeParams(Command* command);
 	
 	virtual bool DoCreatePlusFormulaNode(Command* command);
 	virtual bool DoCreateMinusFormulaNode(Command* command);

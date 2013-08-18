@@ -27,13 +27,11 @@ ResultFormulaNode::ResultFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : Gr
 	type = RESULT_NODE;
 	delayTimer.setInterval(2000);
 	connect(&delayTimer, SIGNAL(timeout()), this, SLOT(OnDelayTimer()));
-}
-
-/**
- * Destructor.
- */
-ResultFormulaNode::~ResultFormulaNode()
-{
+	resultItem = new AutoResultItemFormulaNode(this, wnd, wnd->settings->Load("ScientificNumbers", "resultAccuracy", 3).toInt(), 
+		wnd->settings->Load("ScientificNumbers", "exponentialThreshold", 8).toInt(), 
+		(ExpressionNotation)wnd->settings->Load("IntegerNumbers", "notation", DECIMAL_NOTATION).toInt(), 
+		(FractionType)wnd->settings->Load("RationalNumbers", "form", PROPER_FRACTION).toInt());
+	AddChild(resultItem);
 }
 
 /**
@@ -41,40 +39,115 @@ ResultFormulaNode::~ResultFormulaNode()
  */
 void ResultFormulaNode::Remake()
 {
-	//solve all the result's variants
-	for (int i = 0; i < childNodes->Count(); ++i)
+	if (resultItem == NULL)
+		return;
+	
+	ParserExpressionVariant& p = resultItem->GetExpression();
+	if (*p.GetSolved())
+		return;
+	
+	wnd->GetParserThread()->GetSolvedExpression(p);
+	boost::apply_visitor(ResultNodeMaker(resultItem), p.var);
+	
+	GroupFormulaNode::Remake();
+	baseline = resultItem->baseline;
+	
+	UpdateBoundingRect();
+}
+
+void ResultFormulaNode::AddChild(FormulaNode* node)
+{
+	assert(node->type == RESULT_ITEM_NODE);
+	RemoveChildNodes();
+	GroupFormulaNode::AddChild(node);
+	resultItem = (ResultItemFormulaNode*)node;
+}
+
+void ResultFormulaNode::RemoveChildNodes()
+{
+	GroupFormulaNode::RemoveChildNodes();
+	resultItem = NULL;
+}
+
+void ResultFormulaNode::SetAutoResult(int realPrecision, int realExp, ExpressionNotation notation, FractionType fractionType)
+{
+	NodeEvent nodeEvent;
+	nodeEvent["Type"] = std::string("Auto");
+	nodeEvent["RealPrecision"] = realPrecision;
+	nodeEvent["RealExp"] = realExp;
+	nodeEvent["Notation"] = notation;
+	nodeEvent["FractionType"] = fractionType;
+	wnd->commandManager.ChangeNodeParams(nodeEvent, CommandAction(SharedCaretState(new CaretState(resultItem)), &FormulaNode::DoChangeParams));
+}
+
+void ResultFormulaNode::SetRealResult(int precision, int exp)
+{
+	NodeEvent nodeEvent;
+	nodeEvent["Type"] = std::string("Real");
+	nodeEvent["Precision"] = precision;
+	nodeEvent["Exp"] = exp;
+	wnd->commandManager.ChangeNodeParams(nodeEvent, CommandAction(SharedCaretState(new CaretState(resultItem)), &FormulaNode::DoChangeParams));
+}
+
+void ResultFormulaNode::SetIntegerResult(ExpressionNotation notation)
+{
+	NodeEvent nodeEvent;
+	nodeEvent["Type"] = std::string("Integer");
+	nodeEvent["Notation"] = notation;
+	wnd->commandManager.ChangeNodeParams(nodeEvent, CommandAction(SharedCaretState(new CaretState(resultItem)), &FormulaNode::DoChangeParams));
+}
+
+void ResultFormulaNode::SetRationalResult(FractionType fractionType)
+{
+	NodeEvent nodeEvent;
+	nodeEvent["Type"] = std::string("Rational");
+	nodeEvent["FractionType"] = fractionType;
+	wnd->commandManager.ChangeNodeParams(nodeEvent, CommandAction(SharedCaretState(new CaretState(resultItem)), &FormulaNode::DoChangeParams));
+}
+
+bool ResultFormulaNode::DoChangeParams(Command* command)
+{
+	command->SaveNodeState(parent->parent);
+	SharedCaretState c = SharedCaretState(command->beforeCaretState->Dublicate());
+	std::string type = any_cast<std::string>(command->nodeEvent["Type"]);
+	
+	if (type == "Auto")
 	{
-		ResultItemFormulaNode* n = (ResultItemFormulaNode*)(*childNodes)[i];
-		ParserExpressionVariant& p = n->GetExpression();
-		
-		if (*p.GetSolved())
-			continue;
-		
-		wnd->GetParserThread()->GetSolvedExpression(p);
-		boost::apply_visitor(ResultNodeMaker(n), p.var);
+		int realPrecision = any_cast<int>(command->nodeEvent["RealPrecision"]);
+		int realExp = any_cast<int>(command->nodeEvent["RealExp"]);
+		FractionType fractionType = any_cast<FractionType>(command->nodeEvent["FractionType"]);
+		ExpressionNotation notation = any_cast<ExpressionNotation>(command->nodeEvent["Notation"]);
+		resultItem = new AutoResultItemFormulaNode(this, wnd, realPrecision, realExp, notation, fractionType);
 	}
-	
-	childNodes->Remake();
-	
-	//place the result nodes
-	if (childNodes->Count() == 1)
+	else if (type == "Real")
 	{
-		GroupFormulaNode::Remake();
-		baseline = (*this)[0]->baseline;
+		int precision = any_cast<int>(command->nodeEvent["Precision"]);
+		int exp = any_cast<int>(command->nodeEvent["Exp"]);
+		resultItem = new RealResultItemFormulaNode(this, wnd, precision, exp);
+	}
+	else if (type == "Integer")
+	{
+		ExpressionNotation notation = any_cast<ExpressionNotation>(command->nodeEvent["Notation"]);
+		resultItem = new IntegerResultItemFormulaNode(this, wnd, notation);
+	}
+	else if (type == "Rational")
+	{
+		FractionType fractionType = any_cast<FractionType>(command->nodeEvent["FractionType"]);
+		resultItem = new RationalResultItemFormulaNode(this, wnd, fractionType);
 	}
 	else
 	{
-		int cy = 0;
-		for (int i = 0; i < childNodes->Count(); ++i)
-		{
-			FormulaNode* n = (*this)[i];
-			n->Move(0, cy);
-			cy += n->boundingRect.height();
-		}
-		baseline = cy / 2;
+		assert(false);
 	}
 	
-	UpdateBoundingRect();
+	lastExpression.expression = "";
+	resultItem->Normalize();
+	ReplaceChild(resultItem, 0);
+	c->SetToNode(parent->parent, 1);
+	
+	command->afterCaretState = c;
+	
+	return true;
 }
 
 /**
@@ -92,67 +165,16 @@ void ResultFormulaNode::SetExpression(ParserString& expr)
 	lastExpression = expr;
 	expr.expression += ";";
 	
-	for (int i = 0; i < childNodes->Count(); ++i)
+	expressionToSolve = &resultItem->GetExpression();
+
+	if (expr.expression != expressionToSolve->GetExpression()->expression)
 	{
-		ResultItemFormulaNode* node = (ResultItemFormulaNode*)(*childNodes)[i];
-		expressionToSolve = &node->GetExpression();
-
-		if (expr.expression != expressionToSolve->GetExpression()->expression)
-		{
-			*(expressionToSolve->GetExpression()) = expr;
-			*(expressionToSolve->GetSolved()) = false;
-
-			delayTimer.start();
-		}
+		*(expressionToSolve->GetExpression()) = expr;
+		*(expressionToSolve->GetSolved()) = false;
+		delayTimer.start();
 	}
 
 	Remake();
-}
-
-/**
- * Adds an automatic result node.
- * @param precision The precision.
- * @param exp The exponent.
- */
-void ResultFormulaNode::AddAutoResultNode(int realPrecision, int realExp, ExpressionNotation _notation, FractionType _fractionType)
-{
-	AutoResultItemFormulaNode* n = new AutoResultItemFormulaNode(this, wnd, realPrecision, realExp, _notation, _fractionType);
- 	AddChild(n);
-}
-
-/**
- * Adds a real result node.
- * @param precision The precision.
- * @param exp The exponent.
- */
-void ResultFormulaNode::AddRealResultNode(int precision, int exp)
-{
-	RealResultItemFormulaNode* n = new RealResultItemFormulaNode(this, wnd, precision, exp);
-	AddChild(n);
-}
-
-/**
- * Adds an integer result node.
- * @param notation The notation.
- */
-void ResultFormulaNode::AddIntegerResultNode(ExpressionNotation notation)
-{
-	IntegerResultItemFormulaNode* n = new IntegerResultItemFormulaNode(this, wnd, notation);
-	AddChild(n);
-}
-
-/**
- * Adds a rational result node.
- * @param type The fraction type.
- */
-void ResultFormulaNode::AddRationalResultNode(FractionType type)
-{
-	RationalResultItemFormulaNode* n = new RationalResultItemFormulaNode(this, wnd, type);
-	AddChild(n);
-}
-
-void ResultFormulaNode::RemoveResultNode()
-{
 }
 
 #ifdef TEST
@@ -171,7 +193,7 @@ bool ResultFormulaNode::FromString(std::string::iterator& begin, std::string::it
 		ResultFormulaNode* r = new ResultFormulaNode(parent, parent->wnd);
 
 		i += 4;
-		if (!GroupFormulaNode::FromString(i, end, r))
+		if (!FormulaNode::FromNestedString(i, end, r))
 		{
 			delete r;
 			return false;
@@ -213,15 +235,21 @@ ResultFormulaNode::ResultNodeMaker::ResultNodeMaker(FormulaNode* _parent) : pare
 void ResultFormulaNode::ResultNodeMaker::operator()(RealParserExpression const& expr) const
 {
 	parent->childNodes->Clear();
-
+	
 	if (!expr.solved)
 	{
+		EquationFormulaNode* e = (EquationFormulaNode*)parent->GetParentByType(EQUATION_NODE);
+		if (parent->wnd->caret->currentState->CheckInNode(parent))
+		{
+			parent->wnd->caret->SetToNode(e, 1);
+			QCoreApplication::postEvent(parent->wnd, new QEvent((QEvent::Type)FormulaWnd::updateCaretEventId));
+		}
 		TextFormulaNode* t = new TextFormulaNode(parent);
-		parent->AddChild(t);
 		t->SetText("~");
+		parent->AddChild(t);
 		return;
 	}
-	
+
 	//make an exception node
 	if (expr.exception.id != None)
 	{
@@ -271,12 +299,18 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RealParserExpression const& 
 void ResultFormulaNode::ResultNodeMaker::operator()(IntegerParserExpression const& expr) const
 {
 	parent->childNodes->Clear();
-
+	
 	if (!expr.solved)
 	{
+		EquationFormulaNode* e = (EquationFormulaNode*)parent->GetParentByType(EQUATION_NODE);
+		if (parent->wnd->caret->currentState->CheckInNode(parent))
+		{
+			parent->wnd->caret->SetToNode(e, 1);
+			QCoreApplication::postEvent(parent->wnd, new QEvent((QEvent::Type)FormulaWnd::updateCaretEventId));
+		}
 		TextFormulaNode* t = new TextFormulaNode(parent);
-		parent->AddChild(t);
 		t->SetText("~");
+		parent->AddChild(t);
 		return;
 	}
 
@@ -307,12 +341,18 @@ void ResultFormulaNode::ResultNodeMaker::operator()(IntegerParserExpression cons
 void ResultFormulaNode::ResultNodeMaker::operator()(RationalParserExpression const& expr) const
 {
 	parent->childNodes->Clear();
-
+	
 	if (!expr.solved)
 	{
+		EquationFormulaNode* e = (EquationFormulaNode*)parent->GetParentByType(EQUATION_NODE);
+		if (parent->wnd->caret->currentState->CheckInNode(parent))
+		{
+			parent->wnd->caret->SetToNode(e, 1);
+			QCoreApplication::postEvent(parent->wnd, new QEvent((QEvent::Type)FormulaWnd::updateCaretEventId));
+		}
 		TextFormulaNode* t = new TextFormulaNode(parent);
-		parent->AddChild(t);
 		t->SetText("~");
+		parent->AddChild(t);
 		return;
 	}
 
@@ -344,11 +384,11 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RationalParserExpression con
 		{
 			DivisionFormulaNode* div = new DivisionFormulaNode(parent, parent->wnd);
 			TextFormulaNode* t = new TextFormulaNode(parent);
-			div->InsertChild(t, 0);
 			t->SetText(n.ToString().c_str());
+			div->dividend->AddChild(t);
 			t = new TextFormulaNode(parent);
-			div->InsertChild(t, 1);
 			t->SetText(d.ToString().c_str());
+			div->divisor->AddChild(t);
 			parent->AddChild(div);
 		}
 	}
@@ -365,11 +405,11 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RationalParserExpression con
 		{
 			DivisionFormulaNode* div = new DivisionFormulaNode(parent, parent->wnd);
 			TextFormulaNode* t = new TextFormulaNode(parent);
-			div->InsertChild(t, 0);
 			t->SetText(n.ToString().c_str());
+			div->dividend->AddChild(t);
 			t = new TextFormulaNode(parent);
-			div->InsertChild(t, 1);
 			t->SetText(d.ToString().c_str());
+			div->divisor->AddChild(t);
 			parent->AddChild(div);
 		}
 	}

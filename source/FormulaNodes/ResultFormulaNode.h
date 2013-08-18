@@ -3,6 +3,7 @@
 
 #include "GroupFormulaNode.h"
 #include "../ParserThread/ParserExpression.h"
+#include "ResultItemFormulaNode.h"
 #include <QtCore/QTimer>
 
 /**
@@ -14,20 +15,28 @@ class ResultFormulaNode : public GroupFormulaNode
 	
 public:
 	ResultFormulaNode(FormulaNode* _parent, FormulaWnd* wnd);
-	virtual ~ResultFormulaNode();
 
 public:
+	friend class AutoResultItemFormulaNode;
+	friend class RealResultItemFormulaNode;
+	friend class IntegerResultItemFormulaNode;
+	friend class RationalResultItemFormulaNode;
+	
+public:
 	virtual void Remake();
+	virtual void AddChild(FormulaNode* node);
+	virtual void RemoveChildNodes();
+	
+	void SetAutoResult(int realPrecision, int realExp, ExpressionNotation notation, FractionType fractionType);
+	void SetRealResult(int precision, int exp);
+	void SetIntegerResult(ExpressionNotation notation);
+	void SetRationalResult(FractionType fractionType);
+	
+	virtual bool DoChangeParams(Command* command);
 	
 public:
 	void SetExpression(ParserString& expr);
 	
-	void AddAutoResultNode(int realPrecision, int realExp, ExpressionNotation _notation, FractionType _fractionType);
-	void AddRealResultNode(int precision, int exp);
-	void AddIntegerResultNode(ExpressionNotation notation);
-	void AddRationalResultNode(FractionType type);
-	void RemoveResultNode();
-
 #ifdef TEST
 	virtual std::string ParseStructure();
 #endif
@@ -39,6 +48,8 @@ public slots:
 	void OnDelayTimer();
 	
 private:
+	ResultItemFormulaNode* resultItem;
+	
 	struct ResultNodeMaker : boost::static_visitor<void>
 	{
 		ResultNodeMaker(FormulaNode* _parent);

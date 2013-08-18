@@ -15,6 +15,7 @@
 #include "../Util/QRectEx.h"
 
 int FormulaWnd::updateEventId;
+int FormulaWnd::updateCaretEventId;
 
 /**
  * Constructor.
@@ -40,6 +41,7 @@ FormulaWnd::FormulaWnd(QWidget *parent)	: QGraphicsView(parent), commandManager(
 	caret->Render();
 
 	updateEventId = QEvent::registerEventType(1);
+	updateCaretEventId = QEvent::registerEventType(2);
 	
 	parserThread = new ParserThread(this);
 	
@@ -70,6 +72,11 @@ bool FormulaWnd::event(QEvent* e)
 	if (e->type() == (QEvent::Type)updateEventId)
 	{
 		UpdateView();
+		return true;
+	}
+	else if (e->type() == (QEvent::Type)updateCaretEventId)
+	{
+		caret->Render();
 		return true;
 	}
 	

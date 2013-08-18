@@ -43,7 +43,6 @@
         <itemPath>../source/FormulaNodes/MinusFormulaNode.h</itemPath>
         <itemPath>../source/FormulaNodes/MultiplyFormulaNode.cpp</itemPath>
         <itemPath>../source/FormulaNodes/MultiplyFormulaNode.h</itemPath>
-        <itemPath>../source/NthRootFormulaNode.cpp</itemPath>
         <itemPath>../source/FormulaNodes/NthRootFormulaNode.cpp</itemPath>
         <itemPath>../source/FormulaNodes/NthRootFormulaNode.h</itemPath>
         <itemPath>../source/FormulaNodes/PlusFormulaNode.cpp</itemPath>
@@ -462,8 +461,6 @@
             flavor2="0">
       </item>
       <item path="../source/Main/main.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../source/NthRootFormulaNode.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../source/ParserThread/ParserExpression.cpp"
             ex="false"
@@ -914,8 +911,6 @@
             flavor2="0">
       </item>
       <item path="../source/Main/main.cpp" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../source/NthRootFormulaNode.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../source/ParserThread/ParserExpression.cpp"
             ex="false"
@@ -1378,8 +1373,6 @@
             flavor2="0">
       </item>
       <item path="../source/Main/main.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../source/NthRootFormulaNode.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../source/ParserThread/ParserExpression.cpp"
             ex="false"

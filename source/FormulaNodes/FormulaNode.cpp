@@ -177,6 +177,11 @@ bool FormulaNode::CanRemove(int pos)
 	return true;
 }
 
+bool FormulaNode::CanChangeParams(int pos)
+{
+	return true;
+}
+
 /**
  * Returns an expression at the pos.
  * @param pos The position.
@@ -387,6 +392,12 @@ bool FormulaNode::FromString(std::string::iterator& begin, std::string::iterator
 		return true;
 	if (AutoResultItemFormulaNode::FromString(begin, end, parent))
 		return true;
+	if (RealResultItemFormulaNode::FromString(begin, end, parent))
+		return true;
+	if (IntegerResultItemFormulaNode::FromString(begin, end, parent))
+		return true;
+	if (RationalResultItemFormulaNode::FromString(begin, end, parent))
+		return true;
 	return false;
 }
 
@@ -423,6 +434,29 @@ bool FormulaNode::GetIntParams(std::string::iterator& begin, std::string::iterat
     while (std::getline(ss, item, ','))
 			params.push_back(std::stoi(item));
 		
+		return true;
+	}
+
+	return false;
+}
+
+bool FormulaNode::FromNestedString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent)
+{
+	if (*begin == '(')
+	{
+		++begin;
+		
+		while (begin != end)
+		{
+			if (*begin == ')')
+			{
+				++begin;
+				break;
+			}
+			if (!FormulaNode::FromString(begin, end, parent))
+				break;
+		}
+
 		return true;
 	}
 
@@ -488,6 +522,15 @@ int FormulaNode::GetFirstLevelChildPos(FormulaNode* node)
 	}
 	
 	return -1;
+}
+
+FormulaNode* FormulaNode::GetParentByType(NodeType type)
+{
+	if (!parent)
+		return NULL;
+	if (parent->type == type)
+		return parent;
+	return parent->GetParentByType(type);
 }
 
 /**
@@ -697,18 +740,6 @@ bool FormulaNode::DoInsertLine(Command* command)
 }
 
 /**
- * Undo insert line.
- * @param [in] nodeEvent The node event.
- * @return true if it succeeds, false if it fails.
- */
-bool FormulaNode::UndoInsertLine(Command* command)
-{
-	if (parent)
-		return parent->UndoInsertLine(command);
-	return false;
-}
-
-/**
  * Executes the remove item operation.
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
@@ -756,6 +787,11 @@ bool FormulaNode::DoRemoveItem(Command* command)
 	command->afterCaretState = c;
 	
 	return true;
+}
+
+bool FormulaNode::DoChangeParams(Command* command)
+{
+	return false;
 }
 
 /**

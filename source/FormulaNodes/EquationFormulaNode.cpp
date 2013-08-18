@@ -30,13 +30,6 @@ EquationFormulaNode::EquationFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) 
 	result = NULL;
 }
 
-/**
- * Destructor.
- */
-EquationFormulaNode::~EquationFormulaNode()
-{
-}
-
 void EquationFormulaNode::RemoveChildNodes()
 {
 	childNodes->Clear();
@@ -62,7 +55,7 @@ void EquationFormulaNode::Remake()
 			result = new ResultFormulaNode(this, wnd);
 			right->AddChild(result);
 			
-			result->AddAutoResultNode(wnd->settings->Load("ScientificNumbers", "resultAccuracy", 3).toInt(), 
+			result->SetAutoResult(wnd->settings->Load("ScientificNumbers", "resultAccuracy", 3).toInt(), 
 				wnd->settings->Load("ScientificNumbers", "exponentialThreshold", 8).toInt(), 
 				(ExpressionNotation)wnd->settings->Load("IntegerNumbers", "notation", DECIMAL_NOTATION).toInt(), 
 				(FractionType)wnd->settings->Load("RationalNumbers", "form", PROPER_FRACTION).toInt());
@@ -181,72 +174,7 @@ bool EquationFormulaNode::DoInsertText(Command* command)
 	return false;
 }
 
-/**
- * Makes a context menu.
- * @param [in] menu The parent menu.
- */
-void EquationFormulaNode::MakeContextMenu(QMenu* menu)
+bool EquationFormulaNode::DoRemoveItem(Command* command)
 {
-	QMenu* subMenu = new QMenu("Add result", menu);
-
-	menu->addMenu(subMenu);
-	
-	QAction* a = new QAction(tr("Auto"), subMenu);
-	subMenu->addAction(a);
-	connect(a, SIGNAL(triggered()), this, SLOT(OnAddAutoResult()));
-
-	a = new QAction(tr("Scientific"), subMenu);
-	subMenu->addAction(a);
-	connect(a, SIGNAL(triggered()), this, SLOT(OnAddRealResult()));
-
-	a = new QAction(tr("Integer"), subMenu);
-	subMenu->addAction(a);
-	connect(a, SIGNAL(triggered()), this, SLOT(OnAddIntegerResult()));
-
-	a = new QAction(tr("Rational"), subMenu);
-	subMenu->addAction(a);
-	connect(a, SIGNAL(triggered()), this, SLOT(OnAddRationalResult()));
-}
-
-/**
- * Executes the add automatic result node.
- */
-void EquationFormulaNode::OnAddAutoResult()
-{
-	assert(result);
-	result->AddAutoResultNode(wnd->settings->Load("ScientificNumbers", "resultAccuracy", 3).toInt(), 
-		wnd->settings->Load("ScientificNumbers", "exponentialThreshold", 8).toInt(), 
-		(ExpressionNotation)wnd->settings->Load("IntegerNumbers", "notation", DECIMAL_NOTATION).toInt(), 
-		(FractionType)wnd->settings->Load("RationalNumbers", "form", PROPER_FRACTION).toInt());
-	Remake();
-}
-
-/**
- * Executes the add real result node.
- */
-void EquationFormulaNode::OnAddRealResult()
-{
-	assert(result);
-	result->AddRealResultNode(wnd->settings->value("auto/precision", 8).toInt(), wnd->settings->value("auto/exp", 3).toInt());
-	Remake();
-}
-
-/**
- * Executes the add integer result node.
- */
-void EquationFormulaNode::OnAddIntegerResult()
-{
-	assert(result);
-	result->AddIntegerResultNode(DECIMAL_NOTATION);
-	Remake();
-}
-
-/**
- * Executes the add rational result node.
- */
-void EquationFormulaNode::OnAddRationalResult()
-{
-	assert(result);
-	result->AddRationalResultNode(IMPROPER_FRACTION);
-	Remake();
+	return false;
 }

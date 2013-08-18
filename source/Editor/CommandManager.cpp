@@ -80,6 +80,15 @@ bool CommandManager::Remove(bool right, bool commit)
 	return DoAction(CommandAction(caretState, &FormulaNode::DoRemoveItem), nodeEvent, commit);	
 }
 
+bool CommandManager::ChangeNodeParams(NodeEvent nodeEvent, CommandAction doAction, bool commit)
+{
+	SharedCaretState caretState = SharedCaretState(wnd->GetCaret()->currentState->Dublicate());
+	if (!caretState->GetNode()->CanInsert(caretState->GetPos()))
+		return false;
+	
+	return DoAction(doAction, nodeEvent, commit);
+}
+
 bool CommandManager::DoAction(CommandAction doAction, NodeEvent nodeEvent, bool commit)
 {
 	SharedCaretState caretState = SharedCaretState(wnd->GetCaret()->currentState->Dublicate());

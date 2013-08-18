@@ -22,6 +22,7 @@ public:
 	bool InsertText(QString& text, CommandAction doAction, bool commit = true);
 	bool InsertLine(bool commit = true);
 	bool Remove(bool right, bool commit = true);
+	bool ChangeNodeParams(NodeEvent nodeEvent, CommandAction doAction, bool commit = true);
 	
 	bool DoAction(CommandAction doAction, NodeEvent nodeEvent, bool commit = true);
 	

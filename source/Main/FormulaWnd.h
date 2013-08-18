@@ -128,6 +128,7 @@ public:
 	
 public:
 	static int updateEventId;
+	static int updateCaretEventId;
 	Settings* settings; ///< Options for the application
 	
 private:

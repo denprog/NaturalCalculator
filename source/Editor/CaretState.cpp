@@ -142,7 +142,7 @@ bool CaretState::CheckOnNode(FormulaNode* node)
  */
 bool CaretState::CheckInNode(FormulaNode* node)
 {
-	return GetNode() == node || node->IsChild(GetNode());
+	return currentNode->CheckInNode(node);
 }
 
 /**
@@ -228,7 +228,7 @@ FormulaNode* CaretPosition::GetNode()
 	FormulaNode* n = wnd->GetDocumentNode();
 	for (int i = (int)positions.size() - 1; i > 0; --i)
 	{
-		if (!n)
+		if (!n || n->childNodes->Count() <= positions[i])
 			return NULL;
 		n = (*n)[positions[i]];
 	}
@@ -245,6 +245,22 @@ int CaretPosition::GetPos()
 	if (positions.size() == 0)
 		return -1;
 	return positions[0];
+}
+
+bool CaretPosition::CheckInNode(FormulaNode* node)
+{
+	HierarchyPos pos;
+	node->GetHierarchyPos(pos);
+	
+	if (positions.size() < pos.size())
+		return false;
+	for (int i = positions.size() - 1, j = pos.size() - 1; i >= 0 && j >= 0; --i, --j)
+	{
+		if (positions[i] != pos[j])
+			return false;
+	}
+	
+	return true;
 }
 
 //CurrentNode
@@ -293,4 +309,9 @@ FormulaNode* CurrentNode::GetNode()
 int CurrentNode::GetPos()
 {
 	return position.GetPos();
+}
+
+bool CurrentNode::CheckInNode(FormulaNode* node)
+{
+	return position.CheckInNode(node);
 }
