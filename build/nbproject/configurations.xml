@@ -587,10 +587,6 @@
       </item>
       <item path="../test/BracesTest.h" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../test/DocumentTest.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../test/DocumentTest.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../test/EquationTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../test/EquationTest.h" ex="false" tool="3" flavor2="0">
@@ -1040,10 +1036,6 @@
       <item path="../test/BracesTest.cpp" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../test/BracesTest.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../test/DocumentTest.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../test/DocumentTest.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../test/EquationTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -1506,10 +1498,6 @@
       <item path="../test/BracesTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../test/BracesTest.h" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../test/DocumentTest.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../test/DocumentTest.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../test/EquationTest.cpp" ex="false" tool="1" flavor2="0">
       </item>

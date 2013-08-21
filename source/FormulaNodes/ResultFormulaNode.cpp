@@ -12,6 +12,7 @@ map<ParserExceptionCode, QString> ResultFormulaNode::errorMessages = boost::assi
 	(BigNumbersParser::SyntaxError, tr("Syntax error"))
 	(BigNumbersParser::WrongArgumentsCount, tr("Wrong arguments count"))
 	(BigNumbersParser::UnknownIdentifier, tr("Unknown identifier"))
+	(BigNumbersParser::ExpressionExpected, tr("Expression expected"))
 	(BigNumbersParser::DivisionByZero, tr("Division by zero"))
 	(BigNumbersParser::Overflow, tr("Overflow"))
 	(BigNumbersParser::ArgumentIsOver, tr("Argument is over"))
