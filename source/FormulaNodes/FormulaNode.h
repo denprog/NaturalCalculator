@@ -108,9 +108,13 @@ public:
 	
 	virtual int ChildrenCount();
 	
-	virtual bool CanInsert(int pos);
-	virtual bool CanRemove(int pos);
-	virtual bool CanChangeParams(int pos);
+	virtual bool CanInsert();
+	virtual bool CanRemove();
+	virtual bool CanChangeParams();
+
+	virtual void SetCanInsert(bool _canInsert);
+	virtual void SetCanRemove(bool _canRemove);
+	virtual void SetCanChangeParams(bool _canChangeParams);
 	
 	virtual FormulaNode* GetExpression(int pos) const;
 	virtual void ShowShape(int pos, bool show);
@@ -206,6 +210,11 @@ public:
 	FormulaNodeLevel level; ///< The node level
 	Command* command;	
 	Settings* settings;
+	
+protected:
+	bool canInsert;
+	bool canRemove;
+	bool canChangeParams;
 };
 
 #endif

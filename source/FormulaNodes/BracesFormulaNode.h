@@ -39,7 +39,7 @@ public:
 
 	virtual void Remake();
 
-	virtual bool CanInsert(int pos);
+	virtual bool CanInsert();
 
 	virtual FormulaNode* GetExpression(int pos) const;
 	virtual void ShowShape(int pos, bool show);

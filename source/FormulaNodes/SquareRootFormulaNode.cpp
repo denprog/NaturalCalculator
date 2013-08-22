@@ -83,7 +83,7 @@ void SquareRootFormulaNode::UpdateBoundingRect()
  * @param pos The position.
  * @return false.
  */
-bool SquareRootFormulaNode::CanInsert(int pos)
+bool SquareRootFormulaNode::CanInsert()
 {
 	return false;
 }

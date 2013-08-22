@@ -28,6 +28,9 @@ FormulaNode::FormulaNode()
 	settings = NULL;
 	childNodes = NULL;
 	level = NORMAL_LEVEL;
+	canInsert = true;
+	canRemove = true;
+	canChangeParams = true;
 }
 
 /**
@@ -45,6 +48,9 @@ FormulaNode::FormulaNode(FormulaNode* _parent, FormulaWnd* _wnd)
 	settings = _wnd->settings;
 	childNodes = new FormulaNodesCollection();
 	level = NORMAL_LEVEL;
+	canInsert = true;
+	canRemove = true;
+	canChangeParams = true;
 }
 
 /**
@@ -162,9 +168,9 @@ int FormulaNode::ChildrenCount()
  * @param pos The position.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::CanInsert(int pos)
+bool FormulaNode::CanInsert()
 {
-	return true;
+	return canInsert;
 }
 
 /**
@@ -172,14 +178,35 @@ bool FormulaNode::CanInsert(int pos)
  * @param pos The position.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::CanRemove(int pos)
+bool FormulaNode::CanRemove()
 {
-	return true;
+	return canRemove;
 }
 
-bool FormulaNode::CanChangeParams(int pos)
+bool FormulaNode::CanChangeParams()
 {
-	return true;
+	return canChangeParams;
+}
+
+void FormulaNode::SetCanInsert(bool _canInsert)
+{
+	canInsert = _canInsert;
+	for (int i = 0; i < ChildrenCount(); ++i)
+		(*childNodes)[i]->SetCanInsert(_canInsert);
+}
+
+void FormulaNode::SetCanRemove(bool _canRemove)
+{
+	canRemove = _canRemove;
+	for (int i = 0; i < ChildrenCount(); ++i)
+		(*childNodes)[i]->SetCanRemove(_canRemove);
+}
+
+void FormulaNode::SetCanChangeParams(bool _canChangeParams)
+{
+	canChangeParams = _canChangeParams;
+	for (int i = 0; i < ChildrenCount(); ++i)
+		(*childNodes)[i]->SetCanChangeParams(_canChangeParams);
 }
 
 /**

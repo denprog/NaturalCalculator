@@ -14,7 +14,7 @@ CommandManager::~CommandManager()
 bool CommandManager::InsertNode(FormulaNode* node, CommandAction doAction, bool commit)
 {
 	SharedCaretState caretState = SharedCaretState(wnd->GetCaret()->currentState->Dublicate());
-	if (!caretState->GetNode()->CanInsert(caretState->GetPos()))
+	if (!caretState->GetNode()->CanInsert())
 		return false;
 	
 	NodeEvent nodeEvent;
@@ -47,7 +47,7 @@ bool CommandManager::InsertNode(FormulaNode* node, CommandAction doAction, bool 
 bool CommandManager::InsertText(QString& text, CommandAction doAction, bool commit)
 {
 	SharedCaretState caretState = SharedCaretState(wnd->GetCaret()->currentState->Dublicate());
-	if (!caretState->GetNode()->CanInsert(caretState->GetPos()))
+	if (!caretState->GetNode()->CanInsert())
 		return false;
 	
 	NodeEvent nodeEvent;
@@ -59,7 +59,7 @@ bool CommandManager::InsertText(QString& text, CommandAction doAction, bool comm
 bool CommandManager::InsertLine(bool commit)
 {
 	SharedCaretState caretState = SharedCaretState(wnd->GetCaret()->currentState->Dublicate());
-	if (!caretState->GetNode()->CanInsert(caretState->GetPos()))
+	if (!caretState->GetNode()->CanInsert())
 		return false;
 	
 	return DoAction(CommandAction(caretState, &FormulaNode::DoInsertLine), NodeEvent(), commit);
@@ -68,7 +68,7 @@ bool CommandManager::InsertLine(bool commit)
 bool CommandManager::Remove(bool right, bool commit)
 {
 	SharedCaretState caretState = SharedCaretState(wnd->GetCaret()->currentState->Dublicate());
-	if (!caretState->GetNode()->CanRemove(caretState->GetPos()))
+	if (!caretState->GetNode()->CanRemove())
 		return false;
 	
 	NodeEvent nodeEvent;
@@ -80,7 +80,7 @@ bool CommandManager::Remove(bool right, bool commit)
 bool CommandManager::ChangeNodeParams(NodeEvent nodeEvent, CommandAction doAction, bool commit)
 {
 	SharedCaretState caretState = SharedCaretState(wnd->GetCaret()->currentState->Dublicate());
-	if (!caretState->GetNode()->CanInsert(caretState->GetPos()))
+	if (!caretState->GetNode()->CanInsert())
 		return false;
 	
 	return DoAction(doAction, nodeEvent, commit);

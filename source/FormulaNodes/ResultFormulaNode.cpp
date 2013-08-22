@@ -43,6 +43,9 @@ void ResultFormulaNode::Remake()
 	if (resultItem == NULL)
 		return;
 	
+	SetCanInsert(false);
+	SetCanRemove(false);
+	
 	ParserExpressionVariant& p = resultItem->GetExpression();
 	if (*p.GetSolved())
 		return;

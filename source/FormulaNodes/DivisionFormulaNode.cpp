@@ -112,7 +112,7 @@ void DivisionFormulaNode::UpdateBoundingRect()
  * @param pos The position.
  * @return false.
  */
-bool DivisionFormulaNode::CanInsert(int pos)
+bool DivisionFormulaNode::CanInsert()
 {
 	return false;
 }
