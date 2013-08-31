@@ -560,6 +560,19 @@ FormulaNode* FormulaNode::GetParentByType(NodeType type)
 	return parent->GetParentByType(type);
 }
 
+FormulaNode* FormulaNode::GetNodeByHierarchyPos(HierarchyPos& pos)
+{
+	FormulaNode* n = wnd->GetDocumentNode();
+	for (int i = (int)pos.size() - 1; i > 0; --i)
+	{
+		if (!n || n->childNodes->Count() <= pos[i])
+			return NULL;
+		n = (*n)[pos[i]];
+	}
+	
+	return n;
+}
+
 /**
  * Gets the document bounds.
  * @return The document bounds.

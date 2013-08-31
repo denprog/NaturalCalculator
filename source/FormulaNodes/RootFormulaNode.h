@@ -1,10 +1,8 @@
 #ifndef ROOTFORMULANODE_H
 #define ROOTFORMULANODE_H
 
-//#include <QApplication>
 #include "../Main/NaturalCalculatorApp.h"
 #include "GroupFormulaNode.h"
-//#include <QGraphicsItemGroup>
 
 /**
  * Root node for formula nodes.

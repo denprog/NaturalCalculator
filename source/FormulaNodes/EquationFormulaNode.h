@@ -58,11 +58,13 @@ public:
 public:
 	GroupFormulaNode* left;
 	GroupFormulaNode* right;
-
+	HierarchyPos errorPos;
+	
 private:
 	ShapeFormulaNode* shape;
 	ResultFormulaNode* result;
 	string lastExpression;
+	QGraphicsPathItem* errorItem;
 };
 
 namespace boost

@@ -6,6 +6,7 @@
 #include "FormulaNodesCollection.h"
 #include "ResultItemFormulaNode.h"
 #include "../Main/FormulaWnd.h"
+#include "../ParserThread/ParserExpression.h"
 #include <boost/assign/list_of.hpp>
 
 map<ParserExceptionCode, QString> ResultFormulaNode::errorMessages = boost::assign::map_list_of
@@ -242,24 +243,14 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RealParserExpression const& 
 	
 	if (!expr.solved)
 	{
-		EquationFormulaNode* e = (EquationFormulaNode*)parent->GetParentByType(EQUATION_NODE);
-		if (parent->wnd->caret->currentState->CheckInNode(parent))
-		{
-			parent->wnd->caret->SetToNode(e, 1);
-			QCoreApplication::postEvent(parent->wnd, new QEvent((QEvent::Type)FormulaWnd::updateCaretEventId));
-		}
-		TextFormulaNode* t = new TextFormulaNode(parent);
-		t->SetText("~");
-		parent->AddChild(t);
+		UpdateWaitingSymbol();
 		return;
 	}
 
 	//make an exception node
 	if (expr.exception.id != None)
 	{
-		TextFormulaNode* t = new TextFormulaNode(parent);
-		parent->AddChild(t);
-		t->SetText(errorMessages[expr.exception.id]);
+		MakeExceptionNode(expr.expression, expr.exception);
 		return;
 	}
 	
@@ -306,24 +297,14 @@ void ResultFormulaNode::ResultNodeMaker::operator()(IntegerParserExpression cons
 	
 	if (!expr.solved)
 	{
-		EquationFormulaNode* e = (EquationFormulaNode*)parent->GetParentByType(EQUATION_NODE);
-		if (parent->wnd->caret->currentState->CheckInNode(parent))
-		{
-			parent->wnd->caret->SetToNode(e, 1);
-			QCoreApplication::postEvent(parent->wnd, new QEvent((QEvent::Type)FormulaWnd::updateCaretEventId));
-		}
-		TextFormulaNode* t = new TextFormulaNode(parent);
-		t->SetText("~");
-		parent->AddChild(t);
+		UpdateWaitingSymbol();
 		return;
 	}
 
 	//make an exception node
 	if (expr.exception.id != None)
 	{
-		TextFormulaNode* t = new TextFormulaNode(parent);
-		parent->AddChild(t);
-		t->SetText(errorMessages[expr.exception.id]);
+		MakeExceptionNode(expr.expression, expr.exception);
 		return;
 	}
 	
@@ -348,24 +329,14 @@ void ResultFormulaNode::ResultNodeMaker::operator()(RationalParserExpression con
 	
 	if (!expr.solved)
 	{
-		EquationFormulaNode* e = (EquationFormulaNode*)parent->GetParentByType(EQUATION_NODE);
-		if (parent->wnd->caret->currentState->CheckInNode(parent))
-		{
-			parent->wnd->caret->SetToNode(e, 1);
-			QCoreApplication::postEvent(parent->wnd, new QEvent((QEvent::Type)FormulaWnd::updateCaretEventId));
-		}
-		TextFormulaNode* t = new TextFormulaNode(parent);
-		t->SetText("~");
-		parent->AddChild(t);
+		UpdateWaitingSymbol();
 		return;
 	}
 
 	//make an exception node
 	if (expr.exception.id != None)
 	{
-		TextFormulaNode* t = new TextFormulaNode(parent);
-		parent->AddChild(t);
-		t->SetText(errorMessages[expr.exception.id]);
+		MakeExceptionNode(expr.expression, expr.exception);
 		return;
 	}
 	
@@ -436,4 +407,44 @@ void ResultFormulaNode::ResultNodeMaker::operator()(AutoParserExpression const& 
 		(*this)(rationalExpr);
 	else
 		assert(false);
+}
+
+void ResultFormulaNode::ResultNodeMaker::UpdateWaitingSymbol() const
+{
+	EquationFormulaNode* e = (EquationFormulaNode*)parent->GetParentByType(EQUATION_NODE);
+	if (parent->wnd->caret->currentState->CheckInNode(parent))
+	{
+		parent->wnd->caret->SetToNode(e, 1);
+		QCoreApplication::postEvent(parent->wnd, new QEvent((QEvent::Type)FormulaWnd::updateCaretEventId));
+	}
+	TextFormulaNode* t = new TextFormulaNode(parent);
+	t->SetText("~");
+	parent->AddChild(t);
+	e->errorPos.clear();
+}
+
+void ResultFormulaNode::ResultNodeMaker::MakeExceptionNode(ParserString expression, ParserException exception) const
+{
+	TextFormulaNode* t = new TextFormulaNode(parent);
+	parent->AddChild(t);
+	t->SetText(errorMessages[exception.id]);
+	
+	EquationFormulaNode* e = (EquationFormulaNode*)parent->GetParentByType(EQUATION_NODE);
+	assert(e);
+	
+	HierarchyPos errorPos;
+	int j = INT_MAX;
+	
+	//find the shortest annotation chunk, it is the error position
+	for (size_t i = 0; i < expression.annotation.size(); ++i)
+	{
+		ParserString::AnnotationPos p = expression.annotation[i];
+		if (exception.pos >= p.pos && exception.pos <= p.pos + p.length)
+		{
+			if (j > p.length)
+				errorPos = p.hierarchyPos;
+		}
+	}
+	
+	e->errorPos = errorPos;
 }

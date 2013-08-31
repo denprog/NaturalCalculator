@@ -28,6 +28,8 @@ EquationFormulaNode::EquationFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) 
 	right = new GroupFormulaNode(this, wnd);
 	AddChild(right);
 	result = NULL;
+
+	errorItem = NULL;
 }
 
 void EquationFormulaNode::RemoveChildNodes()
@@ -36,6 +38,7 @@ void EquationFormulaNode::RemoveChildNodes()
 	left = NULL;
 	right = NULL;
 	shape = NULL;
+	errorItem = NULL;
 }
 
 /**
@@ -94,6 +97,39 @@ void EquationFormulaNode::Remake()
 		shape->boundingRect.setCoords(0, 0, w, h);
 
 		UpdateBoundingRect();
+		
+		if (errorItem)
+		{
+			((QGraphicsItemGroup*)item)->removeFromGroup(errorItem);
+			delete errorItem;
+			errorItem = NULL;
+		}
+		
+		if (errorPos.size() > 0)
+		{
+			FormulaNode* n = GetNodeByHierarchyPos(errorPos);
+			if (n)
+			{
+				QRectF r = n->GetDocumentBounds();
+				QPainterPath p(QPointF(r.left(), r.bottom()));
+				p.moveTo(r.left() + 1, r.bottom() + 1);
+				qreal x = r.left();
+				while (x < r.right())
+				{
+					p.arcMoveTo(x, r.bottom(), 3, 3, 0);
+					p.arcTo(x, r.bottom(), 3, 3, 0, 180);
+					x += 3;
+					if (x >= r.right())
+						break;
+					p.arcMoveTo(x, r.bottom(), 3, 3, 0);
+					p.arcTo(x, r.bottom(), 3, 3, 0, -180);
+					x += 3;
+				}
+				errorItem = new QGraphicsPathItem(p);
+				errorItem->setPen(QPen(QColor("red")));
+				((QGraphicsItemGroup*)item)->addToGroup(errorItem);
+			}
+		}
 	}
 }
 

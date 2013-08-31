@@ -59,6 +59,9 @@ private:
 		void operator()(RationalParserExpression const& expr) const;
 		void operator()(AutoParserExpression const& expr) const;
 		
+		void UpdateWaitingSymbol() const;
+		void MakeExceptionNode(ParserString expression, ParserException exception) const;
+		
 		FormulaNode* parent;
 	};
 	

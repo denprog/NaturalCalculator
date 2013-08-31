@@ -152,6 +152,7 @@ public:
 	bool IsChild(const FormulaNode* node);
 	int GetFirstLevelChildPos(FormulaNode* node);
 	virtual FormulaNode* GetParentByType(NodeType type);
+	virtual FormulaNode* GetNodeByHierarchyPos(HierarchyPos& pos);
 	
 	virtual QRectF GetDocumentBounds();
 	virtual QRectF GetDocumentPosBounds(int pos);
