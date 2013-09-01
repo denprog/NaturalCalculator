@@ -80,7 +80,7 @@ bool CommandManager::Remove(bool right, bool commit)
 bool CommandManager::ChangeNodeParams(NodeEvent nodeEvent, CommandAction doAction, bool commit)
 {
 	SharedCaretState caretState = SharedCaretState(wnd->GetCaret()->currentState->Dublicate());
-	if (!caretState->GetNode()->CanInsert())
+	if (!caretState->GetNode()->CanChangeParams())
 		return false;
 	
 	return DoAction(doAction, nodeEvent, commit);

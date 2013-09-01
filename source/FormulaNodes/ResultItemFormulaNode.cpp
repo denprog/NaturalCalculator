@@ -58,6 +58,7 @@ AutoResultItemFormulaNode::AutoResultItemFormulaNode(FormulaNode* _parent, Formu
 	ExpressionNotation _notation, FractionType _fractionType) : 
 	ResultItemFormulaNode(_parent, wnd), realPrecision(_realPrecision), realExp(_realExp), notation(_notation), fractionType(_fractionType)
 {
+	type = AUTO_RESULT_ITEM_NODE;
 	Normalize();
 }
 
@@ -159,6 +160,7 @@ std::string AutoResultItemFormulaNode::ToString()
 RealResultItemFormulaNode::RealResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, int _precision, int _exp) : 
 	ResultItemFormulaNode(_parent, wnd), precision(_precision), exp(_exp)
 {
+	type = REAL_RESULT_ITEM_NODE;
 	Normalize();
 }
 
@@ -246,6 +248,7 @@ std::string RealResultItemFormulaNode::ToString()
 IntegerResultItemFormulaNode::IntegerResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, ExpressionNotation _notation) : 
 	ResultItemFormulaNode(_parent, wnd), notation(_notation)
 {
+	type = INTEGER_RESULT_ITEM_NODE;
 	Normalize();
 }
 
@@ -337,6 +340,7 @@ std::string IntegerResultItemFormulaNode::ToString()
 RationalResultItemFormulaNode::RationalResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, FractionType _fractionType) : 
 	ResultItemFormulaNode(_parent, wnd), fractionType(_fractionType)
 {
+	type = RATIONAL_RESULT_ITEM_NODE;
 	Normalize();
 }
 

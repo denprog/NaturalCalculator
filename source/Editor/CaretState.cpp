@@ -126,6 +126,8 @@ FormulaNode* CaretState::GetCurrentNode()
 QRectF CaretState::GetBounds()
 {
 	FormulaNode* node = currentNode->GetNode();
+	if (!node)
+		return QRectF();
 	return node->GetDocumentPosBounds(GetPos());
 }
 

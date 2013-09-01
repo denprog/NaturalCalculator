@@ -62,7 +62,6 @@ void ResultFormulaNode::Remake()
 
 void ResultFormulaNode::AddChild(FormulaNode* node)
 {
-	assert(node->type == RESULT_ITEM_NODE);
 	RemoveChildNodes();
 	GroupFormulaNode::AddChild(node);
 	resultItem = (ResultItemFormulaNode*)node;
@@ -122,22 +121,54 @@ bool ResultFormulaNode::DoChangeParams(Command* command)
 		int realExp = any_cast<int>(command->nodeEvent["RealExp"]);
 		FractionType fractionType = any_cast<FractionType>(command->nodeEvent["FractionType"]);
 		ExpressionNotation notation = any_cast<ExpressionNotation>(command->nodeEvent["Notation"]);
+		
+		if (resultItem->type == AUTO_RESULT_ITEM_NODE)
+		{
+			AutoResultItemFormulaNode* node = (AutoResultItemFormulaNode*)resultItem;
+			if (node->realPrecision == realPrecision && node->realExp == realExp && node->fractionType == fractionType && node->notation == notation)
+				return false;
+		}
+		
 		resultItem = new AutoResultItemFormulaNode(this, wnd, realPrecision, realExp, notation, fractionType);
 	}
 	else if (type == "Real")
 	{
 		int precision = any_cast<int>(command->nodeEvent["Precision"]);
 		int exp = any_cast<int>(command->nodeEvent["Exp"]);
+
+		if (resultItem->type == REAL_RESULT_ITEM_NODE)
+		{
+			RealResultItemFormulaNode* node = (RealResultItemFormulaNode*)resultItem;
+			if (node->precision == precision && node->exp == exp)
+				return false;
+		}
+		
 		resultItem = new RealResultItemFormulaNode(this, wnd, precision, exp);
 	}
 	else if (type == "Integer")
 	{
 		ExpressionNotation notation = any_cast<ExpressionNotation>(command->nodeEvent["Notation"]);
+
+		if (resultItem->type == INTEGER_RESULT_ITEM_NODE)
+		{
+			IntegerResultItemFormulaNode* node = (IntegerResultItemFormulaNode*)resultItem;
+			if (node->notation == notation)
+				return false;
+		}
+		
 		resultItem = new IntegerResultItemFormulaNode(this, wnd, notation);
 	}
 	else if (type == "Rational")
 	{
 		FractionType fractionType = any_cast<FractionType>(command->nodeEvent["FractionType"]);
+
+		if (resultItem->type == RATIONAL_RESULT_ITEM_NODE)
+		{
+			RationalResultItemFormulaNode* node = (RationalResultItemFormulaNode*)resultItem;
+			if (node->fractionType == fractionType)
+				return false;
+		}
+		
 		resultItem = new RationalResultItemFormulaNode(this, wnd, fractionType);
 	}
 	else

@@ -52,7 +52,7 @@ public:
 	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* _parent);
 	virtual std::string ToString();
 	
-private:
+public:
 	int realPrecision;
 	int realExp;
 	ExpressionNotation notation;
@@ -81,7 +81,7 @@ public:
 	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* _parent);
 	virtual std::string ToString();
 	
-private:
+public:
 	int precision;
 	int exp;
 };
@@ -108,7 +108,7 @@ public:
 	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* _parent);
 	virtual std::string ToString();
 	
-private:
+public:
 	ExpressionNotation notation;
 };
 
@@ -134,7 +134,7 @@ public:
 	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* _parent);
 	virtual std::string ToString();
 	
-private:
+public:
 	FractionType fractionType;
 };
 
