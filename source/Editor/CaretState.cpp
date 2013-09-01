@@ -123,6 +123,12 @@ FormulaNode* CaretState::GetCurrentNode()
 	return node;
 }
 
+QRectF CaretState::GetBounds()
+{
+	FormulaNode* node = currentNode->GetNode();
+	return node->GetDocumentPosBounds(GetPos());
+}
+
 /**
  * Checks whether the caret state located on the node.
  * @param [in,out] node The node.

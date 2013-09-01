@@ -123,6 +123,8 @@
     <logicalFolder name="test" displayName="test" projectFiles="true">
       <itemPath>../test/BracesTest.cpp</itemPath>
       <itemPath>../test/BracesTest.h</itemPath>
+      <itemPath>../test/DocumentTest.cpp</itemPath>
+      <itemPath>../test/DocumentTest.h</itemPath>
       <itemPath>../test/EquationTest.cpp</itemPath>
       <itemPath>../test/EquationTest.h</itemPath>
       <itemPath>../test/NcTestBase.cpp</itemPath>
@@ -587,6 +589,10 @@
       </item>
       <item path="../test/BracesTest.h" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="../test/DocumentTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/DocumentTest.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../test/EquationTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../test/EquationTest.h" ex="false" tool="3" flavor2="0">
@@ -1036,6 +1042,10 @@
       <item path="../test/BracesTest.cpp" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../test/BracesTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../test/DocumentTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/DocumentTest.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../test/EquationTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -1498,6 +1508,10 @@
       <item path="../test/BracesTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../test/BracesTest.h" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/DocumentTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../test/DocumentTest.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../test/EquationTest.cpp" ex="false" tool="1" flavor2="0">
       </item>

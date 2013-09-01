@@ -131,9 +131,9 @@ public:
 	static int updateEventId;
 	static int updateCaretEventId;
 	Settings* settings; ///< Options for the application
+	Caret* caret; ///< The caret
 	
 private:
-	Caret* caret; ///< The caret
 	ParserThread* parserThread; ///< The parser thread
 	QGraphicsScene* scene;	///< The graphics scene
 	CommandManager commandManager;	///< Manager for commands

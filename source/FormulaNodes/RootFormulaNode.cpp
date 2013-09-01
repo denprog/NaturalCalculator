@@ -40,6 +40,11 @@ FormulaNode* RootFormulaNode::Clone(FormulaNode* p)
 	return res;
 }
 
+RootFormulaNode* RootFormulaNode::GetRootNode()
+{
+	return this;
+}
+
 /**
  * Gets the first caret position.
  * @return The first caret position.
@@ -165,6 +170,20 @@ SharedCaretState RootFormulaNode::GetPreviousPosition(SharedCaretState relativeS
 	}
 	
 	return res;
+}
+
+SharedCaretState RootFormulaNode::GetUpperPosition(SharedCaretState relativeState)
+{
+	if (relativeState->CheckInNode(this))
+		return parent->GetUpperPosition(relativeState);
+	return GroupFormulaNode::GetUpperPosition(relativeState);
+}
+
+SharedCaretState RootFormulaNode::GetLowerPosition(SharedCaretState relativeState)
+{
+	if (relativeState->CheckInNode(this))
+		return parent->GetLowerPosition(relativeState);
+	return GroupFormulaNode::GetLowerPosition(relativeState);
 }
 
 /**

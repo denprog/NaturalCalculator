@@ -1,6 +1,7 @@
 #include "Caret.h"
 #include "../FormulaNodes/FormulaNode.h"
 #include "../Main/FormulaWnd.h"
+#include "../FormulaNodes/RootFormulaNode.h"
 
 /**
  * Constructor.
@@ -15,6 +16,8 @@ Caret::Caret(FormulaWnd* _wnd)
 	timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(TimerUpdate()));
 	timer->start(500);
+
+	xPos = 0;
 }
 
 /**
@@ -41,9 +44,14 @@ void Caret::Render()
  * Sets a caret state.
  * @param state The caret state.
  */
-void Caret::SetState(SharedCaretState state)
+void Caret::SetState(SharedCaretState state, bool updateXPos)
 {
 	currentState = state;
+	if (updateXPos)
+	{
+		QRectF r = currentState->GetBounds();
+		xPos = r.left();
+	}
 }
 	
 /**
@@ -86,8 +94,10 @@ void Caret::MoveLeft()
 	if (!c)
 		return;
 	
-	SetState(c);
+	SetState(c, false);
 	Render();
+	QRectF r = c->GetBounds();
+	xPos = r.left();
 }
 
 /**
@@ -103,16 +113,38 @@ void Caret::MoveRight()
 	if (!c)
 		return;
 	
-	SetState(c);
+	SetState(c, false);
 	Render();
+	QRectF r = c->GetBounds();
+	xPos = r.left();
 }
 
 void Caret::MoveUp()
 {
+	FormulaNode* n = currentState->GetNode();
+	if (!n)
+		return;
+	
+	SharedCaretState c = n->GetUpperPosition(currentState);
+	if (!c)
+		return;
+	
+	SetState(c, false);
+	Render();
 }
 
 void Caret::MoveDown()
 {
+	FormulaNode* n = currentState->GetNode();
+	if (!n)
+		return;
+	
+	SharedCaretState c = n->GetLowerPosition(currentState);
+	if (!c)
+		return;
+	
+	SetState(c, false);
+	Render();
 }
 
 void Caret::MoveHome()
@@ -125,8 +157,10 @@ void Caret::MoveHome()
 	if (!c)
 		return;
 	
-	SetState(c);
+	SetState(c, false);
 	Render();
+	QRectF r = c->GetBounds();
+	xPos = r.left();
 }
 
 void Caret::MoveEnd()
@@ -139,8 +173,10 @@ void Caret::MoveEnd()
 	if (!c)
 		return;
 	
-	SetState(c);
+	SetState(c, false);
 	Render();
+	QRectF r = c->GetBounds();
+	xPos = r.left();
 }
 
 void Caret::TimerUpdate()

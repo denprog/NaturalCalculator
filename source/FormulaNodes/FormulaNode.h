@@ -160,12 +160,17 @@ public:
 	virtual int GetNearestPos(qreal x, qreal y);
 
 	virtual bool IsEmptySymbol();
+	virtual RootFormulaNode* GetRootNode();
 	
 	//caret functions
 	virtual SharedCaretState GetFirstPosition();
 	virtual SharedCaretState GetLastPosition();
 	virtual SharedCaretState GetNextPosition(SharedCaretState relativeState = SharedCaretState());
 	virtual SharedCaretState GetPreviousPosition(SharedCaretState relativeState = SharedCaretState());
+	
+	virtual SharedCaretState GetUpperPosition(SharedCaretState relativeState = SharedCaretState());
+	virtual SharedCaretState GetLowerPosition(SharedCaretState relativeState = SharedCaretState());
+	
 	virtual SharedCaretState GetLineBegin(SharedCaretState& relativeState);
 	virtual SharedCaretState GetLineEnd(SharedCaretState& relativeState);
 

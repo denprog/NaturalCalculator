@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <boost/shared_ptr.hpp>
+#include <QRect>
 
 class FormulaNode;
 class FormulaWnd;
@@ -34,7 +35,8 @@ public:
 	FormulaNode* GetNode();
 	int GetPos();
 	FormulaNode* GetCurrentNode();
-
+	QRectF GetBounds();
+	
 	bool CheckOnNode(FormulaNode* node);
 	bool CheckInNode(FormulaNode* node);
 	bool CheckAtLast(FormulaNode* node);

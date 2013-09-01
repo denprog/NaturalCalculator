@@ -50,6 +50,9 @@ public:
 	virtual SharedCaretState GetNextPosition(SharedCaretState relativeState = SharedCaretState());
 	virtual SharedCaretState GetPreviousPosition(SharedCaretState relativeState = SharedCaretState());
 
+	virtual SharedCaretState GetUpperPosition(SharedCaretState relativeState = SharedCaretState());
+	virtual SharedCaretState GetLowerPosition(SharedCaretState relativeState = SharedCaretState());
+	
 	//commands
 	virtual bool DoInsertLine(Command* command);
 	
