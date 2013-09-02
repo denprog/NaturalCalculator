@@ -195,7 +195,7 @@ void SquareRootFormulaNode::RenderCaret(const int pos, const int anchor)
 		QRectF r = GetDocumentPosBounds(pos);
 		int cx = GetExpression(0)->boundingRect.height() * 5 / 11;
 		
-		QGraphicsItemGroup* g = wnd->GetCaret()->caretShape;
+		QGraphicsItemGroup* g = wnd->caret->caretShape;
 		
 		qDeleteAll(g->childItems());
 		g->childItems().clear();

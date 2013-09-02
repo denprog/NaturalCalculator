@@ -145,7 +145,7 @@ void FormulaNode::ReplaceChild(FormulaNode* node, int pos)
 {
 	RemoveChild(pos);
 	InsertChild(node, pos);
-	wnd->GetDocumentNode()->Remake();
+	wnd->documentNode->Remake();
 }
 
 void FormulaNode::Normalize()
@@ -562,7 +562,7 @@ FormulaNode* FormulaNode::GetParentByType(NodeType type)
 
 FormulaNode* FormulaNode::GetNodeByHierarchyPos(HierarchyPos& pos)
 {
-	FormulaNode* n = wnd->GetDocumentNode();
+	FormulaNode* n = wnd->documentNode;
 	for (int i = (int)pos.size() - 1; i > 0; --i)
 	{
 		if (!n || n->childNodes->Count() <= pos[i])
@@ -809,7 +809,7 @@ void FormulaNode::RenderCaret(const int pos, const int anchor)
 {
 	QRectF r = GetDocumentPosBounds(pos);
 	
-	QGraphicsItemGroup* g = wnd->GetCaret()->caretShape;
+	QGraphicsItemGroup* g = wnd->caret->caretShape;
 	
 	qDeleteAll(g->childItems());
 	g->childItems().clear();

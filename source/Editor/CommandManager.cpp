@@ -13,7 +13,7 @@ CommandManager::~CommandManager()
 
 bool CommandManager::InsertNode(FormulaNode* node, CommandAction doAction, bool commit)
 {
-	SharedCaretState caretState = SharedCaretState(wnd->GetCaret()->currentState->Dublicate());
+	SharedCaretState caretState = SharedCaretState(wnd->caret->currentState->Dublicate());
 	if (!caretState->GetNode()->CanInsert())
 		return false;
 	
@@ -33,7 +33,7 @@ bool CommandManager::InsertNode(FormulaNode* node, CommandAction doAction, bool 
 	}
 	
 	//set new caret state
-	wnd->GetCaret()->SetState(undoCommands[0]->afterCaretState);
+	wnd->caret->SetState(undoCommands[0]->afterCaretState);
 	
 	if (commit)
 	{
@@ -46,7 +46,7 @@ bool CommandManager::InsertNode(FormulaNode* node, CommandAction doAction, bool 
 
 bool CommandManager::InsertText(QString& text, CommandAction doAction, bool commit)
 {
-	SharedCaretState caretState = SharedCaretState(wnd->GetCaret()->currentState->Dublicate());
+	SharedCaretState caretState = SharedCaretState(wnd->caret->currentState->Dublicate());
 	if (!caretState->GetNode()->CanInsert())
 		return false;
 	
@@ -58,7 +58,7 @@ bool CommandManager::InsertText(QString& text, CommandAction doAction, bool comm
 
 bool CommandManager::InsertLine(bool commit)
 {
-	SharedCaretState caretState = SharedCaretState(wnd->GetCaret()->currentState->Dublicate());
+	SharedCaretState caretState = SharedCaretState(wnd->caret->currentState->Dublicate());
 	if (!caretState->GetNode()->CanInsert())
 		return false;
 	
@@ -67,7 +67,7 @@ bool CommandManager::InsertLine(bool commit)
 
 bool CommandManager::Remove(bool right, bool commit)
 {
-	SharedCaretState caretState = SharedCaretState(wnd->GetCaret()->currentState->Dublicate());
+	SharedCaretState caretState = SharedCaretState(wnd->caret->currentState->Dublicate());
 	if (!caretState->GetNode()->CanRemove())
 		return false;
 	
@@ -79,7 +79,7 @@ bool CommandManager::Remove(bool right, bool commit)
 
 bool CommandManager::ChangeNodeParams(NodeEvent nodeEvent, CommandAction doAction, bool commit)
 {
-	SharedCaretState caretState = SharedCaretState(wnd->GetCaret()->currentState->Dublicate());
+	SharedCaretState caretState = SharedCaretState(wnd->caret->currentState->Dublicate());
 	if (!caretState->GetNode()->CanChangeParams())
 		return false;
 	
@@ -88,7 +88,7 @@ bool CommandManager::ChangeNodeParams(NodeEvent nodeEvent, CommandAction doActio
 
 bool CommandManager::DoAction(CommandAction doAction, NodeEvent nodeEvent, bool commit)
 {
-	SharedCaretState caretState = SharedCaretState(wnd->GetCaret()->currentState->Dublicate());
+	SharedCaretState caretState = SharedCaretState(wnd->caret->currentState->Dublicate());
 	Command* command;
 	
 	if (doAction.action == &FormulaNode::DoInsertLine)
@@ -116,7 +116,7 @@ bool CommandManager::DoAction(CommandAction doAction, NodeEvent nodeEvent, bool 
 	}
 
 	//set new caret state
-	wnd->GetCaret()->SetState(undoCommands[0]->afterCaretState);
+	wnd->caret->SetState(undoCommands[0]->afterCaretState);
 	
 	if (commit)
 	{
@@ -163,7 +163,7 @@ bool CommandManager::Undo()
 	if (c)
 	{
 		//set new caret state
-		wnd->GetCaret()->SetState(c);
+		wnd->caret->SetState(c);
 	}
 	
 	return true;
@@ -196,7 +196,7 @@ bool CommandManager::Redo()
 	if (c)
 	{
 		//set new caret state
-		wnd->GetCaret()->SetState(c);
+		wnd->caret->SetState(c);
 	}
 	
 	return true;

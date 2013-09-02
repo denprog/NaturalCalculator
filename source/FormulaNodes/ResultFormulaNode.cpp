@@ -51,7 +51,7 @@ void ResultFormulaNode::Remake()
 	if (*p.GetSolved())
 		return;
 	
-	wnd->GetParserThread()->GetSolvedExpression(p);
+	wnd->parserThread->GetSolvedExpression(p);
 	boost::apply_visitor(ResultNodeMaker(resultItem), p.var);
 	
 	GroupFormulaNode::Remake();
@@ -251,7 +251,7 @@ std::string ResultFormulaNode::ToString()
 void ResultFormulaNode::OnDelayTimer()
 {
 	//solve the expression
-	wnd->GetParserThread()->AddExpression(*expressionToSolve);
+	wnd->parserThread->AddExpression(*expressionToSolve);
 	delayTimer.stop();
 }
 

@@ -219,7 +219,7 @@ void DivisionFormulaNode::RenderCaret(const int pos, const int anchor)
 	{
 		//render the shape's caret
 		QRectF r = GetDocumentPosBounds(pos);
-		QGraphicsItemGroup* g = wnd->GetCaret()->caretShape;
+		QGraphicsItemGroup* g = wnd->caret->caretShape;
 		
 		qDeleteAll(g->childItems());
 		g->childItems().clear();

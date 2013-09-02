@@ -233,7 +233,7 @@ void CaretPosition::SetNodePos(FormulaNode* node, int pos)
  */
 FormulaNode* CaretPosition::GetNode()
 {
-	FormulaNode* n = wnd->GetDocumentNode();
+	FormulaNode* n = wnd->documentNode;
 	for (int i = (int)positions.size() - 1; i > 0; --i)
 	{
 		if (!n || n->childNodes->Count() <= positions[i])

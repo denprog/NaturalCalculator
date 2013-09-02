@@ -16,7 +16,7 @@ public:
 	 * Constructor.
 	 * @param [in] _mainWindow The main window.
 	 */
-	NcTestBase(MainWindow* _mainWindow) : mainWindow(_mainWindow), wnd(_mainWindow->formulaWnd), doc(wnd->GetDocumentNode())
+	NcTestBase(MainWindow* _mainWindow) : mainWindow(_mainWindow), wnd(_mainWindow->formulaWnd), doc(wnd->documentNode)
 	{
 	}
 
