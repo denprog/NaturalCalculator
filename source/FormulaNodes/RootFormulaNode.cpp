@@ -4,6 +4,7 @@
 #include "FormulaNodesCollection.h"
 #include "EquationFormulaNode.h"
 #include "../Main/FormulaWnd.h"
+#include "../Util/QRectEx.h"
 
 /**
  * Default constructor.
@@ -176,14 +177,78 @@ SharedCaretState RootFormulaNode::GetUpperPosition(SharedCaretState relativeStat
 {
 	if (relativeState->CheckInNode(this))
 		return parent->GetUpperPosition(relativeState);
-	return GroupFormulaNode::GetUpperPosition(relativeState);
+	
+	int minDist = INT_MAX, dist;
+	QRectEx r1 = relativeState->GetBounds();
+	
+	SharedCaretState firstPos = GetFirstPosition();
+	SharedCaretState lastPos = GetLastPosition();
+	SharedCaretState nearestPos = SharedCaretState();
+
+	if (firstPos)
+	{
+		//circle at least one time
+		for (SharedCaretState curPos = firstPos; ; curPos = curPos->GetNode()->GetNextPosition(curPos))
+		{
+			QRectEx r2 = curPos->GetBounds();
+			if (r1.top() > r2.bottom())
+			{
+				FormulaNode* n = curPos->GetNode();
+				//don't move to the beginning of the compound node
+				if (n->ChildrenCount() > curPos->GetPos() && dynamic_cast<CompoundFormulaNode*>((*n)[curPos->GetPos()]))
+					r2.setWidth(1);
+				dist = r2.DistToPoint(wnd->caret->xPos, r1.top());
+				if (dist < minDist)
+				{
+					nearestPos = curPos;
+					minDist = dist;
+				}
+			}
+			if (*curPos == *lastPos)
+				break;
+		}
+	}
+	
+	return nearestPos;
 }
 
 SharedCaretState RootFormulaNode::GetLowerPosition(SharedCaretState relativeState)
 {
 	if (relativeState->CheckInNode(this))
 		return parent->GetLowerPosition(relativeState);
-	return GroupFormulaNode::GetLowerPosition(relativeState);
+	
+	int minDist = INT_MAX, dist;
+	QRectEx r1 = relativeState->GetBounds();
+	
+	SharedCaretState firstPos = GetFirstPosition();
+	SharedCaretState lastPos = GetLastPosition();
+	SharedCaretState nearestPos = SharedCaretState();
+
+	if (firstPos)
+	{
+		//circle at least one time
+		for (SharedCaretState curPos = firstPos; ; curPos = curPos->GetNode()->GetNextPosition(curPos))
+		{
+			QRectEx r2 = curPos->GetBounds();
+			if (r1.bottom() < r2.top())
+			{
+				FormulaNode* n = curPos->GetNode();
+				//don't move to the begining of the compound node
+				if (n->ChildrenCount() > curPos->GetPos() && dynamic_cast<CompoundFormulaNode*>((*n)[curPos->GetPos()]))
+					r2.setWidth(1);
+				dist = r2.DistToPoint(wnd->caret->xPos, r1.bottom());
+				if (dist < minDist)
+				{
+					nearestPos = curPos;
+					minDist = dist;
+				}
+			}
+			if (*curPos == *lastPos)
+				break;
+		}
+	}
+	
+	return nearestPos;
 }
 
 /**
