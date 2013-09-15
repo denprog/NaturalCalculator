@@ -30,20 +30,20 @@ void DocumentTest::Test1()
 	QCOMPARE(wnd->caret->currentState->GetPos(), 0);
 	
 	QTest::keyClicks(wnd, "12+56=");
-	QCOMPARE(doc->ParseStructure().c_str(), "g(123+456)\n\rg(g(12+56)=$res(g($auto(g(~)))))\n\rg(34*56)");
+	QCOMPARE(doc->ParseStructure().c_str(), "g(123+456)\n\rg(g(12+56)=$res(g($auto(g(68.)))))\n\rg(34*56)");
 	QCOMPARE(wnd->caret->currentState->GetPos(), 1);
 	
 	QTest::keyClick(wnd, Qt::Key_Enter);
 	QTest::keyClicks(wnd, "4/5=");
-	QCOMPARE(doc->ParseStructure().c_str(), "g(123+456)\n\rg(g(12+56)=$res(g($auto(g(~)))))\n\rg(g((g(4)/g(5)))=$res(g($auto(g(~)))))\n\rg(34*56)");
+	QCOMPARE(doc->ParseStructure().c_str(), "g(123+456)\n\rg(g(12+56)=$res(g($auto(g(68.)))))\n\rg(g((g(4)/g(5)))=$res(g($auto(g(0.8)))))\n\rg(34*56)");
 	QCOMPARE(wnd->caret->currentState->GetPos(), 1);
 	
 	wnd->Undo();
-	QCOMPARE(doc->ParseStructure().c_str(), "g(123+456)\n\rg(g(12+56)=$res(g($auto(g(~)))))\n\rg((g(4)/g(5)))\n\rg(34*56)");
+	QCOMPARE(doc->ParseStructure().c_str(), "g(123+456)\n\rg(g(12+56)=$res(g($auto(g(68.)))))\n\rg((g(4)/g(5)))\n\rg(34*56)");
 	QCOMPARE(wnd->caret->currentState->GetPos(), 1);
 
 	wnd->Redo();
-	QCOMPARE(doc->ParseStructure().c_str(), "g(123+456)\n\rg(g(12+56)=$res(g($auto(g(~)))))\n\rg(g((g(4)/g(5)))=$res(g($auto(g(~)))))\n\rg(34*56)");
+	QCOMPARE(doc->ParseStructure().c_str(), "g(123+456)\n\rg(g(12+56)=$res(g($auto(g(68.)))))\n\rg(g((g(4)/g(5)))=$res(g($auto(g(0.8)))))\n\rg(34*56)");
 	QCOMPARE(wnd->caret->currentState->GetPos(), 1);
 }
 

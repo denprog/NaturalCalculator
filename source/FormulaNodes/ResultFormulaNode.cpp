@@ -28,7 +28,9 @@ ResultFormulaNode::ResultFormulaNode(FormulaNode* _parent, FormulaWnd* wnd) : Gr
 {
 	type = RESULT_NODE;
 	delayTimer.setInterval(2000);
+#ifndef TEST
 	connect(&delayTimer, SIGNAL(timeout()), this, SLOT(OnDelayTimer()));
+#endif
 	resultItem = new AutoResultItemFormulaNode(this, wnd, wnd->settings->Load("ScientificNumbers", "resultAccuracy", 3).toInt(), 
 		wnd->settings->Load("ScientificNumbers", "exponentialThreshold", 8).toInt(), 
 		(ExpressionNotation)wnd->settings->Load("IntegerNumbers", "notation", DECIMAL_NOTATION).toInt(), 
@@ -51,7 +53,12 @@ void ResultFormulaNode::Remake()
 	if (*p.GetSolved())
 		return;
 	
+#ifdef TEST
+	while (!wnd->parserThread->GetSolvedExpression(p));
+#else
 	wnd->parserThread->GetSolvedExpression(p);
+#endif
+	
 	boost::apply_visitor(ResultNodeMaker(resultItem), p.var);
 	
 	GroupFormulaNode::Remake();
@@ -207,7 +214,11 @@ void ResultFormulaNode::SetExpression(ParserString& expr)
 	{
 		*(expressionToSolve->GetExpression()) = expr;
 		*(expressionToSolve->GetSolved()) = false;
-		delayTimer.start();
+#ifdef TEST
+	wnd->parserThread->AddExpression(*expressionToSolve);
+#else
+	delayTimer.start();
+#endif	
 	}
 
 	Remake();
