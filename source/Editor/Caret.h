@@ -7,6 +7,7 @@
 #include "CaretState.h"
 
 class FormulaNode;
+class RootFormulaNode;
 
 /**
  * Caret.
@@ -22,7 +23,7 @@ public:
 public:
 	void Render();
 	
-	void SetState(SharedCaretState state);
+	void SetState(SharedCaretState state, bool updateXPos = true);
 	void SetToNode(FormulaNode* node, int pos);
 	void SetToNodeBegin(FormulaNode* node);
 	void SetToNodeEnd(FormulaNode* node);
@@ -40,6 +41,7 @@ public slots:
 public:
 	QGraphicsItemGroup* caretShape; ///< The caret group shape
 	SharedCaretState currentState; ///< The current caret state
+	int xPos;
 	
 private:
 	FormulaWnd* wnd;

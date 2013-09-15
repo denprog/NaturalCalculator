@@ -1,10 +1,8 @@
 #ifndef ROOTFORMULANODE_H
 #define ROOTFORMULANODE_H
 
-//#include <QApplication>
 #include "../Main/NaturalCalculatorApp.h"
 #include "GroupFormulaNode.h"
-//#include <QGraphicsItemGroup>
 
 /**
  * Root node for formula nodes.
@@ -35,11 +33,14 @@ private:
 
 public:
 	virtual FormulaNode* Clone(FormulaNode* p);
+	virtual RootFormulaNode* GetRootNode();
 	
 	virtual SharedCaretState GetFirstPosition();
 	virtual SharedCaretState GetLastPosition();
 	virtual SharedCaretState GetNextPosition(SharedCaretState relativeState = SharedCaretState());
 	virtual SharedCaretState GetPreviousPosition(SharedCaretState relativeState = SharedCaretState());
+	virtual SharedCaretState GetUpperPosition(SharedCaretState relativeState = SharedCaretState());
+	virtual SharedCaretState GetLowerPosition(SharedCaretState relativeState = SharedCaretState());
 
 public:
 	virtual bool DoCreateEquationFormulaNode(Command* command);

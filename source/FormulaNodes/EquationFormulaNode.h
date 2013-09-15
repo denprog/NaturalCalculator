@@ -15,7 +15,6 @@ class EquationFormulaNode : public CompoundFormulaNode
 public:
 	EquationFormulaNode();
 	EquationFormulaNode(FormulaNode* _parent, FormulaWnd* wnd);
-	virtual ~EquationFormulaNode();
 
 private:
 	friend class boost::serialization::access;
@@ -54,24 +53,18 @@ public:
 	
 	//command functions
 	virtual bool DoInsertText(Command* command);
-
-public:
-	virtual void MakeContextMenu(QMenu* menu);
-	
-public slots:
-	virtual void OnAddAutoResult();
-	virtual void OnAddRealResult();
-	virtual void OnAddIntegerResult();
-	virtual void OnAddRationalResult();
+	virtual bool DoRemoveItem(Command* command);
 
 public:
 	GroupFormulaNode* left;
-
+	GroupFormulaNode* right;
+	HierarchyPos errorPos;
+	
 private:
 	ShapeFormulaNode* shape;
-	GroupFormulaNode* right;
 	ResultFormulaNode* result;
 	string lastExpression;
+	QGraphicsPathItem* errorItem;
 };
 
 namespace boost

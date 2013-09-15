@@ -4,7 +4,7 @@
 void NcTestBase::Check(QString actual, QString expected, int caretPos)
 {
 	QCOMPARE(actual, expected);
-	QCOMPARE(wnd->GetCaret()->currentState->GetPos(), caretPos);
+	QCOMPARE(wnd->caret->currentState->GetPos(), caretPos);
 }
 
 void NcTestBase::Check(std::string actual, std::string& expected, int caretPos)

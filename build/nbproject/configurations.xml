@@ -43,6 +43,8 @@
         <itemPath>../source/FormulaNodes/MinusFormulaNode.h</itemPath>
         <itemPath>../source/FormulaNodes/MultiplyFormulaNode.cpp</itemPath>
         <itemPath>../source/FormulaNodes/MultiplyFormulaNode.h</itemPath>
+        <itemPath>../source/FormulaNodes/NthRootFormulaNode.cpp</itemPath>
+        <itemPath>../source/FormulaNodes/NthRootFormulaNode.h</itemPath>
         <itemPath>../source/FormulaNodes/PlusFormulaNode.cpp</itemPath>
         <itemPath>../source/FormulaNodes/PlusFormulaNode.h</itemPath>
         <itemPath>../source/FormulaNodes/PowerFormulaNode.cpp</itemPath>
@@ -121,6 +123,8 @@
     <logicalFolder name="test" displayName="test" projectFiles="true">
       <itemPath>../test/BracesTest.cpp</itemPath>
       <itemPath>../test/BracesTest.h</itemPath>
+      <itemPath>../test/DocumentTest.cpp</itemPath>
+      <itemPath>../test/DocumentTest.h</itemPath>
       <itemPath>../test/EquationTest.cpp</itemPath>
       <itemPath>../test/EquationTest.h</itemPath>
       <itemPath>../test/NcTestBase.cpp</itemPath>

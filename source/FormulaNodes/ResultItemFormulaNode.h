@@ -12,7 +12,6 @@ class ResultItemFormulaNode : public GroupFormulaNode
 	
 public:
 	ResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd);
-	virtual ~ResultItemFormulaNode();
 
 public slots:
 	void OnPresentAsAutoResult();
@@ -40,7 +39,6 @@ class AutoResultItemFormulaNode : public ResultItemFormulaNode
 	
 public:
 	AutoResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, int _precision, int _exp, ExpressionNotation _notation, FractionType _fractionType);
-	virtual ~AutoResultItemFormulaNode();
 
 public:
 	virtual void Normalize();
@@ -54,7 +52,7 @@ public:
 	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* _parent);
 	virtual std::string ToString();
 	
-private:
+public:
 	int realPrecision;
 	int realExp;
 	ExpressionNotation notation;
@@ -70,14 +68,20 @@ class RealResultItemFormulaNode : public ResultItemFormulaNode
 
 public:
 	RealResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, int _precision, int _exp);
-	virtual ~RealResultItemFormulaNode();
 
 public:
-	virtual void UpdateExpression();
+	virtual void Normalize();
 
 	virtual void MakeContextMenu(QMenu* menu);
 
-private:
+#ifdef TEST
+	virtual std::string ParseStructure();
+#endif
+
+	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* _parent);
+	virtual std::string ToString();
+	
+public:
 	int precision;
 	int exp;
 };
@@ -91,14 +95,20 @@ class IntegerResultItemFormulaNode : public ResultItemFormulaNode
 
 public:
 	IntegerResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, ExpressionNotation _notation);
-	virtual ~IntegerResultItemFormulaNode();
 
 public:
-	virtual void UpdateExpression();
+	virtual void Normalize();
 
 	virtual void MakeContextMenu(QMenu* menu);
 	
-private:
+#ifdef TEST
+	virtual std::string ParseStructure();
+#endif
+
+	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* _parent);
+	virtual std::string ToString();
+	
+public:
 	ExpressionNotation notation;
 };
 
@@ -111,14 +121,20 @@ class RationalResultItemFormulaNode : public ResultItemFormulaNode
 
 public:
 	RationalResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, FractionType _fractionType);
-	virtual ~RationalResultItemFormulaNode();
 
 public:
-	virtual void UpdateExpression();
+	virtual void Normalize();
 
 	virtual void MakeContextMenu(QMenu* menu);
 	
-private:
+#ifdef TEST
+	virtual std::string ParseStructure();
+#endif
+
+	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* _parent);
+	virtual std::string ToString();
+	
+public:
 	FractionType fractionType;
 };
 

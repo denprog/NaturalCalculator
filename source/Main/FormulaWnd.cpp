@@ -15,6 +15,7 @@
 #include "../Util/QRectEx.h"
 
 int FormulaWnd::updateEventId;
+int FormulaWnd::updateCaretEventId;
 
 /**
  * Constructor.
@@ -40,6 +41,7 @@ FormulaWnd::FormulaWnd(QWidget *parent)	: QGraphicsView(parent), commandManager(
 	caret->Render();
 
 	updateEventId = QEvent::registerEventType(1);
+	updateCaretEventId = QEvent::registerEventType(2);
 	
 	parserThread = new ParserThread(this);
 	
@@ -72,6 +74,11 @@ bool FormulaWnd::event(QEvent* e)
 		UpdateView();
 		return true;
 	}
+	else if (e->type() == (QEvent::Type)updateCaretEventId)
+	{
+		caret->Render();
+		return true;
+	}
 	
 	return QGraphicsView::event(e);
 }
@@ -100,6 +107,14 @@ void FormulaWnd::keyPressEvent(QKeyEvent* event)
 		break;
 	case Qt::Key_Right:
 		caret->MoveRight();
+		EnsureVisible();
+		break;
+	case Qt::Key_Up:
+		caret->MoveUp();
+		EnsureVisible();
+		break;
+	case Qt::Key_Down:
+		caret->MoveDown();
 		EnsureVisible();
 		break;
 	case Qt::Key_Home:

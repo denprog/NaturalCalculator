@@ -94,46 +94,14 @@ private:
 	}
 
 public:
-	/**
-	 * Getter of the document node.
-	 * @return The document node.
-	 */
-	DocumentFormulaNode* GetDocumentNode()
-	{
-		return documentNode;
-	}
-
-	/**
-	 * Getter of the caret.
-	 * @return The caret.
-	 */
-	Caret* GetCaret()
-	{
-		return caret;
-	}
-
-	/**
-	 * Getter of the parser thread.
-	 * @return The parser thread.
-	 */
-	ParserThread* GetParserThread()
-	{
-		return parserThread;
-	}
-	
-	Settings* GetSettings()
-	{
-		return settings;
-	}
-	
-public:
 	DocumentFormulaNode* documentNode;	///< The main document node
 	static int updateEventId;
+	static int updateCaretEventId;
 	Settings* settings; ///< Options for the application
-	
-private:
 	Caret* caret; ///< The caret
 	ParserThread* parserThread; ///< The parser thread
+	
+private:
 	QGraphicsScene* scene;	///< The graphics scene
 	CommandManager commandManager;	///< Manager for commands
 	

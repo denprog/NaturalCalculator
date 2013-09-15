@@ -50,6 +50,10 @@ enum NodeType
 	BRACES_NODE, 
 	RESULT_NODE, 
 	RESULT_ITEM_NODE, 
+	AUTO_RESULT_ITEM_NODE,
+	REAL_RESULT_ITEM_NODE,
+	INTEGER_RESULT_ITEM_NODE,
+	RATIONAL_RESULT_ITEM_NODE,
 	EQUATION_NODE, 
 	COMMA_NODE
 };
@@ -96,7 +100,6 @@ private:
 
 public:
 	//child functions
-	
 	virtual void AddChild(FormulaNode* node);
 	virtual void InsertChild(FormulaNode* node, int pos);
 	virtual void MoveChild(FormulaNode* node, int pos);
@@ -109,8 +112,13 @@ public:
 	
 	virtual int ChildrenCount();
 	
-	virtual bool CanInsert(int pos);
-	virtual bool CanRemove(int pos);
+	virtual bool CanInsert();
+	virtual bool CanRemove();
+	virtual bool CanChangeParams();
+
+	virtual void SetCanInsert(bool _canInsert);
+	virtual void SetCanRemove(bool _canRemove);
+	virtual void SetCanChangeParams(bool _canChangeParams);
 	
 	virtual FormulaNode* GetExpression(int pos) const;
 	virtual void ShowShape(int pos, bool show);
@@ -140,12 +148,15 @@ public:
 	static bool FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent);
 	virtual std::string ToString();
 	static bool GetIntParams(std::string::iterator& begin, std::string::iterator& end, std::vector<int>& params);
+	static bool FromNestedString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent);
 	
 	static bool FindSubstring(std::string::iterator& begin, std::string::iterator& end, std::string subString);
 	
 	int GetChildPos(const FormulaNode* node) const;
 	bool IsChild(const FormulaNode* node);
 	int GetFirstLevelChildPos(FormulaNode* node);
+	virtual FormulaNode* GetParentByType(NodeType type);
+	virtual FormulaNode* GetNodeByHierarchyPos(HierarchyPos& pos);
 	
 	virtual QRectF GetDocumentBounds();
 	virtual QRectF GetDocumentPosBounds(int pos);
@@ -153,13 +164,17 @@ public:
 	virtual int GetNearestPos(qreal x, qreal y);
 
 	virtual bool IsEmptySymbol();
+	virtual RootFormulaNode* GetRootNode();
 	
 	//caret functions
-	
 	virtual SharedCaretState GetFirstPosition();
 	virtual SharedCaretState GetLastPosition();
 	virtual SharedCaretState GetNextPosition(SharedCaretState relativeState = SharedCaretState());
 	virtual SharedCaretState GetPreviousPosition(SharedCaretState relativeState = SharedCaretState());
+	
+	virtual SharedCaretState GetUpperPosition(SharedCaretState relativeState = SharedCaretState());
+	virtual SharedCaretState GetLowerPosition(SharedCaretState relativeState = SharedCaretState());
+	
 	virtual SharedCaretState GetLineBegin(SharedCaretState& relativeState);
 	virtual SharedCaretState GetLineEnd(SharedCaretState& relativeState);
 
@@ -168,14 +183,11 @@ public:
 	virtual void RenderCaret(const int pos, const int anchor);
 	
 	//command functions
-	
 	virtual bool DoInsertNode(Command* command);
 	virtual bool DoInsertText(Command* command);
-	
 	virtual bool DoInsertLine(Command* command);
-	virtual bool UndoInsertLine(Command* command);
-	
 	virtual bool DoRemoveItem(Command* command);
+	virtual bool DoChangeParams(Command* command);
 	
 	virtual bool DoCreatePlusFormulaNode(Command* command);
 	virtual bool DoCreateMinusFormulaNode(Command* command);
@@ -208,6 +220,11 @@ public:
 	FormulaNodeLevel level; ///< The node level
 	Command* command;	
 	Settings* settings;
+	
+protected:
+	bool canInsert;
+	bool canRemove;
+	bool canChangeParams;
 };
 
 #endif

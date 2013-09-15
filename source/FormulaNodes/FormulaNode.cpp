@@ -28,6 +28,9 @@ FormulaNode::FormulaNode()
 	settings = NULL;
 	childNodes = NULL;
 	level = NORMAL_LEVEL;
+	canInsert = true;
+	canRemove = true;
+	canChangeParams = true;
 }
 
 /**
@@ -45,6 +48,9 @@ FormulaNode::FormulaNode(FormulaNode* _parent, FormulaWnd* _wnd)
 	settings = _wnd->settings;
 	childNodes = new FormulaNodesCollection();
 	level = NORMAL_LEVEL;
+	canInsert = true;
+	canRemove = true;
+	canChangeParams = true;
 }
 
 /**
@@ -139,7 +145,7 @@ void FormulaNode::ReplaceChild(FormulaNode* node, int pos)
 {
 	RemoveChild(pos);
 	InsertChild(node, pos);
-	wnd->GetDocumentNode()->Remake();
+	wnd->documentNode->Remake();
 }
 
 void FormulaNode::Normalize()
@@ -162,9 +168,9 @@ int FormulaNode::ChildrenCount()
  * @param pos The position.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::CanInsert(int pos)
+bool FormulaNode::CanInsert()
 {
-	return true;
+	return canInsert;
 }
 
 /**
@@ -172,9 +178,35 @@ bool FormulaNode::CanInsert(int pos)
  * @param pos The position.
  * @return true if it succeeds, false if it fails.
  */
-bool FormulaNode::CanRemove(int pos)
+bool FormulaNode::CanRemove()
 {
-	return true;
+	return canRemove;
+}
+
+bool FormulaNode::CanChangeParams()
+{
+	return canChangeParams;
+}
+
+void FormulaNode::SetCanInsert(bool _canInsert)
+{
+	canInsert = _canInsert;
+	for (int i = 0; i < ChildrenCount(); ++i)
+		(*childNodes)[i]->SetCanInsert(_canInsert);
+}
+
+void FormulaNode::SetCanRemove(bool _canRemove)
+{
+	canRemove = _canRemove;
+	for (int i = 0; i < ChildrenCount(); ++i)
+		(*childNodes)[i]->SetCanRemove(_canRemove);
+}
+
+void FormulaNode::SetCanChangeParams(bool _canChangeParams)
+{
+	canChangeParams = _canChangeParams;
+	for (int i = 0; i < ChildrenCount(); ++i)
+		(*childNodes)[i]->SetCanChangeParams(_canChangeParams);
 }
 
 /**
@@ -387,6 +419,12 @@ bool FormulaNode::FromString(std::string::iterator& begin, std::string::iterator
 		return true;
 	if (AutoResultItemFormulaNode::FromString(begin, end, parent))
 		return true;
+	if (RealResultItemFormulaNode::FromString(begin, end, parent))
+		return true;
+	if (IntegerResultItemFormulaNode::FromString(begin, end, parent))
+		return true;
+	if (RationalResultItemFormulaNode::FromString(begin, end, parent))
+		return true;
 	return false;
 }
 
@@ -423,6 +461,29 @@ bool FormulaNode::GetIntParams(std::string::iterator& begin, std::string::iterat
     while (std::getline(ss, item, ','))
 			params.push_back(std::stoi(item));
 		
+		return true;
+	}
+
+	return false;
+}
+
+bool FormulaNode::FromNestedString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* parent)
+{
+	if (*begin == '(')
+	{
+		++begin;
+		
+		while (begin != end)
+		{
+			if (*begin == ')')
+			{
+				++begin;
+				break;
+			}
+			if (!FormulaNode::FromString(begin, end, parent))
+				break;
+		}
+
 		return true;
 	}
 
@@ -488,6 +549,28 @@ int FormulaNode::GetFirstLevelChildPos(FormulaNode* node)
 	}
 	
 	return -1;
+}
+
+FormulaNode* FormulaNode::GetParentByType(NodeType type)
+{
+	if (!parent)
+		return NULL;
+	if (parent->type == type)
+		return parent;
+	return parent->GetParentByType(type);
+}
+
+FormulaNode* FormulaNode::GetNodeByHierarchyPos(HierarchyPos& pos)
+{
+	FormulaNode* n = wnd->documentNode;
+	for (int i = (int)pos.size() - 1; i > 0; --i)
+	{
+		if (!n || n->childNodes->Count() <= pos[i])
+			return NULL;
+		n = (*n)[pos[i]];
+	}
+	
+	return n;
 }
 
 /**
@@ -557,6 +640,11 @@ bool FormulaNode::IsEmptySymbol()
 	return childNodes->Count() == 1 && (*this)[0]->type == EMPTY_NODE;
 }
 
+RootFormulaNode* FormulaNode::GetRootNode()
+{
+	return parent->GetRootNode();
+}
+
 /**
  * Gets the first caret position of the node.
  * @return The first caret position.
@@ -599,6 +687,90 @@ SharedCaretState FormulaNode::GetPreviousPosition(SharedCaretState relativeState
 	return SharedCaretState();
 }
 
+SharedCaretState FormulaNode::GetUpperPosition(SharedCaretState relativeState)
+{
+	if (!parent)
+		return SharedCaretState();
+	
+	int minDist = INT_MAX, dist;
+	QRectEx r1 = relativeState->GetBounds();
+	
+	SharedCaretState firstPos = parent->GetFirstPosition();
+	SharedCaretState lastPos = parent->GetLastPosition();
+	SharedCaretState curPos = firstPos;
+	SharedCaretState nearestPos = SharedCaretState();
+
+	if (curPos)
+	{
+		do
+		{
+			QRectEx r2 = curPos->GetBounds();
+			if (r1.top() > r2.bottom())
+			{
+				FormulaNode* n = curPos->GetNode();
+				//don't move to the beginning of the compound node
+				if (n->ChildrenCount() > curPos->GetPos() && dynamic_cast<CompoundFormulaNode*>((*n)[curPos->GetPos()]))
+					r2.setWidth(1);
+				dist = r2.DistToPoint(wnd->caret->xPos, r1.top());
+				if (dist < minDist)
+				{
+					nearestPos = curPos;
+					minDist = dist;
+				}
+			}
+			curPos = curPos->GetNode()->GetNextPosition(curPos);
+		}
+		while (*curPos != *lastPos);
+	}
+	
+	if (!nearestPos)
+		nearestPos = parent->GetUpperPosition(relativeState);
+	
+	return nearestPos;
+}
+
+SharedCaretState FormulaNode::GetLowerPosition(SharedCaretState relativeState)
+{
+	if (!parent)
+		return SharedCaretState();
+	
+	int minDist = INT_MAX, dist;
+	QRectEx r1 = relativeState->GetBounds();
+	
+	SharedCaretState firstPos = parent->GetFirstPosition();
+	SharedCaretState lastPos = parent->GetLastPosition();
+	SharedCaretState curPos = firstPos;
+	SharedCaretState nearestPos = SharedCaretState();
+
+	if (curPos)
+	{
+		do
+		{
+			QRectEx r2 = curPos->GetBounds();
+			if (r1.bottom() < r2.top())
+			{
+				FormulaNode* n = curPos->GetNode();
+				//don't move to the begining of the compound node
+				if (n->ChildrenCount() > curPos->GetPos() && dynamic_cast<CompoundFormulaNode*>((*n)[curPos->GetPos()]))
+					r2.setWidth(1);
+				dist = r2.DistToPoint(wnd->caret->xPos, r1.bottom());
+				if (dist < minDist)
+				{
+					nearestPos = curPos;
+					minDist = dist;
+				}
+			}
+			curPos = curPos->GetNode()->GetNextPosition(curPos);
+		}
+		while (*curPos != *lastPos);
+	}
+	
+	if (!nearestPos)
+		nearestPos = parent->GetLowerPosition(relativeState);
+	
+	return nearestPos;
+}
+
 /**
  * Returns the first caret position of the line.
  * @param [in,out] relativeState Relative caret state.
@@ -637,7 +809,7 @@ void FormulaNode::RenderCaret(const int pos, const int anchor)
 {
 	QRectF r = GetDocumentPosBounds(pos);
 	
-	QGraphicsItemGroup* g = wnd->GetCaret()->caretShape;
+	QGraphicsItemGroup* g = wnd->caret->caretShape;
 	
 	qDeleteAll(g->childItems());
 	g->childItems().clear();
@@ -697,18 +869,6 @@ bool FormulaNode::DoInsertLine(Command* command)
 }
 
 /**
- * Undo insert line.
- * @param [in] nodeEvent The node event.
- * @return true if it succeeds, false if it fails.
- */
-bool FormulaNode::UndoInsertLine(Command* command)
-{
-	if (parent)
-		return parent->UndoInsertLine(command);
-	return false;
-}
-
-/**
  * Executes the remove item operation.
  * @param [in] nodeEvent The node event.
  * @return true if it succeeds, false if it fails.
@@ -756,6 +916,11 @@ bool FormulaNode::DoRemoveItem(Command* command)
 	command->afterCaretState = c;
 	
 	return true;
+}
+
+bool FormulaNode::DoChangeParams(Command* command)
+{
+	return false;
 }
 
 /**

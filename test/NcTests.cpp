@@ -66,6 +66,7 @@ void NcTests::DocumentTests()
 {
 	DocumentTest documentTest(mainWindow);
 	documentTest.Test1();
+	documentTest.Test2();
 }
 
 #endif

@@ -43,7 +43,7 @@ public:
 	virtual void Remake();
 	virtual void UpdateBoundingRect();
 
-	virtual bool CanInsert(int pos);
+	virtual bool CanInsert();
 
 	virtual void Parse(ParserString& expr);
 #ifdef TEST

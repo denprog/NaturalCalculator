@@ -13,24 +13,14 @@ ResultItemFormulaNode::ResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* w
 }
 
 /**
- * Destructor.
- */
-ResultItemFormulaNode::~ResultItemFormulaNode()
-{
-}
-
-/**
  * Executes the action of presentation as automatic result node.
  */
 void ResultItemFormulaNode::OnPresentAsAutoResult()
 {
-	AutoResultItemFormulaNode* node = new AutoResultItemFormulaNode(parent, wnd, 
-		settings->Load("ScientificNumbers", "resultAccuracy", 3).toInt(), 
+	((ResultFormulaNode*)parent)->SetAutoResult(settings->Load("ScientificNumbers", "resultAccuracy", 3).toInt(), 
 		settings->Load("ScientificNumbers", "exponentialThreshold", 8).toInt(), 
 		(ExpressionNotation)settings->Load("IntegerNumbers", "notation", DECIMAL_NOTATION).toInt(), 
 		(FractionType)settings->Load("RationalNumbers", "form", PROPER_FRACTION).toInt());
-	node->Normalize();
-	parent->ReplaceChild(node, parent->GetChildPos(this));
 }
 
 /**
@@ -38,10 +28,7 @@ void ResultItemFormulaNode::OnPresentAsAutoResult()
  */
 void ResultItemFormulaNode::OnPresentAsRealResult()
 {
-	RealResultItemFormulaNode* node = new RealResultItemFormulaNode(parent, wnd, settings->value("auto/precision", 8).toInt(), 
-		settings->value("auto/exp", 3).toInt());
-	node->UpdateExpression();
-	parent->ReplaceChild(node, parent->GetChildPos(this));
+	((ResultFormulaNode*)parent)->SetRealResult(settings->value("auto/precision", 8).toInt(), settings->value("auto/exp", 3).toInt());
 }
 
 /**
@@ -49,9 +36,7 @@ void ResultItemFormulaNode::OnPresentAsRealResult()
  */
 void ResultItemFormulaNode::OnPresentAsIntegerResult()
 {
-	IntegerResultItemFormulaNode* node = new IntegerResultItemFormulaNode(parent, wnd, DECIMAL_NOTATION);
-	node->UpdateExpression();
-	parent->ReplaceChild(node, parent->GetChildPos(this));
+	((ResultFormulaNode*)parent)->SetIntegerResult(DECIMAL_NOTATION);
 }
 
 /**
@@ -59,9 +44,7 @@ void ResultItemFormulaNode::OnPresentAsIntegerResult()
  */
 void ResultItemFormulaNode::OnPresentAsRationalResult()
 {
-	RationalResultItemFormulaNode* node = new RationalResultItemFormulaNode(parent, wnd, IMPROPER_FRACTION);
-	node->UpdateExpression();
-	parent->ReplaceChild(node, parent->GetChildPos(this));
+	((ResultFormulaNode*)parent)->SetRationalResult(IMPROPER_FRACTION);
 }
 
 /**
@@ -75,14 +58,8 @@ AutoResultItemFormulaNode::AutoResultItemFormulaNode(FormulaNode* _parent, Formu
 	ExpressionNotation _notation, FractionType _fractionType) : 
 	ResultItemFormulaNode(_parent, wnd), realPrecision(_realPrecision), realExp(_realExp), notation(_notation), fractionType(_fractionType)
 {
+	type = AUTO_RESULT_ITEM_NODE;
 	Normalize();
-}
-
-/**
- * Destructor.
- */
-AutoResultItemFormulaNode::~AutoResultItemFormulaNode()
-{
 }
 
 /**
@@ -106,7 +83,12 @@ void AutoResultItemFormulaNode::MakeContextMenu(QMenu* menu)
 	QMenu* subMenu = new QMenu("Present as", menu);
 	menu->addMenu(subMenu);
 	
-	QAction* a = new QAction(tr("Scientific"), subMenu);
+	QAction* a = new QAction(tr("Auto"), subMenu);
+	a->setCheckable(true);
+	a->setChecked(true);
+	subMenu->addAction(a);
+	
+	a = new QAction(tr("Scientific"), subMenu);
 	subMenu->addAction(a);
 	connect(a, SIGNAL(triggered()), this, SLOT(OnPresentAsRealResult()));
 
@@ -178,19 +160,14 @@ std::string AutoResultItemFormulaNode::ToString()
 RealResultItemFormulaNode::RealResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, int _precision, int _exp) : 
 	ResultItemFormulaNode(_parent, wnd), precision(_precision), exp(_exp)
 {
-}
-
-/**
- * Destructor.
- */
-RealResultItemFormulaNode::~RealResultItemFormulaNode()
-{
+	type = REAL_RESULT_ITEM_NODE;
+	Normalize();
 }
 
 /**
  * Updates the expression.
  */
-void RealResultItemFormulaNode::UpdateExpression()
+void RealResultItemFormulaNode::Normalize()
 {
 	expression = RealParserExpression(this, precision, exp);
 }
@@ -212,6 +189,11 @@ void RealResultItemFormulaNode::MakeContextMenu(QMenu* menu)
 	subMenu->addAction(a);
 	connect(a, SIGNAL(triggered()), this, SLOT(OnPresentAsAutoResult()));
 
+	a = new QAction(tr("Scientific"), subMenu);
+	a->setCheckable(true);
+	a->setChecked(true);
+	subMenu->addAction(a);
+	
 	a = new QAction(tr("Integer"), subMenu);
 	subMenu->addAction(a);
 	connect(a, SIGNAL(triggered()), this, SLOT(OnPresentAsIntegerResult()));
@@ -221,24 +203,59 @@ void RealResultItemFormulaNode::MakeContextMenu(QMenu* menu)
 	connect(a, SIGNAL(triggered()), this, SLOT(OnPresentAsRationalResult()));
 }
 
+#ifdef TEST
+std::string RealResultItemFormulaNode::ParseStructure()
+{
+	return "$real(" + ResultItemFormulaNode::ParseStructure() + ")";
+}
+#endif
+
+bool RealResultItemFormulaNode::FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* _parent)
+{
+	std::string::iterator i = begin;
+	
+	if (FindSubstring(begin, end, "$real"))
+	{
+		int precision = _parent->wnd->settings->Load("ScientificNumbers", "resultAccuracy", 3).toInt();
+		int exp = _parent->wnd->settings->Load("ScientificNumbers", "exponentialThreshold", 8).toInt();
+		
+		i += 5;
+		std::vector<int> params;
+		if (FormulaNode::GetIntParams(i, end, params) && params.size() == 2)
+		{
+			precision = params[0];
+			exp = params[1];
+		}
+		
+		_parent->AddChild(new RealResultItemFormulaNode(_parent, _parent->wnd, precision, exp));
+		begin = i;
+		return true;
+	}
+	
+	return false;
+}
+
+std::string RealResultItemFormulaNode::ToString()
+{
+	std::stringstream res;
+	res << "$real(";
+	res << precision << ")";
+	return res.str();
+}
+
 //IntegerResultItemFormulaNode
 
 IntegerResultItemFormulaNode::IntegerResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, ExpressionNotation _notation) : 
 	ResultItemFormulaNode(_parent, wnd), notation(_notation)
 {
-}
-
-/**
- * Destructor.
- */
-IntegerResultItemFormulaNode::~IntegerResultItemFormulaNode()
-{
+	type = INTEGER_RESULT_ITEM_NODE;
+	Normalize();
 }
 
 /**
  * Updates the expression.
  */
-void IntegerResultItemFormulaNode::UpdateExpression()
+void IntegerResultItemFormulaNode::Normalize()
 {
 	expression = IntegerParserExpression(this, notation);
 }
@@ -264,9 +281,52 @@ void IntegerResultItemFormulaNode::MakeContextMenu(QMenu* menu)
 	subMenu->addAction(a);
 	connect(a, SIGNAL(triggered()), this, SLOT(OnPresentAsRealResult()));
 
+	a = new QAction(tr("Integer"), subMenu);
+	a->setCheckable(true);
+	a->setChecked(true);
+	subMenu->addAction(a);
+	
 	a = new QAction(tr("Rational"), subMenu);
 	subMenu->addAction(a);
 	connect(a, SIGNAL(triggered()), this, SLOT(OnPresentAsRationalResult()));
+}
+
+#ifdef TEST
+std::string IntegerResultItemFormulaNode::ParseStructure()
+{
+	return "$integer(" + ResultItemFormulaNode::ParseStructure() + ")";
+}
+#endif
+
+bool IntegerResultItemFormulaNode::FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* _parent)
+{
+	std::string::iterator i = begin;
+	
+	if (FindSubstring(begin, end, "$integer"))
+	{
+		ExpressionNotation notation = (ExpressionNotation)_parent->wnd->settings->Load("IntegerNumbers", "notation", DECIMAL_NOTATION).toInt();
+		
+		i += 8;
+		std::vector<int> params;
+		if (FormulaNode::GetIntParams(i, end, params) && params.size() == 1)
+		{
+			notation = (ExpressionNotation)params[0];
+		}
+		
+		_parent->AddChild(new IntegerResultItemFormulaNode(_parent, _parent->wnd, notation));
+		begin = i;
+		return true;
+	}
+	
+	return false;
+}
+
+std::string IntegerResultItemFormulaNode::ToString()
+{
+	std::stringstream res;
+	res << "$integer(";
+	res << (int)notation << ")";
+	return res.str();
 }
 
 //RationalResultItemFormulaNode
@@ -280,19 +340,14 @@ void IntegerResultItemFormulaNode::MakeContextMenu(QMenu* menu)
 RationalResultItemFormulaNode::RationalResultItemFormulaNode(FormulaNode* _parent, FormulaWnd* wnd, FractionType _fractionType) : 
 	ResultItemFormulaNode(_parent, wnd), fractionType(_fractionType)
 {
-}
-
-/**
- * Destructor.
- */
-RationalResultItemFormulaNode::~RationalResultItemFormulaNode()
-{
+	type = RATIONAL_RESULT_ITEM_NODE;
+	Normalize();
 }
 
 /**
  * Updates the expression.
  */
-void RationalResultItemFormulaNode::UpdateExpression()
+void RationalResultItemFormulaNode::Normalize()
 {
 	expression = RationalParserExpression(this, fractionType);
 }
@@ -321,4 +376,47 @@ void RationalResultItemFormulaNode::MakeContextMenu(QMenu* menu)
 	a = new QAction(tr("Integer"), subMenu);
 	subMenu->addAction(a);
 	connect(a, SIGNAL(triggered()), this, SLOT(OnPresentAsIntegerResult()));
+
+	a = new QAction(tr("Rational"), subMenu);
+	a->setCheckable(true);
+	a->setChecked(true);
+	subMenu->addAction(a);
+}
+
+#ifdef TEST
+std::string RationalResultItemFormulaNode::ParseStructure()
+{
+	return "$rational(" + ResultItemFormulaNode::ParseStructure() + ")";
+}
+#endif
+
+bool RationalResultItemFormulaNode::FromString(std::string::iterator& begin, std::string::iterator& end, FormulaNode* _parent)
+{
+	std::string::iterator i = begin;
+	
+	if (FindSubstring(begin, end, "$rational"))
+	{
+		FractionType fractionType = (FractionType)_parent->wnd->settings->Load("RationalNumbers", "form", PROPER_FRACTION).toInt();
+		
+		i += 9;
+		std::vector<int> params;
+		if (FormulaNode::GetIntParams(i, end, params) && params.size() == 1)
+		{
+			fractionType = (FractionType)params[0];
+		}
+		
+		_parent->AddChild(new RationalResultItemFormulaNode(_parent, _parent->wnd, fractionType));
+		begin = i;
+		return true;
+	}
+	
+	return false;
+}
+
+std::string RationalResultItemFormulaNode::ToString()
+{
+	std::stringstream res;
+	res << "$rational(";
+	res << (int)fractionType << ")";
+	return res.str();
 }

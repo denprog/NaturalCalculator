@@ -1,5 +1,7 @@
 #include "CompoundFormulaNode.h"
 #include "FormulaNodesCollection.h"
+#include "../Main/FormulaWnd.h"
+#include "../Util/QRectEx.h"
 
 /**
  * Default constructor.

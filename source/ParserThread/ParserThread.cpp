@@ -10,7 +10,7 @@
 ParserThread::ParserThread(FormulaWnd* _wnd) : wnd(_wnd)
 {
 	exit = false;
-	thread = new boost::thread(SolvingThread(this, wnd->GetSettings()));
+	thread = new boost::thread(SolvingThread(this, wnd->settings));
 }
 
 /**

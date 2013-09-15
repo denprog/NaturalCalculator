@@ -32,7 +32,7 @@ void DocumentFormulaNode::Remake()
 	{
 		FormulaNode* n = (*this)[i];
 		n->Move(0, y);
-		y += n->boundingRect.height();
+		y += n->boundingRect.height() + 1;
 	}
 	
 	UpdateBoundingRect();
@@ -126,6 +126,24 @@ SharedCaretState DocumentFormulaNode::GetPreviousPosition(SharedCaretState relat
 	}
 	
 	return res;
+}
+
+SharedCaretState DocumentFormulaNode::GetUpperPosition(SharedCaretState relativeState)
+{
+	int line = GetFirstLevelChildPos(relativeState->GetNode());
+	if (line > 0)
+		return (*this)[line - 1]->GetUpperPosition(relativeState);
+
+	return SharedCaretState();
+}
+
+SharedCaretState DocumentFormulaNode::GetLowerPosition(SharedCaretState relativeState)
+{
+	int line = GetFirstLevelChildPos(relativeState->GetNode());
+	if (line < ChildrenCount() - 1)
+		return (*this)[line + 1]->GetLowerPosition(relativeState);
+
+	return SharedCaretState();
 }
 
 /**

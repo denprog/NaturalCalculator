@@ -61,6 +61,11 @@ FormulaNode* EmptyFormulaNode::Clone(FormulaNode* p)
 	return new EmptyFormulaNode(p);
 }
 
+void EmptyFormulaNode::Parse(ParserString& expr)
+{
+	expr.Add(std::string("()"), this);
+}
+
 #ifdef TEST
 std::string EmptyFormulaNode::ParseStructure()
 {

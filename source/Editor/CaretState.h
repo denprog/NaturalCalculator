@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <boost/shared_ptr.hpp>
+#include <QRect>
 
 class FormulaNode;
 class FormulaWnd;
@@ -34,21 +35,17 @@ public:
 	FormulaNode* GetNode();
 	int GetPos();
 	FormulaNode* GetCurrentNode();
-
-	//bool Empty();
+	QRectF GetBounds();
 	
 	bool CheckOnNode(FormulaNode* node);
 	bool CheckInNode(FormulaNode* node);
 	bool CheckAtLast(FormulaNode* node);
 
 	CaretState* Dublicate();
-			
+	
 public:
 	bool operator==(const CaretState& state) const;
 	bool operator!=(const CaretState& state) const;
-	
-public:
-	//void operator=(const CaretState& source);
 	
 private:
 	CurrentNode* currentNode;
@@ -67,6 +64,7 @@ public:
 	void SetNodePos(FormulaNode* node, int pos);
 	FormulaNode* GetNode();
 	int GetPos();
+	bool CheckInNode(FormulaNode* node);
 	
 private:
 	std::vector<int> positions; ///< The caret positions
@@ -86,6 +84,7 @@ public:
 	void SetNodePos(FormulaNode* node, int pos);
 	FormulaNode* GetNode();
 	int GetPos();
+	bool CheckInNode(FormulaNode* node);
 	
 private:
 	CaretPosition position;

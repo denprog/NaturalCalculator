@@ -31,6 +31,7 @@ public:
 	virtual void UpdateBoundingRect();
 
 	virtual FormulaNode* Clone(FormulaNode* p);
+	virtual void Parse(ParserString& expr);
 
 #ifdef TEST
 	virtual std::string ParseStructure();

@@ -106,7 +106,7 @@ void BracesFormulaNode::Remake()
  * @param pos The position.
  * @return false.
  */
-bool BracesFormulaNode::CanInsert(int pos)
+bool BracesFormulaNode::CanInsert()
 {
 	return false;
 }
